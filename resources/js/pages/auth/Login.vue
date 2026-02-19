@@ -40,7 +40,7 @@ defineProps<{
             class="flex flex-col gap-6"
         >
             <div class="grid gap-6">
-                <div class="grid gap-2">
+                <div class="grid gap-2 ">
                     <Label for="email">Correo electronico</Label>
                     <Input
                         id="email"
@@ -51,6 +51,7 @@ defineProps<{
                         :tabindex="1"
                         autocomplete="email"
                         placeholder="email@example.com"
+                        class="placeholder:text-text-main"
                     />
                     <InputError :message="errors.email" />
                 </div>
@@ -61,8 +62,9 @@ defineProps<{
                         <TextLink
                             v-if="canResetPassword"
                             :href="request()"
-                            class="text-sm"
+                            class="text-sm "
                             :tabindex="5"
+                            
                         >
                             Olvidaste tu contraseña?
                         </TextLink>
@@ -74,7 +76,8 @@ defineProps<{
                         required
                         :tabindex="2"
                         autocomplete="current-password"
-                        placeholder="Contraseña"
+                        placeholder="●●●●●●●"
+                        class="placeholder:text-text-main"
                     />
                     <InputError :message="errors.password" />
                 </div>
@@ -99,7 +102,7 @@ defineProps<{
             </div>
 
             <div
-                class="text-center text-sm text-muted-foreground"
+                class="text-center text-sm text-text-main"
                 v-if="canRegister"
             >
                 No tienes una cuenta?
