@@ -43,7 +43,7 @@ const props = withDefaults(
                         class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3"
                     >
                         <svg
-                            class="text-body h-4 w-4"
+                            class="text-body dark:text-black h-4 w-4"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -62,15 +62,15 @@ const props = withDefaults(
                     <input
                         type="search"
                         id="search"
-                        class="bg-muted-foreground border-default-medium text-heading rounded-base focus:ring-brand focus:border-brand placeholder:text-body block w-full border p-3 ps-9 text-sm shadow-xs"
-                        placeholder="Search"
+                        class="bg-muted-foreground border-default-medium text-heading rounded-base focus:ring-brand focus:border-brand placeholder:text-body dark:placeholder:text-black block w-full border p-3 ps-9 text-sm shadow-xs"
+                        placeholder="Buscar..."
                         required
                     />
                     <button
                         type="button"
                         class="bg-primary hover:bg-brand-strong focus:ring-brand-medium absolute end-1.5 bottom-1.5 box-border rounded border border-transparent px-3 py-1.5 text-xs leading-5 font-medium text-white shadow-xs focus:ring-4 focus:outline-none cursor-pointer"
                     >
-                        Search
+                        Buscar
                     </button>
                 </div>
             </div>
