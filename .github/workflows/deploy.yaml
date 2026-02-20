@@ -2,7 +2,7 @@ name: Deploy to SiteGround
 
 on:
   push:
-    branches: [ main ] # Se activa solo cuando haces push a main
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -11,20 +11,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Executing remote ssh commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          algorithms: |
-            server_host_key:
-              - ssh-rsa
-              - rsa-sha2-256
-              - rsa-sha2-512
-          script: |
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # Esto evita que el handshake falle por confirmación de host
+          cat >>~/.ssh/config <<END
+          Host siteground
+            HostName ${{ secrets.SSH_HOST }}
+            User ${{ secrets.SSH_USER }}
+            Port ${{ secrets.SSH_PORT }}
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking no
+          END
+
+      - name: Run Deploy Script
+        run: |
+          # Usamos ssh-pass solo si tu llave tiene contraseña
+          # Si le quitaste la contraseña a la llave, usa solo: ssh siteground "comandos"
+          sudo apt-get install -y sshpass
+          sshpass -p "${{ secrets.SSH_PASSPHRASE }}" ssh siteground << 'ENDSSH'
             cd ~/laravel_app
             git pull origin main
             composer install --no-dev --optimize-autoloader
@@ -32,3 +39,4 @@ jobs:
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+          ENDSSH
