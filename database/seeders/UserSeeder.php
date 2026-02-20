@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'id_card' => 'V-00000000',
             'phone' => '04120000000',
+            'is_admin' => true
         ]);
 
         // 2. Dos usuarios adicionales
