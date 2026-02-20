@@ -31,7 +31,7 @@ jobs:
           # Usamos ssh-pass solo si tu llave tiene contraseña
           # Si le quitaste la contraseña a la llave, usa solo: ssh siteground "comandos"
           sudo apt-get install -y sshpass
-          sshpass -p "${{ secrets.SSH_PASSPHRASE }}" ssh siteground << 'ENDSSH'
+          ssh siteground << 'ENDSSH'
             cd ~/laravel_app
             git pull origin main
             composer install --no-dev --optimize-autoloader
