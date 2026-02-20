@@ -26,9 +26,9 @@ const auth = computed(() => page.props.auth);
 <template>
     <nav class="relative">
         <section
-            class="flex h-[10vh] items-center justify-between bg-primary dark:bg-black px-10"
+            class="flex h-[10vh] items-center justify-between bg-primary dark:bg-black  md:px-10"
         >
-            <AppLogo class="w-48" />
+            <AppLogo class="pl-4 md:pl-0 w-48" />
 
             <div
                 class="text-carbon-black-text flex items-center font-semibold"

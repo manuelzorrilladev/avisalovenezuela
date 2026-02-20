@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-import { LucideHome } from 'lucide-vue-next';
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
 import HeadSEO from '@/components/shared/HeadSEO.vue';
 import Navbar from '@/components/shared/Navbar.vue';
-import type { NavItem } from '@/types';
-import AppLogo from '@/components/AppLogo.vue';
+
+const publications = ref([])
+
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -24,19 +25,29 @@ const props = withDefaults(
 );
 
 
+onMounted(() => {
+    axios.get('/api/publications/get-all')
+        .then(response => {
+            publications.value = response.data;
+        })
+        .catch(error => {
+            console.error('Error fetching publications:', error);
+        });
+});
+
 </script>
 
 <template>
     <HeadSEO v-bind="props" />
     <Navbar :can-register="props.canRegister" />
 
-    <section class="relative h-[55vh] overflow-hidden bg-background">
+    <section class="relative h-[45vh] md:h-[55vh] overflow-hidden bg-background ">
         <div class="absolute top-0 z-10 flex flex-col gap-4 items-center w-full justify-center h-full">
-            <h1 class="w-10/12 text-center font-brand text-xl md:text-4xl ">Todo lo que necesitas, en un solo lugar</h1>
-            <p class="w-1/3 text-center">
+            <h1 class="w-11/12 md:w-10/12 text-center font-brand text-xl md:text-4xl ">Todo lo que necesitas, en un solo lugar</h1>
+            <p class="w-11/12 md:w-1/3 text-center">
                Consigue todo aquello que necesitas o publica tus bienes y servicios a un publico masivo 
             </p>
-            <div class="mx-auto max-w-md w-1/3">
+            <div class="mx-auto max-w-md w-11/12 md:w-1/3">
               
                 <div class="relative bg-card rounded-lg overflow-hidden border border-primary">
                     <div
@@ -76,4 +87,10 @@ const props = withDefaults(
             </div>
         </div>
     </section>
+
+    <main>
+        {{ publications }}
+    
+    </main>
+
 </template>
