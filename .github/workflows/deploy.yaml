@@ -19,6 +19,11 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          algorithms: |
+            server_host_key:
+              - ssh-rsa
+              - rsa-sha2-256
+              - rsa-sha2-512
           script: |
             cd ~/laravel_app
             git pull origin main
