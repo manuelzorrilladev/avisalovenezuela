@@ -1,6 +1,8 @@
+import PublicationController from './PublicationController'
 import Settings from './Settings'
 const Controllers = {
-    Settings: Object.assign(Settings, Settings),
+    PublicationController: Object.assign(PublicationController, PublicationController),
+Settings: Object.assign(Settings, Settings),
 }
 
 export default Controllers
