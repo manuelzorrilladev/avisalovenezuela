@@ -11,14 +11,14 @@
 @theme inline {
     --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 
- --font-brand: "KeepCalm", ui-sans-serif, system-ui, sans-serif;
+    --font-brand: "KeepCalm", ui-sans-serif, system-ui, sans-serif;
     --font-title:"Raleway",sans-serif;
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
 
 
-    --color-text-main:var(--text-primary)
+    --color-text-main:var(--text-primary);
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
