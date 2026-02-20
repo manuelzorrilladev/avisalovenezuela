@@ -24,17 +24,17 @@ class Publication extends Model
         return $this->hasMany(PublicationImage::class);
     }
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
 
-    public function categories()
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }
-    public function subCategories()
+    public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
     }
@@ -45,8 +45,7 @@ class Publication extends Model
 
     public function comments(): HasMany
     {
-        // Cargamos solo los comentarios raíz (donde parent_id es null)
-        // y traemos sus respuestas anidadas automáticamente
+ 
         return $this->hasMany(Comment::class)->whereNull('parent_id');
     }
 }
