@@ -7,7 +7,10 @@ import Navbar from '@/components/shared/Navbar.vue';
 import type { PublicationCardType } from '@/types/publication';
 
 interface QueryProps {
-    most_recent?: PublicationCardType[];
+    most_recent?: PublicationCardType[],
+    most_viewed?: PublicationCardType[],
+    vehicles?: PublicationCardType[],
+    m_service?: PublicationCardType[]
 }
 const publications = ref<QueryProps>({});
 
@@ -57,7 +60,6 @@ onMounted(() => {
 <template>
     <HeadSEO v-bind="props" />
     <Navbar :can-register="props.canRegister" />
-
     <section
         class="relative h-[45vh] overflow-hidden bg-background md:h-[55vh]"
     >
@@ -115,28 +117,50 @@ onMounted(() => {
         </div>
     </section>
 
-    <main class="mb-20">
-        <h2 class="text-center text-3xl font-bold mb-4">Publicaciones recientes</h2>
-        <section
-            v-if="isLoading"
-            class="grid grid-cols-4 place-content-center place-items-center gap-y-6"
-        >
-            <PublicationCard
-                v-for="item in 8"
-                :key="item"
-                :is-loading="isLoading"
-            />
-        </section>
-        <section
-            v-else
-            class="grid grid-cols-4 place-content-center place-items-center gap-y-6"
-        >
-            <PublicationCard
-                v-for="item in publications['most_recent']"
-                :key="item.id"
-                :publication="item"
-                :is-loading="isLoading"
-            />
-        </section>
+    <main class="mb-20 space-y-12">
+        <div>
+            <h2 class="mb-4 text-center text-3xl font-bold">
+                Publicaciones recientes
+            </h2>
+            <section
+                v-if="isLoading"
+                class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
+            >
+                <PublicationCard
+                    v-for="item in 9"
+                    :key="item"
+                    :is-loading="isLoading"
+                />
+            </section>
+            <section
+                v-else
+                class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
+            >
+                <PublicationCard
+                    v-for="item in publications['most_recent']"
+                    :key="item.id"
+                    :publication="item"
+                    :is-loading="isLoading"
+                />
+            </section>
+        </div>
+        <div>
+            <h2 class="mb-4 text-center text-3xl font-bold">
+                Más populares            
+                
+            </h2>
+            
+            <section
+              
+                class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
+            >
+                <PublicationCard
+                    v-for="item in publications['most_viewed']"
+                    :key="item.id"
+                    :publication="item"
+                    :is-loading="isLoading"
+                />
+            </section>
+        </div>
     </main>
 </template>

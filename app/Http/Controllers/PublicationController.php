@@ -24,25 +24,25 @@ class PublicationController extends Controller
                     // 1. Más recientes
                     'most_recent' => (clone $baseQuery)
                         ->orderBy('created_at', 'desc')
-                        ->limit(8)
+                        ->limit(9)
                         ->get(),
 
                     // 2. Más vistos (Populares)
                     'most_viewed' => (clone $baseQuery)
                         ->orderBy('views', 'desc')
-                        ->limit(8)
+                        ->limit(9)
                         ->get(),
 
                     // 3. Específicos por categoría: Vehículos
                     'vehicles' => (clone $baseQuery)
                         ->whereHas('category', fn($q) => $q->where('name', 'Vehículos'))
-                        ->limit(4)
+                        ->limit(6)
                         ->get(),
 
                     // 4. Específicos por categoría: Servicios
                     'services' => (clone $baseQuery)
                         ->whereHas('category', fn($q) => $q->where('name', 'Servicios'))
-                        ->limit(4)
+                        ->limit(6)
                         ->get(),
                 ];
             });

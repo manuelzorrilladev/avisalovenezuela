@@ -13,7 +13,7 @@ defineProps<{
 </script>
 
 <template>
-    <div v-if="isLoading" class="w-80 h-fit overflow-hidden rounded-lg bg-secondary-background shadow-lg border animate-pulse">
+      <div v-if="isLoading" class="w-96 h-fit overflow-hidden rounded-lg bg-secondary-background shadow-lg border animate-pulse">
         <div class="w-full h-48 bg-gray-300 dark:bg-gray-700"></div>
 
         <div class="p-2 mb-2">
@@ -24,9 +24,10 @@ defineProps<{
             <div class="h-9 w-24 bg-gray-300 dark:bg-gray-700 rounded-lg"></div>
         </div>
     </div>
-    <div v-else class="w-80 hover:scale-105 duration-200 h-fit overflow-hidden rounded-lg  bg-secondary-background shadow-lg border">
-        <div class="w-full  ">
-            <img :src="`/storage/${publication?.images[0].path}`" alt="">
+     <div v-else class="w-11/12 md:w-100 hover:scale-105 duration-200 h-fit overflow-hidden rounded-lg  bg-secondary-background shadow-lg border">
+        <div class="w-full   h-48 flex items-center overflow-hidden">
+            <!-- <img src="https://picsum.photos/1200/768" alt="" class="w-full"> -->
+            <img :src="`/storage/${publication?.images[0].path}`" alt="" class="w-full">
         </div>
 
         <header class="p-2 mb-2">

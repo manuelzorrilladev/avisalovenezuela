@@ -35,14 +35,14 @@ const auth = computed(() => page.props.auth);
             >
                 <div v-if="isDesktop" class="flex items-center space-x-4">
                     <template v-if="auth.user">
-                        <Link
+                        <Link  @click="isActive = !isActive"
                             :href="dashboard()"
                             class="transition-colors hover:text-white"
                         >
                             Panel de Control
                         </Link>
 
-                        <Link
+                        <Link  @click="isActive = !isActive"
                             href="/logout"
                             method="post"
                             as="button"
@@ -53,14 +53,14 @@ const auth = computed(() => page.props.auth);
                     </template>
 
                     <template v-else>
-                        <Link
+                        <Link  @click="isActive = !isActive"
                             :href="login()"
                             class="transition-colors hover:text-white px-4 py-2 border border-white dark:border-primary rounded-md"
                         >
                             Iniciar Sesión
                         </Link>
 
-                        <Link
+                        <Link  @click="isActive = !isActive"
                             v-if="canRegister"
                             :href="register()"
                             class="rounded-md bg-white text-black dark:text-primary px-4 py-2 shadow-sm transition-all hover:bg-gray-100"
@@ -92,74 +92,74 @@ const auth = computed(() => page.props.auth);
                 </div>
 
                 <hr class="my-2 border-black" />
-                <Link
+                <Link  @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Inmuebles <ChevronDown
                 /></Link>
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Compra y venta
                 </Link>
 
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Alquiler</Link
                 >
 
-                <Link
+                <Link  @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Vehiculo <ChevronDown
                 /></Link>
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Motos</Link
                 >
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Automoviles</Link
                 >
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Camionetas</Link
                 >
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Taxis</Link
                 >
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Pesados</Link
                 >
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Otros Vehiculos
                 </Link>
-                <Link
+                <Link  @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Empleos <ChevronDown />
                 </Link>
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Empleos generales</Link
                 >
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Empleos Especializados</Link
                 >
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Empleos de servicio domestico
                 </Link>
-                <Link
+                <Link  @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Servicios <ChevronDown />
                 </Link>
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Servicios a domicilio</Link
                 >
-                <Link class="ml-8 text-black duration-200 hover:text-white"
+                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Servicios Especializados</Link
                 >
                 <hr class="my-2 border-black" />
                 <div v-if="!isDesktop" class=" space-x-4 text-lg">
                     <template v-if="auth.user">
-                        <Link
+                        <Link  @click="isActive = !isActive"
                             :href="dashboard()"
                             class="flex items-center gap-3 text-black duration-200 hover:text-white"
                         >
                             Panel de Control
                         </Link>
 
-                        <Link
+                        <Link  @click="isActive = !isActive"
                             href="/logout"
                             method="post"
                             as="button"
@@ -170,14 +170,14 @@ const auth = computed(() => page.props.auth);
                     </template>
 
                     <template v-else>
-                        <Link
+                        <Link  @click="isActive = !isActive"
                             :href="login()"
                             class="flex items-center gap-3 text-black duration-200 hover:text-white"
                         >
                             Iniciar Sesión
                         </Link>
 
-                        <Link
+                        <Link  @click="isActive = !isActive"
                             v-if="canRegister"
                             :href="register()"
                             class="flex items-center gap-3 text-black duration-200 hover:text-white"
@@ -187,7 +187,7 @@ const auth = computed(() => page.props.auth);
                     </template>
                 </div>
 
-                <Link
+                <Link  @click="isActive = !isActive" 
                     class="flex items-center gap-3 text-lg text-black underline duration-200 hover:text-white"
                     >Publica tu anuncio
                 </Link>
@@ -196,6 +196,7 @@ const auth = computed(() => page.props.auth);
         <Transition name="show">
             <section
                 v-if="isActive"
+                 @click="isActive = !isActive" 
                 class="fixed top-0 right-0 z-40 flex h-screen w-full flex-col bg-gray-600/50 px-10 py-4 shadow-2xl blur-2xl"
             ></section>
         </Transition>
