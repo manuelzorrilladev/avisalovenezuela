@@ -42,6 +42,6 @@ class PublicationViewSeeder extends Seeder
             }
         }
 
-        PublicationView::create($data);
+        PublicationView::insert($data);
     }
 }

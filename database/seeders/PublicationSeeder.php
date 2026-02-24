@@ -21,7 +21,8 @@ class PublicationSeeder extends Seeder
             $subCategory = $currentCategory->subCategories->random();
             $tag = $subCategory->tags->isNotEmpty() ? $subCategory->tags->random() : null;
             $user = $users->random();
-            $data[] = [
+            $specs =$this->generateSpecs($currentCategory->name);
+            Publication::create([
                 'user_id' => $user->id,
                 'category_id' => $currentCategory->id,
                 'sub_category_id' => $subCategory->id,
@@ -33,10 +34,9 @@ class PublicationSeeder extends Seeder
                 'views' => rand(0, 500),
                 'state' => 'Miranda',
                 'city' => 'Caracas',
-                'specs' => $this->generateSpecs($currentCategory->name),
-            ];
+                'specs' => $specs,
+            ]);
         }
-        Publication::create($data);
     }
 
     private function generateSpecs($categoriesName)
