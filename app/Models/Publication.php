@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\PublicationView;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\PublicationImage;
@@ -48,4 +49,10 @@ class Publication extends Model
  
         return $this->hasMany(Comment::class)->whereNull('parent_id');
     }
+
+    public function detailedViews(): HasMany
+{
+    // Esto te permite hacer $publication->detailedViews
+    return $this->hasMany(PublicationView::class);
+}
 }
