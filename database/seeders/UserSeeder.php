@@ -14,7 +14,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. El Administrador
         User::create([
             'name' => 'Admin',
             'last_name' => 'Marketplace',
@@ -25,7 +24,6 @@ class UserSeeder extends Seeder
             'is_admin' => true
         ]);
 
-        // 2. Dos usuarios adicionales
-        User::factory()->count(4)->create();
+        User::factory()->count(9)->create();
     }
 }

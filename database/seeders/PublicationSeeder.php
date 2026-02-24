@@ -13,18 +13,15 @@ class PublicationSeeder extends Seeder
     public function run(): void
     {
         $users = User::all();
-        // Esta variable 'allCategories' se mantiene como colección siempre
         $allCategories = Category::with('subCategories.tags')->get();
-
-        for ($i = 1; $i <= 25; $i++) {
-            // Seleccionamos una y la guardamos en singular para no romper la original
+        $data = [];
+        for ($i = 1; $i <= 50; $i++) {
             $currentCategory = $allCategories->random();
 
             $subCategory = $currentCategory->subCategories->random();
             $tag = $subCategory->tags->isNotEmpty() ? $subCategory->tags->random() : null;
             $user = $users->random();
-
-            Publication::create([
+            $data[] = [
                 'user_id' => $user->id,
                 'category_id' => $currentCategory->id,
                 'sub_category_id' => $subCategory->id,
@@ -37,11 +34,11 @@ class PublicationSeeder extends Seeder
                 'state' => 'Miranda',
                 'city' => 'Caracas',
                 'specs' => $this->generateSpecs($currentCategory->name),
-            ]);
+            ];
         }
+        Publication::create($data);
     }
 
-    // Lógica para llenar el JSON según la categoría
     private function generateSpecs($categoriesName)
     {
         return match ($categoriesName) {

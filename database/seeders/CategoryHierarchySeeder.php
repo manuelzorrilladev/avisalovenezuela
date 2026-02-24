@@ -44,21 +44,18 @@ class CategoryHierarchySeeder extends Seeder
         ];
 
         foreach ($structure as $categoryName => $subCategoriesArray) {
-            // 1. Crear la Categoría (Variable en SINGULAR)
             $category = Category::create([
                 'name' => $categoryName,
                 'slug' => Str::slug($categoryName),
             ]);
 
             foreach ($subCategoriesArray as $subCategoryName => $tagsArray) {
-                // 2. Crear la Subcategoría (Variable en SINGULAR)
                 $subCategory = SubCategory::create([
                     'category_id' => $category->id,
                     'name' => $subCategoryName,
                     'slug' => Str::slug($subCategoryName),
                 ]);
 
-                // 3. Crear las Etiquetas relacionadas (si existen)
                 foreach ($tagsArray as $tagName) {
                     Tag::create([
                         'sub_category_id' => $subCategory->id,

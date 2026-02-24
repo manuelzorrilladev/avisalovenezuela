@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Database\Seeders\CommentSeeder;
 use Database\Seeders\CategoryHierarchySeeder;
+use Database\Seeders\CommentSeeder;
 use Database\Seeders\PublicationImageSeeder;
 use Database\Seeders\PublicationSeeder;
+use Database\Seeders\PublicationViewSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Database\Seeder;
 
@@ -25,7 +24,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PublicationSeeder::class,
             CommentSeeder::class,
-            PublicationImageSeeder::class
+            PublicationImageSeeder::class,
+            PublicationViewSeeder::class
         ]);
     }
 }
