@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Publication;
 use Illuminate\Database\Eloquent\Model;
 
 class PublicationImage extends Model
 {
-    //
+     public function publication()
+    {
+        return $this->belongsTo(Publication::class);
+    }
 }
