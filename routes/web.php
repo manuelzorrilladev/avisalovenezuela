@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\PublicationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -18,7 +17,6 @@ Route::get('dashboard', function () {
 
 //API Routes
 
-Route::get('/api/publications/get-all', [PublicationController::class, 'getAll']);
 
 
 

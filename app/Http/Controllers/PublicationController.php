@@ -61,4 +61,31 @@ class PublicationController extends Controller
             ], 500);
         }
     }
+
+    public function getByCategory($category_slug, $sub_category_slug = '')
+    {
+
+        try {
+            $query = Publication::query()
+                ->with(['category:id,slug', 'subCategory:id,slug','images:id,publication_id,path'])
+                ->whereHas('category', fn($q) => $q->where('name', $category_slug))
+                ->when($sub_category_slug, function ($q) use ($sub_category_slug) {
+                    return $q->whereHas('subCategory', fn($sq) => $sq->where('name', $sub_category_slug));
+                })
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $query
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error("Error cargando las publicaciones: " . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No pudimos cargar las secciones de la página.',
+                'error' => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
+    }
 }
