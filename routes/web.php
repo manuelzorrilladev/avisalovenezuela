@@ -8,12 +8,7 @@ use Laravel\Fortify\Features;
 Route::get('/', [PublicationController::class, 'getAll'])->name('home');
 
 Route::get(
-    '/anuncios/{category_slug}/{sub_category_slug?}',
-    function () {
-        return Inertia::render('ByCategory', [
-            'canRegister' => Features::enabled(Features::registration())
-        ]);
-    }
+    '/anuncios/{category_slug}/{sub_category_slug?}', [PublicationController::class,'getByCategory']
 )->name('search-category');
 
 Route::get('dashboard', function () {

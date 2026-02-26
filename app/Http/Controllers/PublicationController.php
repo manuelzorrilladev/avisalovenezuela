@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Publication;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -46,7 +47,7 @@ class PublicationController extends Controller
 
             return Inertia::render('Welcome', [
                 'canRegister' => Features::enabled(Features::registration()),
-                'homeData' => Inertia::defer(fn () => $homeData),
+                'homeData' => Inertia::defer(fn() => $homeData),
                 'status' => session('status'), // Opcional: para mensajes de éxito
             ]);
         } catch (\Exception $e) {
@@ -65,28 +66,48 @@ class PublicationController extends Controller
     {
 
         try {
-            $query = Publication::query()
-                ->with(['category:id,slug', 'subCategory:id,slug', 'images:id,publication_id,path'])
-                ->whereHas('category', fn($q) => $q->where('name', $category_slug))
-                ->when($sub_category_slug, function ($q) use ($sub_category_slug) {
-                    return $q->whereHas('subCategory', fn($sq) => $sq->where('name', $sub_category_slug));
-                })
-                ->get();
+            $category = Category::where('name', $category_slug)->firstOrFail();
 
+            // If there is a subcategory, we find it too
+            $subCategory = $sub_category_slug
+                ? SubCategory::where('name', $sub_category_slug)->first()
+                : null;
 
+            $cacheKey = "pubs_cat_{$category_slug}" . ($sub_category_slug ? "_sub_{$sub_category_slug}" : "");
 
-            return response()->json([
-                'success' => true,
-                'data' => $query
-            ], 200);
+            $publications = Cache::remember($cacheKey, 600, function () use ($category, $subCategory) {
+                return Publication::query()
+                    ->with(['category:id,slug,name', 'subCategory:id,slug,name', 'images:id,publication_id,path'])
+                    ->where('category_id', $category->id)
+                    ->when($subCategory, function ($q) use ($subCategory) {
+                        return $q->where('sub_category_id', $subCategory->id);
+                    })
+                    ->latest()
+                    ->get();
+            });
+
+            return Inertia::render('ByCategory', [
+                'canRegister' => Features::enabled(Features::registration()),
+                'categoryData' => Inertia::defer(fn() => $publications),
+                'status' => session('status'),
+
+                // Dynamic Props for SEO and UI
+                'title'       => $subCategory ? $subCategory->name : $category->name,
+                'description' => "Explora las mejores publicaciones en {$category->name}" . ($subCategory ? " - {$subCategory->name}" : ""),
+                'url'         => url()->current(), // Generates the full current URL for canonical tag
+
+                'currentFilters' => [
+                    'category' => $category->name,
+                    'sub_category' => $subCategory?->name
+                ]
+            ]);
         } catch (\Exception $e) {
-            Log::error("Error cargando el Home: " . $e->getMessage());
+            Log::error("Error cargando el Home con Inertia: " . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
+            return Inertia::render('Error', [
                 'message' => 'No pudimos cargar las secciones de la página.',
                 'error' => config('app.debug') ? $e->getMessage() : null
-            ], 500);
+            ]);
         }
     }
 }
