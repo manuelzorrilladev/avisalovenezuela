@@ -22,6 +22,10 @@ Route::get('dashboard', function () {
 
 
 
-
+Route::fallback(function (){
+    return Inertia::render('Error', [
+            'canRegister' => Features::enabled(Features::registration())
+        ]);
+    });
 
 require __DIR__ . '/settings.php';
