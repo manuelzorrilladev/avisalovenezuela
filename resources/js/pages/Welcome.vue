@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { Deferred } from '@inertiajs/vue3';
 import PublicationCard from '@/components/shared/Cards/PublicationCard.vue';
 import HeadSEO from '@/components/shared/HeadSEO.vue';
 import Navbar from '@/components/shared/Navbar.vue';
 import type { PublicationCardType } from '@/types/publication';
-import { Deferred } from '@inertiajs/vue3';
 interface QueryProps {
     most_recent?: PublicationCardType[];
     most_viewed?: PublicationCardType[];
@@ -30,7 +29,6 @@ const props = withDefaults(
         image: '/assets/img/avisalo.png',
     },
 );
-const isLoading = ref<boolean>(true);
 </script>
 
 <template>
@@ -104,7 +102,11 @@ const isLoading = ref<boolean>(true);
                     <section
                         class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
                     >
-                        <PublicationCard v-for="item in 9" :key="item" :is-loading="true"/>
+                        <PublicationCard
+                            v-for="item in 9"
+                            :key="item"
+                            :is-loading="true"
+                        />
                     </section>
                 </template>
                 <section
@@ -129,7 +131,7 @@ const isLoading = ref<boolean>(true);
                     v-for="item in homeData['most_viewed']"
                     :key="item.id"
                     :publication="item"
-                    :is-loading="isLoading"
+                    :is-loading="false"
                 />
             </section>
         </div>
