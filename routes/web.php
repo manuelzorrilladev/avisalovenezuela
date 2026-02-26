@@ -1,24 +1,27 @@
 <?php
 
+use App\Http\Controllers\PublicationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::get('/', [PublicationController::class, 'getAll'])->name('home');
+
+Route::get(
+    '/anuncios/{category_slug}/{sub_category_slug?}',
+    function () {
+        return Inertia::render('ByCategory', [
+            'canRegister' => Features::enabled(Features::registration())
+        ]);
+    }
+)->name('search-category');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-//API Routes
 
 
 
-
-
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

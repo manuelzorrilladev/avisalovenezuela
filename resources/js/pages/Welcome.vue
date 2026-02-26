@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import PublicationCard from '@/components/shared/Cards/PublicationCard.vue';
 import HeadSEO from '@/components/shared/HeadSEO.vue';
 import Navbar from '@/components/shared/Navbar.vue';
 import type { PublicationCardType } from '@/types/publication';
-
+import { Deferred } from '@inertiajs/vue3';
 interface QueryProps {
-    most_recent?: PublicationCardType[],
-    most_viewed?: PublicationCardType[],
-    vehicles?: PublicationCardType[],
-    m_service?: PublicationCardType[]
+    most_recent?: PublicationCardType[];
+    most_viewed?: PublicationCardType[];
+    vehicles?: PublicationCardType[];
+    m_service?: PublicationCardType[];
 }
-const publications = ref<QueryProps>({});
 
 const props = withDefaults(
     defineProps<{
@@ -21,6 +19,7 @@ const props = withDefaults(
         description?: string;
         url?: string;
         image?: string;
+        homeData: QueryProps;
     }>(),
     {
         canRegister: true,
@@ -32,34 +31,12 @@ const props = withDefaults(
     },
 );
 const isLoading = ref<boolean>(true);
-
-onMounted(() => {
-    // setTimeout(() => {
-    //     axios
-    //         .get('/api/publications/get-all')
-    //         .then((response) => {
-    //             publications.value = response.data.data;
-    //             isLoading.value = false;
-    //         })
-    //         .catch((error) => {
-    //             console.error('Error fetching publications:', error);
-    //         });
-    // }, 4000);
-    axios
-        .get('/api/publications/get-all')
-        .then((response) => {
-            publications.value = response.data.data;
-            isLoading.value = false;
-        })
-        .catch((error) => {
-            console.error('Error fetching publications:', error);
-        });
-});
 </script>
 
 <template>
     <HeadSEO v-bind="props" />
     <Navbar :can-register="props.canRegister" />
+
     <section
         class="relative h-[45vh] overflow-hidden bg-background md:h-[55vh]"
     >
@@ -122,40 +99,34 @@ onMounted(() => {
             <h2 class="mb-4 text-center text-3xl font-bold">
                 Publicaciones recientes
             </h2>
-            <section
-                v-if="isLoading"
-                class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
-            >
-                <PublicationCard
-                    v-for="item in 9"
-                    :key="item"
-                    :is-loading="isLoading"
-                />
-            </section>
-            <section
-                v-else
-                class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
-            >
-                <PublicationCard
-                    v-for="item in publications['most_recent']"
-                    :key="item.id"
-                    :publication="item"
-                    :is-loading="isLoading"
-                />
-            </section>
+            <Deferred data="homeData">
+                <template #fallback>
+                    <section
+                        class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
+                    >
+                        <PublicationCard v-for="item in 9" :key="item" :is-loading="true"/>
+                    </section>
+                </template>
+                <section
+                    class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
+                >
+                    <PublicationCard
+                        v-for="item in homeData['most_recent']"
+                        :key="item.id"
+                        :publication="item"
+                        :is-loading="false"
+                    />
+                </section>
+            </Deferred>
         </div>
         <div>
-            <h2 class="mb-4 text-center text-3xl font-bold">
-                Más populares            
-                
-            </h2>
-            
+            <h2 class="mb-4 text-center text-3xl font-bold">Más populares</h2>
+
             <section
-              
                 class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
             >
                 <PublicationCard
-                    v-for="item in publications['most_viewed']"
+                    v-for="item in homeData['most_viewed']"
                     :key="item.id"
                     :publication="item"
                     :is-loading="isLoading"
