@@ -24,10 +24,11 @@ defineProps<{
             <div class="h-9 w-24 bg-gray-300 dark:bg-gray-700 rounded-lg"></div>
         </div>
     </div>
-     <div v-else class="w-11/12 md:w-100 hover:scale-105 duration-200 h-fit overflow-hidden rounded-lg  bg-secondary-background shadow-lg shadow-primary/30 border">
+     <Link  v-else class="w-11/12 md:w-100 hover:scale-105 duration-200 h-fit overflow-hidden rounded-lg  bg-secondary-background shadow-lg shadow-primary/30 border">
         <div class="w-full   h-48 flex items-center overflow-hidden">
             <img :src="`/storage/${publication?.images[0].path}`" alt="" class="w-full">
         </div>
+        {{publication }}
 
         <header class="p-2 mb-2">
             <p v-if="keepTag" class="text-xs ">En: {{ publication?.category.name }}</p>
@@ -39,7 +40,7 @@ defineProps<{
             </Link>
         
         </header>
-    </div>
+    </Link >
 </template>
 
 <style scoped>

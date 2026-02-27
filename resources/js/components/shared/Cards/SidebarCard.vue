@@ -11,7 +11,7 @@ import { Form } from '@inertiajs/vue3';
 
     <Form>
         <div class="mb-6">
-            <h4 class="font-brand text-sm uppercase tracking-wider text-black dark:text-primary mb-3">Rango de Precio</h4>
+            <h4 class="font-brand text-sm  text-black dark:text-primary mb-3">Rango de Precio</h4>
             <div class="flex items-center gap-2">
                 <input 
                     type="number" 
@@ -28,7 +28,7 @@ import { Form } from '@inertiajs/vue3';
         </div>
 
         <div class="mb-6">
-            <h4 class="font-brand text-sm uppercase tracking-wider text-black dark:text-primary mb-3">Ubicación</h4>
+            <h4 class="font-brand text-sm  text-black dark:text-primary mb-3">Ubicación</h4>
             <select class="w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-primary focus:border-primary p-2">
                 <option value="">Todas las ciudades</option>
                 <option value="caracas">Caracas</option>
@@ -38,7 +38,7 @@ import { Form } from '@inertiajs/vue3';
         </div>
 
         <div class="mb-6">
-            <h4 class="font-brand text-sm uppercase tracking-wider text-black dark:text-primary mb-3">Especificaciones</h4>
+            <h4 class="font-brand text-sm  text-black dark:text-primary mb-3">Especificaciones</h4>
             
             <div class="space-y-2 mt-2">
                 <label class="flex items-center group cursor-pointer">

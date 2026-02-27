@@ -11,6 +11,11 @@ Route::get(
     '/anuncios/{category_slug}/{sub_category_slug?}', [PublicationController::class,'getByCategory']
 )->name('search-category');
 
+
+Route::get(
+    '/anuncio/{id}', [PublicationController::class,'getDescription']
+)->name('search-category');
+
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
