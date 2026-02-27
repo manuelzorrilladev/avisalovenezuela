@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { Deferred, usePage } from '@inertiajs/vue3';
+import {  useWindowScroll } from '@vueuse/core';
+import { computed } from 'vue';
 import PublicationCard from '@/components/shared/Cards/PublicationCard.vue';
 import SidebarCard from '@/components/shared/Cards/SidebarCard.vue';
-import HeadSEO from '@/components/shared/HeadSEO.vue';
-import Navbar from '@/components/shared/Navbar.vue';
+import CustomLayout from '@/layouts/CustomLayout.vue';
 import type { PublicationCardType } from '@/types/publication';
-
-// const publications = ref<PublicationCardType[]>([]);
-
+const {  y } = useWindowScroll()
+interface FilterType {
+    category:string;
+    sub_category:string;
+}
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -16,6 +18,7 @@ const props = withDefaults(
         description?: string;
         url?: string;
         image?: string;
+        publications: PublicationCardType[];
     }>(),
     {
         canRegister: true,
@@ -27,26 +30,50 @@ const props = withDefaults(
     },
 );
 
-onMounted(() => {
-    // axios
-    //     .get('/api/publications/get-all')
-    //     .then((response) => {
-    //         publications.value = response.data.data;
-    //         isLoading.value = false;
-    //     })
-    //     .catch((error) => {
-    //         console.error('Error fetching publications:', error);
-    //     });
-});
+const filters = usePage().props.currentFilters as FilterType
+const sectionTitle= computed(()=>{
+    let title:string = filters.category
+    if(filters['sub_category'] ){
+        title = `${title} - ${filters['sub_category']}`
+    }
+    return title
+})
+
 </script>
 
 <template>
-    <HeadSEO v-bind="props" />
-    <Navbar :can-register="props.canRegister" />
-    <main>
-        <SidebarCard />
-        <section></section>
-    </main>
+    <CustomLayout v-bind="props">
+        <main class="relative flex w-full justify-center gap-10 px-10 pt-6">
+            <div class="w-[28.3%]">
+                <SidebarCard  :class="y>63?'fixed top-6 w-1/4':'relative w-full'" />
+            </div>
+            <section class="w-3/4 relative">
+
+                <h3 ref="el"  class="font-brand pb-4 text-center text-2xl">{{ sectionTitle }}</h3>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 place-content-center place-items-center">
+                    <Deferred data="publications">
+                        <template #fallback>
+                            <PublicationCard
+                                v-for="item in 9"
+                                :key="item"
+                                :is-loading="true"
+                                :keep-tag="false"
+                            />
+                        </template>
+
+                        <PublicationCard
+                            v-for="item in publications"
+                            :key="item.id"
+                            :publication="item"
+                            :is-loading="false"
+                            :keep-tag="false"
+                        />
+                    </Deferred>
+                </div>
+            </section>
+        </main>
+    </CustomLayout>
+
     <!-- {{ data }} -->
     <!-- <main class="mb-20 space-y-12">
         <div>
