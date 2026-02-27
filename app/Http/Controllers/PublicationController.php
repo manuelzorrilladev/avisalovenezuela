@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Publication;
+use App\Models\SubCategory;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -62,13 +63,12 @@ class PublicationController extends Controller
         }
     }
 
-    public function getByCategory($category_slug, $sub_category_slug = '')
+    public function getByCategory($category_slug, $sub_category_slug = null)
     {
 
         try {
             $category = Category::where('name', $category_slug)->firstOrFail();
 
-            // If there is a subcategory, we find it too
             $subCategory = $sub_category_slug
                 ? SubCategory::where('name', $sub_category_slug)->first()
                 : null;
@@ -88,14 +88,11 @@ class PublicationController extends Controller
 
             return Inertia::render('ByCategory', [
                 'canRegister' => Features::enabled(Features::registration()),
-                'categoryData' => Inertia::defer(fn() => $publications),
+                'publications' => Inertia::defer(fn() => $publications),
                 'status' => session('status'),
-
-                // Dynamic Props for SEO and UI
                 'title'       => $subCategory ? $subCategory->name : $category->name,
                 'description' => "Explora las mejores publicaciones en {$category->name}" . ($subCategory ? " - {$subCategory->name}" : ""),
-                'url'         => url()->current(), // Generates the full current URL for canonical tag
-
+                'url'         => url()->current(),
                 'currentFilters' => [
                     'category' => $category->name,
                     'sub_category' => $subCategory?->name

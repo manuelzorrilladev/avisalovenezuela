@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 // GENERAL ROUTES
 Route::get('/publications/get-all', [PublicationController::class, 'getAll']);
-Route::get('/publications/get/{category}/{sub_category}', [PublicationController::class, 'getByCategory']);
+// Route::get('/publications/get/{category}/{sub_category}', [PublicationController::class, 'getByCategory']);
 
 
 

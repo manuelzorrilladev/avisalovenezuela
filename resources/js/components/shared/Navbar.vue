@@ -28,7 +28,9 @@ const auth = computed(() => page.props.auth);
         <section
             class="flex h-[10vh] items-center justify-between bg-primary dark:bg-black  md:px-10"
         >
+            <Link href="/">
             <AppLogo class="pl-4 md:pl-0 w-48" />
+            </Link>
 
             <div
                 class="text-carbon-black-text flex items-center font-semibold"
@@ -92,61 +94,61 @@ const auth = computed(() => page.props.auth);
                 </div>
 
                 <hr class="my-2 border-black" />
-                <Link  @click="isActive = !isActive"
+                <Link href="/anuncios/inmuebles" @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Inmuebles <ChevronDown
                 /></Link>
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
-                    >Compra y venta
+                <Link href="/anuncios/inmuebles/venta" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                    >Venta
                 </Link>
 
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/inmuebles/alquiler" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Alquiler</Link
                 >
 
-                <Link  @click="isActive = !isActive"
+                <Link href="/anuncios/vehiculos"  @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Vehiculo <ChevronDown
                 /></Link>
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/vehiculos/motos" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Motos</Link
                 >
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/vehiculos/automoviles" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Automoviles</Link
                 >
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/vehiculos/camionetas" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Camionetas</Link
                 >
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/vehiculos/taxis" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Taxis</Link
                 >
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/vehiculos/pesados" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Pesados</Link
                 >
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/vehiculos/otros-vehiculos" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Otros Vehiculos
                 </Link>
-                <Link  @click="isActive = !isActive"
+                <Link href="/anuncios/empleos/"  @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Empleos <ChevronDown />
                 </Link>
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/empleos/empleos-generales" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Empleos generales</Link
                 >
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/empleos/empleos-especializados" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Empleos Especializados</Link
                 >
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/empleos/empleos-de-servicio-domestico" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Empleos de servicio domestico
                 </Link>
-                <Link  @click="isActive = !isActive"
+                <Link href="/anuncios/servicios/"  @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Servicios <ChevronDown />
                 </Link>
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/servicios/servicios-a-domicilio" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Servicios a domicilio</Link
                 >
-                <Link @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link href="/anuncios/servicios/servicios-especializados" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
                     >Servicios Especializados</Link
                 >
                 <hr class="my-2 border-black" />

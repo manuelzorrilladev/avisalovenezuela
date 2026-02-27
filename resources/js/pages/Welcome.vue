@@ -114,6 +114,7 @@ const props = withDefaults(
                             :key="item.id"
                             :publication="item"
                             :is-loading="false"
+                            :keep-tag="true"
                         />
                     </section>
                 </Deferred>
