@@ -33,7 +33,7 @@ defineProps<{
             <p v-if="keepTag" class="text-xs ">En: {{ publication?.category.name }}</p>
             <h2 class="text-lg font-brand">{{publication?.name}}</h2>
             <p class="text-xs font-light pb-2">{{publication?.description}}</p>
-            <Link href="#" class="bg-primary dark:bg-black  hover:bg-white dark:hover:bg-white  text-black dark:text-primary px-3 py-2 rounded-lg text-sm flex items-center gap-1 hover:gap-2 w-fit border border-primary  dark:border-black duration-200 hover:font-semibold">
+            <Link :href="`/anuncio/${publication?.id}`" class="bg-primary dark:bg-black  hover:bg-white dark:hover:bg-white  text-black dark:text-primary px-3 py-2 rounded-lg text-sm flex items-center gap-1 hover:gap-2 w-fit border border-primary  dark:border-black duration-200 hover:font-semibold">
                 Ver más
                 <ArrowRight class=""/>
             </Link>
