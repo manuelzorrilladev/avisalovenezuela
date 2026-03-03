@@ -388,26 +388,26 @@ searchCategory.head = (args: { category_slug: string | number, sub_category_slug
     
     searchCategory.form = searchCategoryForm
 /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:111
+* @see \App\Http\Controllers\PublicationController::viewDescription
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
-export const searchCategory = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: searchCategory.url(args, options),
+export const viewDescription = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: viewDescription.url(args, options),
     method: 'get',
 })
 
-searchCategory.definition = {
+viewDescription.definition = {
     methods: ["get","head"],
     url: '/anuncio/{id}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:111
+* @see \App\Http\Controllers\PublicationController::viewDescription
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
-searchCategory.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
+viewDescription.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
@@ -425,56 +425,56 @@ searchCategory.url = (args: { id: string | number } | [id: string | number ] | s
                         id: args.id,
                 }
 
-    return searchCategory.definition.url
+    return viewDescription.definition.url
             .replace('{id}', parsedArgs.id.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:111
+* @see \App\Http\Controllers\PublicationController::viewDescription
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
-searchCategory.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: searchCategory.url(args, options),
+viewDescription.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: viewDescription.url(args, options),
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:111
+* @see \App\Http\Controllers\PublicationController::viewDescription
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
-searchCategory.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: searchCategory.url(args, options),
+viewDescription.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: viewDescription.url(args, options),
     method: 'head',
 })
 
     /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:111
+* @see \App\Http\Controllers\PublicationController::viewDescription
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
-    const searchCategoryForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-        action: searchCategory.url(args, options),
+    const viewDescriptionForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: viewDescription.url(args, options),
         method: 'get',
     })
 
             /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:111
+* @see \App\Http\Controllers\PublicationController::viewDescription
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
-        searchCategoryForm.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: searchCategory.url(args, options),
+        viewDescriptionForm.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: viewDescription.url(args, options),
             method: 'get',
         })
             /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:111
+* @see \App\Http\Controllers\PublicationController::viewDescription
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
-        searchCategoryForm.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: searchCategory.url(args, {
+        viewDescriptionForm.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: viewDescription.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
                             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -483,7 +483,7 @@ searchCategory.head = (args: { id: string | number } | [id: string | number ] | 
             method: 'get',
         })
     
-    searchCategory.form = searchCategoryForm
+    viewDescription.form = viewDescriptionForm
 /**
  * @see routes/web.php:19
  * @route '/dashboard'

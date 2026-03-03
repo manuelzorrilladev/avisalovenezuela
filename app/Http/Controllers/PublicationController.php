@@ -107,30 +107,37 @@ class PublicationController extends Controller
             ]);
         }
     }
-
     public function getDescription($id)
     {
         try {
+           
+            $publication = Publication::query()
+                ->with([
+                    'category:id,slug,name',
+                    'subCategory:id,slug,name',
+                    'images:id,publication_id,path',
+                    'user:id,name',
+                    'comments' => function ($query) {
+                        $query->with('user:id,name')->latest();
+                    }
+                ])
+                ->findOrFail($id);
 
-            $results = Publication::query()
-                ->with(['category:id,slug,name', 'subCategory:id,slug,name', 'images:id,publication_id,path'])
-                ->where('id', $id)
-                ->get();
-
-            return Inertia::render('Description', [
+            return Inertia::render('Publication', [
                 'canRegister' => Features::enabled(Features::registration()),
-                'results' => $results,
-                'status' => session('status'),
-                'title'       => $results -> name,
-                'description' => $results ->description,
+                'results'     => $publication,
+                'status'      => session('status'),
+                'title'       => $publication->name,
+                'description' => $publication->description,
                 'url'         => url()->current()
             ]);
         } catch (\Exception $e) {
-            Log::error("Error cargando el Home con Inertia: " . $e->getMessage());
+            Log::error("Error cargando la descripción: " . $e->getMessage());
+
 
             return Inertia::render('Error', [
-                'message' => 'No pudimos cargar las secciones de la página.',
-                'error' => config('app.debug') ? $e->getMessage() : null
+                'message' => 'No pudimos cargar la publicación solicitada.',
+                'error'   => config('app.debug') ? $e->getMessage() : null
             ]);
         }
     }

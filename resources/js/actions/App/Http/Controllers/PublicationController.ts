@@ -262,7 +262,7 @@ getByCategory.head = (args: { category_slug: string | number, sub_category_slug?
     getByCategory.form = getByCategoryForm
 /**
 * @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:111
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
 export const getDescription = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -277,7 +277,7 @@ getDescription.definition = {
 
 /**
 * @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:111
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
 getDescription.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -305,7 +305,7 @@ getDescription.url = (args: { id: string | number } | [id: string | number ] | s
 
 /**
 * @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:111
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
 getDescription.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -314,7 +314,7 @@ getDescription.get = (args: { id: string | number } | [id: string | number ] | s
 })
 /**
 * @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:111
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
 getDescription.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -324,7 +324,7 @@ getDescription.head = (args: { id: string | number } | [id: string | number ] | 
 
     /**
 * @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:111
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
     const getDescriptionForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -334,7 +334,7 @@ getDescription.head = (args: { id: string | number } | [id: string | number ] | 
 
             /**
 * @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:111
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
         getDescriptionForm.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -343,7 +343,7 @@ getDescription.head = (args: { id: string | number } | [id: string | number ] | 
         })
             /**
 * @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:111
+ * @see app/Http/Controllers/PublicationController.php:110
  * @route '/anuncio/{id}'
  */
         getDescriptionForm.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

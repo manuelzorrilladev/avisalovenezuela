@@ -14,7 +14,7 @@ Route::get(
 
 Route::get(
     '/anuncio/{id}', [PublicationController::class,'getDescription']
-)->name('search-category');
+)->name('view-description');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
