@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import CustomLayout from '@/layouts/CustomLayout.vue';
 import type { Publication } from '@/types/publication';
-
+import { formatDate } from '@/utils';
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -23,13 +23,11 @@ const props = withDefaults(
 );
 
 
+
 </script>
 
 <template>
     <CustomLayout v-bind="props">
-        {{ results }}
+        {{ formatDate(results.published_at) }}
     </CustomLayout>
-
-
 </template>
-
