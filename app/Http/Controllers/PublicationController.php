@@ -116,7 +116,7 @@ class PublicationController extends Controller
                     'category:id,slug,name',
                     'subCategory:id,slug,name',
                     'images',
-                    'user:id,name,lastname,phone,city,state',
+                    'user:id,name,last_name,phone,created_at',
                     'comments' => function ($query) {
                         $query->with('user:id,name')->latest();
                     }
