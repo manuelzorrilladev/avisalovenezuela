@@ -19,6 +19,7 @@ export interface PublicationCardType {
     views: number;
     created_at: string; 
     category: Category;
+    slug:string;
     images: PublicationImage[];
 }
 
