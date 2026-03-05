@@ -10,6 +10,15 @@ use Illuminate\Database\Seeder;
 
 class PublicationSeeder extends Seeder
 {
+
+    private function slugify($text)
+    {
+        $text = strtolower($text);
+        $text = preg_replace('~[^a-z0-9\-\s]~', '', $text);
+        $text = preg_replace('~[\s-]+~', '-', $text);
+        $text = trim($text, '-');
+        return $text;
+    }
     public function run(): void
     {
         $users = User::all();
@@ -21,21 +30,24 @@ class PublicationSeeder extends Seeder
             $subCategory = $currentCategory->subCategories->random();
             $tag = $subCategory->tags->isNotEmpty() ? $subCategory->tags->random() : null;
             $user = $users->random();
-            $specs =$this->generateSpecs($currentCategory->name);
-            Publication::create([
-                'user_id' => $user->id,
-                'category_id' => $currentCategory->id,
-                'sub_category_id' => $subCategory->id,
-                'tag_id' => $tag?->id,
-                'name' => "Publicación de prueba #$i - " . $currentCategory->name,
-                'description' => "Esta es una descripción detallada para la publicación número $i de la categoría " . $currentCategory->name,
-                'condition' => collect(['nuevo', 'usado', 'n/a'])->random(),
-                'status' => 'disponible',
-                'views' => rand(0, 500),
-                'state' => 'Miranda',
-                'city' => 'Caracas',
-                'specs' => $specs,
-            ]);
+            $specs = $this->generateSpecs($currentCategory->name);
+            $name = "Publicación de prueba #$i - " . $currentCategory->name;
+           
+                Publication::create([
+                    'user_id' => $user->id,
+                    'category_id' => $currentCategory->id,
+                    'sub_category_id' => $subCategory->id,
+                    'tag_id' => $tag?->id,
+                    'name' => $name,
+                    'slug'=> $this->slugify($name),
+                    'description' => "Esta es una descripción detallada para la publicación número $i de la categoría " . $currentCategory->name,
+                    'condition' => collect(['nuevo', 'usado', 'n/a'])->random(),
+                    'status' => 'disponible',
+                    'views' => rand(0, 500),
+                    'state' => 'Miranda',
+                    'city' => 'Caracas',
+                    'specs' => $specs,
+                ]);
         }
     }
 
