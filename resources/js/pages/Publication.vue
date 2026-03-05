@@ -25,9 +25,9 @@ const props = withDefaults(
 
 <template>
     <CustomLayout v-bind="props">
-        <main class="flex justify-center  w-full  gap-4 md:px-6 pt-6">
+        <main class="flex flex-col-reverse md:flex-row items-center md:items-start justify-center  w-full  gap-4 md:px-6 pt-6">
             <aside
-                class="hidden md:flex h-fit min-h-[80vh] w-1/5 flex-col items-center gap-6 rounded-lg border p-6 text-center shadow-lg shadow-primary/30"
+                class="flex h-fit min-h-[80vh] w-11/12 md:w-1/5 flex-col items-center gap-6 rounded-lg border p-6 text-center shadow-lg shadow-primary/30"
             >
                 <div class="group relative h-32 w-32">
                     <img
@@ -130,7 +130,7 @@ const props = withDefaults(
                 </section>
 
                 <section class="w-full space-y-6">
-                    <div class="flex items-start justify-between border-b pb-4">
+                    <div class="flex flex-col md:flex-row items-start justify-between border-b pb-4">
                         <div>
                             <h1 class="text-3xl font-bold text-foreground">
                                 {{ results.name }}
@@ -201,7 +201,7 @@ const props = withDefaults(
                                 <img
                                     src="/assets/img/portrait.png"
                                     alt="User"
-                                    class="h-12 w-12 rounded-full border-2 border-primary/10 object-cover"
+                                    class="h-8 md:h-12 w-8 md:w-12 rounded-full border-2 border-primary/10 object-cover"
                                 />
 
                                 <div class="flex-1">
@@ -234,7 +234,7 @@ const props = withDefaults(
                                             comment.replies &&
                                             comment.replies.length > 0
                                         "
-                                        class="mt-4 ml-8 space-y-4 border-l-2 border-primary/10 pl-6"
+                                        class="mt-4 md:ml-8 space-y-4 border-l-2 border-primary/10 pl-6"
                                     >
                                         <div
                                             v-for="reply in comment.replies"
