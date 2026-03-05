@@ -29,6 +29,11 @@ export interface PublicationCardType {
 export interface User {
     id: number;
     name: string;
+    last_name?:string;
+    phone?:string;
+    created_at?:string;
+    state?:string;
+    city?:string;
 }
 
 /**
@@ -54,6 +59,7 @@ export interface Comment {
     created_at: string;
     updated_at: string;
     user: User;
+    replies:Comment[]
 }
 
 /**

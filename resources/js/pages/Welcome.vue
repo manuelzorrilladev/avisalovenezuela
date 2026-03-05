@@ -119,7 +119,7 @@ const props = withDefaults(
                     </section>
                 </Deferred>
             </div>
-            <div>
+            <!-- <div>
                 <h2 class="mb-4 text-center text-3xl font-bold">
                     Más populares
                 </h2>
@@ -134,7 +134,7 @@ const props = withDefaults(
                         :is-loading="false"
                     />
                 </section>
-            </div>
+            </div> -->
         </main>
     </CustomLayout>
 </template>
