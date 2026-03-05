@@ -21,7 +21,7 @@ class PublicationController extends Controller
 
                 $baseQuery = Publication::query()
                     ->with(['category:id,name', 'images:id,publication_id,path'])
-                    ->select('id', 'name', 'description', 'category_id', 'views', 'created_at');
+                    ->select('id', 'name', 'description', 'category_id', 'views', 'created_at','slug');
 
                 return [
                     'most_recent' => (clone $baseQuery)
@@ -124,7 +124,7 @@ class PublicationController extends Controller
                 'results'     => $publication,
                 'title'       => $publication->name,
                 'description' => $publication->description,
-                'url'         => route('publicacion.show', $publication->slug) 
+                'url'         => url()->current()
             ]);
         } catch (\Exception $e) {
             Log::error("Error cargando la descripción: " . $e->getMessage());
