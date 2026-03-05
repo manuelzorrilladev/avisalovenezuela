@@ -13,7 +13,7 @@ Route::get(
 
 
 Route::get(
-    '/anuncio/{id}', [PublicationController::class,'getDescription']
+    '/anuncio/{publication:slug}', [PublicationController::class,'getDescription']
 )->name('view-description');
 
 Route::get('dashboard', function () {

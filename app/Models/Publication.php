@@ -20,6 +20,17 @@ class Publication extends Model
     ];
 
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($publication) {
+            $publication->slug = \Illuminate\Support\Str::slug($publication->name);
+        });
+
+     
+    }
+
     public function images()
     {
         return $this->hasMany(PublicationImage::class);

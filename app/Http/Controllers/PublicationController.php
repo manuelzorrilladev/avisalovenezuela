@@ -107,38 +107,28 @@ class PublicationController extends Controller
             ]);
         }
     }
-    public function getDescription($id)
+    public function getDescription(Publication $publication)
     {
         try {
-           
-            $publication = Publication::query()
-                ->with([
-                    'category:id,slug,name',
-                    'subCategory:id,slug,name',
-                    'images',
-                    'user:id,name,last_name,phone,created_at',
-                    'comments' => function ($query) {
-                        $query->with('user:id,name')->latest();
-                    }
-                ])
-                ->findOrFail($id);
+            $publication->load([
+                'category:id,slug,name',
+                'subCategory:id,slug,name',
+                'images',
+                'user:id,name,last_name,phone,created_at',
+                'comments' => function ($query) {
+                    $query->with('user:id,name')->latest();
+                }
+            ]);
 
             return Inertia::render('Publication', [
-                'canRegister' => Features::enabled(Features::registration()),
                 'results'     => $publication,
-                'status'      => session('status'),
                 'title'       => $publication->name,
                 'description' => $publication->description,
-                'url'         => url()->current()
+                'url'         => route('publicacion.show', $publication->slug) 
             ]);
         } catch (\Exception $e) {
             Log::error("Error cargando la descripción: " . $e->getMessage());
-
-
-            return Inertia::render('Error', [
-                'message' => 'No pudimos cargar la publicación solicitada.',
-                'error'   => config('app.debug') ? $e->getMessage() : null
-            ]);
+            return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
         }
     }
 }
