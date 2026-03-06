@@ -199,7 +199,7 @@ const auth = computed(() => page.props.auth);
             <section
                 v-if="isActive"
                  @click="isActive = !isActive" 
-                class="fixed top-0 right-0 z-40 flex h-screen w-full flex-col bg-gray-600/50 px-10 py-4 shadow-2xl blur-2xl"
+                class="fixed top-0 right-0 z-40 flex h-screen w-full flex-col bg-gray-900/60 backdrop-blur-sm px-10 py-4 shadow-2xl blur-2xl"
             ></section>
         </Transition>
     </nav>

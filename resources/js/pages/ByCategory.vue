@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Deferred, usePage } from '@inertiajs/vue3';
-import {  useWindowScroll } from '@vueuse/core';
+import {  useWindowScroll, useWindowSize } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import PublicationCard from '@/components/shared/Cards/PublicationCard.vue';
 import SidebarCard from '@/components/shared/Cards/SidebarCard.vue';
@@ -11,6 +11,8 @@ interface FilterType {
     category:string;
     sub_category:string;
 }
+
+const { width } = useWindowSize()
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -54,11 +56,12 @@ function changeModal(){
 
 <template>
     <CustomLayout ref="layoutRef" v-bind="props">
-        <main class="relative flex w-full justify-center gap-10 px-10 pt-6">
-            <div class="w-[28.3%]">
-                <SidebarCard @click="changeModal"  :class="y>63?'fixed top-6 w-1/4':'relative w-full'" />
+        <main class="relative flex flex-col md:flex-row w-full justify-center gap-10 px-4 md:px-10 pt-6">
+            <div class="md:w-[28.3%]">
+                <SidebarCard v-if="width > 768" @click="changeModal"  :class="y>63?'fixed top-6 w-1/4':'relative w-full'" />
+                <SidebarCard v-else @click="changeModal"   />
             </div>
-            <section class="w-3/4 relative pb-10">
+            <section class="w-full md:w-3/4 relative pb-10">
 
                 <h3 ref="el"  class="font-brand pb-4 text-center text-2xl">{{ sectionTitle }}</h3>
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 place-content-center place-items-center">

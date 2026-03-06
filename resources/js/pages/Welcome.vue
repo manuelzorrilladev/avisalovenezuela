@@ -50,7 +50,7 @@ function changeModal(){
                 class="absolute top-0 z-10 flex h-full w-full flex-col items-center justify-center gap-4"
             >
                 <h1
-                    class="w-11/12 text-center font-brand text-xl md:w-10/12 md:text-4xl"
+                    class="w-11/12 md:w-10/12  text-center font-brand text-xl  md:text-4xl"
                 >
                     Todo lo que necesitas, en un solo lugar
                 </h1>
