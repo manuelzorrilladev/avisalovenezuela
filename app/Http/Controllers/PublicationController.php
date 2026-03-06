@@ -133,4 +133,9 @@ class PublicationController extends Controller
             return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
         }
     }
+
+
+
+
+    
 }
