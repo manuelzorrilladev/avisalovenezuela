@@ -138,7 +138,7 @@ const props = withDefaults(
                                 {{ results.name }}
                             </h1>
                             <p class="mt-1 text-sm text-foreground">
-                                Publicado el
+                                Publicado 
                                 {{ formatDate(results.created_at) }}
                             </p>
                         </div>

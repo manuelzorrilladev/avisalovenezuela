@@ -8,7 +8,7 @@ const patternId = computed(
 
 <template>
     <svg
-        class="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20"
+        class="absolute inset-0 size-full stroke-neutral-900/50 dark:stroke-neutral-100/50 "
         fill="none"
     >
         <defs>
@@ -24,7 +24,7 @@ const patternId = computed(
             </pattern>
         </defs>
         <rect
-            stroke="none"
+            class="stroke-neutral-900/50"
             :fill="`url(#${patternId})`"
             width="100%"
             height="100%"

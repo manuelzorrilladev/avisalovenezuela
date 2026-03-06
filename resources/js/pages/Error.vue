@@ -38,7 +38,7 @@ const props = withDefaults(
                         class="absolute inset-0 flex items-center justify-center"
                     >
                         <p
-                            class="mt-10 font-brand text-2xl text-black dark:text-white md:text-4xl"
+                            class="mt-10 font-brand text-2xl text-main md:text-4xl"
                         >
                             ¡Ups! Página perdida
                         </p>
@@ -46,7 +46,7 @@ const props = withDefaults(
                 </div>
 
                 <div class="mt-4 max-w-md text-center relative z-10">
-                    <p class="mb-8 text-lg text-black dark:text-white">
+                    <p class="mb-8 text-lg text-main">
                         Lo sentimos, la publicación que buscas ya no está
                         disponible o el enlace es incorrecto. ¡No te preocupes!
                         Aún hay miles de cosas esperando por ti.

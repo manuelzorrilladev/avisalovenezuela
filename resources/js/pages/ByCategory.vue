@@ -58,7 +58,7 @@ function changeModal(){
             <div class="w-[28.3%]">
                 <SidebarCard @click="changeModal"  :class="y>63?'fixed top-6 w-1/4':'relative w-full'" />
             </div>
-            <section class="w-3/4 relative">
+            <section class="w-3/4 relative pb-10">
 
                 <h3 ref="el"  class="font-brand pb-4 text-center text-2xl">{{ sectionTitle }}</h3>
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 place-content-center place-items-center">
@@ -85,34 +85,5 @@ function changeModal(){
         </main>
     </CustomLayout>
 
-    <!-- {{ data }} -->
-    <!-- <main class="mb-20 space-y-12">
-        <div>
-            <h2 class="mb-4 text-center text-3xl font-bold">
-                Publicaciones recientes
-            </h2>
-            <section
-                v-if="isLoading"
-                class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
-            >
-                <PublicationCard
-                    v-for="item in 9"
-                    :key="item"
-                    :is-loading="isLoading"
-                />
-            </section>
-            <section
-                v-else
-                class="grid grid-cols-1 place-content-center place-items-center gap-y-6 md:grid-cols-2 xl:grid-cols-3"
-            >
-                <PublicationCard
-                    v-for="item in publications"
-                    :key="item.id"
-                    :publication="item"
-                    :is-loading="isLoading"
-                />
-            </section>
-        </div>
-      
-    </main> -->
+   
 </template>

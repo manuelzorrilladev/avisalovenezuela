@@ -103,6 +103,7 @@
   --white: #ffffff;
   --cool-steel: #f0f0f0;
   --carbon-black-text: #1f1f1f;
+  --contrast-text:#fff;
 
   /* Mapeo al sistema de diseño (Light Mode) */
 
@@ -151,6 +152,7 @@
 .dark {
   /* En dark, mantenemos las bases de marca pero ajustamos el fondo */
     --text-primary: white;
+    --contrast-text:white;
 
   --secondary-background: #2c2c2c;
 

@@ -37,14 +37,14 @@ const auth = computed(() => page.props.auth);
             >
                 <div v-if="isDesktop" class="flex items-center space-x-4">
                     <template v-if="auth.user">
-                        <Link  @click="isActive = !isActive"
+                        <Link  
                             :href="dashboard()"
                             class="transition-colors hover:text-white"
                         >
                             Panel de Control
                         </Link>
 
-                        <Link  @click="isActive = !isActive"
+                        <Link  
                             href="/logout"
                             method="post"
                             as="button"
@@ -55,14 +55,14 @@ const auth = computed(() => page.props.auth);
                     </template>
 
                     <template v-else>
-                        <Link  @click="isActive = !isActive"
+                        <Link 
                             :href="login()"
                             class="transition-colors hover:text-white px-4 py-2 border border-white dark:border-primary rounded-md"
                         >
                             Iniciar Sesión
                         </Link>
 
-                        <Link  @click="isActive = !isActive"
+                        <Link 
                             v-if="canRegister"
                             :href="register()"
                             class="rounded-md bg-white text-black dark:text-primary px-4 py-2 shadow-sm transition-all hover:bg-gray-100"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { LayoutGrid } from 'lucide-vue-next';
+import { LayoutGrid,MessageSquareText,ChartNoAxesCombined } from 'lucide-vue-next';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -21,6 +21,16 @@ const mainNavItems: NavItem[] = [
         title: 'Panel de control',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Comentarios',
+        href: '#',
+        icon: MessageSquareText,
+    },
+    {
+        title: 'Métricas',
+        href: '#',
+        icon: ChartNoAxesCombined,
     },
 ];
 
@@ -45,8 +55,8 @@ const mainNavItems: NavItem[] = [
             <NavMain :items="mainNavItems" />
         </SidebarContent>
 
-        <SidebarFooter>
-            <NavUser />
+        <SidebarFooter >
+            <NavUser class="border border-primary rounded-lg"/>
         </SidebarFooter>
     </Sidebar>
     <slot />
