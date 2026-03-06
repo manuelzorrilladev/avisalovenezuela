@@ -9,7 +9,7 @@ import { Form } from '@inertiajs/vue3';
     <h3 class="py-2 font-bold text-gray-800 dark:text-gray-100 font-brand text-xl">Filtros</h3>
     <hr class="border-gray-200 dark:border-gray-800 mb-4">
 
-    <Form>
+    <Form @submit.prevent>
         <div class="mb-6">
             <h4 class="font-brand text-sm  text-black dark:text-primary mb-3">Rango de Precio</h4>
             <div class="flex items-center gap-2">

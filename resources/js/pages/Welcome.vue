@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Deferred } from '@inertiajs/vue3';
+import {  ref } from 'vue'
 import PublicationCard from '@/components/shared/Cards/PublicationCard.vue';
 import CustomLayout from '@/layouts/CustomLayout.vue';
 import type { PublicationCardType } from '@/types/publication';
@@ -28,10 +29,20 @@ const props = withDefaults(
         image: '/assets/img/avisalo.png',
     },
 );
+const layoutRef = ref<InstanceType<typeof CustomLayout> | null>(null);
+function changeModal(){
+    if(layoutRef.value){
+        layoutRef.value.changeModalState()
+
+    } else {
+        console.error("El Layout aún no está listo o no se encontró la ref");
+    }
+}
+
 </script>
 
 <template>
-    <CustomLayout v-bind="props">
+    <CustomLayout ref="layoutRef" v-bind="props">
         <section
             class="relative h-[45vh] overflow-hidden bg-background md:h-[55vh]"
         >
@@ -79,6 +90,7 @@ const props = withDefaults(
                             required
                         />
                         <button
+                         @click="changeModal"
                             type="button"
                             class="hover:bg-brand-strong focus:ring-brand-medium absolute end-1.5 bottom-1.5 box-border cursor-pointer rounded border border-transparent bg-primary px-3 py-1.5 text-xs leading-5 font-medium text-white shadow-xs focus:ring-4 focus:outline-none"
                         >

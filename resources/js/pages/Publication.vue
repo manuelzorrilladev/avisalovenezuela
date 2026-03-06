@@ -21,6 +21,8 @@ const props = withDefaults(
         image: '/assets/img/avisalo.png',
     },
 );
+
+
 </script>
 
 <template>

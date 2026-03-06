@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Deferred, usePage } from '@inertiajs/vue3';
 import {  useWindowScroll } from '@vueuse/core';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import PublicationCard from '@/components/shared/Cards/PublicationCard.vue';
 import SidebarCard from '@/components/shared/Cards/SidebarCard.vue';
 import CustomLayout from '@/layouts/CustomLayout.vue';
@@ -39,13 +39,24 @@ const sectionTitle= computed(()=>{
     return title
 })
 
+const layoutRef = ref<InstanceType<typeof CustomLayout> | null>(null);
+function changeModal(){
+    if(layoutRef.value){
+        layoutRef.value.changeModalState()
+
+    } else {
+        console.error("El Layout aún no está listo o no se encontró la ref");
+    }
+}
+
+
 </script>
 
 <template>
-    <CustomLayout v-bind="props">
+    <CustomLayout ref="layoutRef" v-bind="props">
         <main class="relative flex w-full justify-center gap-10 px-10 pt-6">
             <div class="w-[28.3%]">
-                <SidebarCard  :class="y>63?'fixed top-6 w-1/4':'relative w-full'" />
+                <SidebarCard @click="changeModal"  :class="y>63?'fixed top-6 w-1/4':'relative w-full'" />
             </div>
             <section class="w-3/4 relative">
 
