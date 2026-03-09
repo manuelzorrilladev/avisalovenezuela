@@ -22,7 +22,7 @@ class CommentSeeder extends Seeder
 
         Publication::all()->each(function ($publication) use ($users) {
             
-            $totalMax = rand(1, 5);
+            $totalMax = rand(1, 3);
             $countCreated = 0;
             $rootComments = [];
 

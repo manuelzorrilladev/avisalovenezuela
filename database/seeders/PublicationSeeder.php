@@ -24,7 +24,7 @@ class PublicationSeeder extends Seeder
         $users = User::all();
         $allCategories = Category::with('subCategories.tags')->get();
         $data = [];
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 25; $i++) {
             $currentCategory = $allCategories->random();
 
             $subCategory = $currentCategory->subCategories->random();
