@@ -36,7 +36,7 @@ import { store } from '@/routes/register';
                         autocomplete="name"
                         name="name"
                         placeholder="Pedro Pérez"
-                        class="placeholder:text-text-main"
+                        class="placeholder:text-text-main/50"
                     />
                     <InputError :message="errors.name" />
                 </div>
@@ -51,7 +51,7 @@ import { store } from '@/routes/register';
                         autocomplete="email"
                         name="email"
                         placeholder="email@example.com"
-                        class="placeholder:text-text-main"
+                        class="placeholder:text-text-main/50"
                     />
                     <InputError :message="errors.email" />
                 </div>
@@ -66,7 +66,7 @@ import { store } from '@/routes/register';
                         autocomplete="new-password"
                         name="password"
                         placeholder="●●●●●●●"
-                        class="placeholder:text-text-main"
+                        class="placeholder:text-text-main/50"
                     />
                     <InputError :message="errors.password" />
                 </div>
@@ -81,7 +81,7 @@ import { store } from '@/routes/register';
                         autocomplete="new-password"
                         name="password_confirmation"
                         placeholder="●●●●●●●"
-                        class="placeholder:text-text-main"
+                        class="placeholder:text-text-main/50"
                     />
                     <InputError :message="errors.password_confirmation" />
                 </div>
@@ -98,7 +98,7 @@ import { store } from '@/routes/register';
                 </Button>
             </div>
 
-            <div class="text-center text-sm text-text-main">
+            <div class="text-center text-sm text-text-main/50">
                 ¿Ya estas registrado?
                 <TextLink
                     :href="login()"
