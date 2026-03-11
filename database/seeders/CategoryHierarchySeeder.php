@@ -18,28 +18,35 @@ class CategoryHierarchySeeder extends Seeder
         $structure = [
             'Inmuebles' => [
                 'Venta' => [
-                    'Apartamentos', 'Casas', 'Locales', 'Establecimiento'
+                    'Apartamentos',
+                    'Casas',
+                    'Locales',
+                    'Establecimiento'
                 ],
                 'Alquiler' => [
-                    'Apartamento', 'Habitacion', 'Anexo', 'Local', 'Casa'
+                    'Apartamento',
+                    'Habitación',
+                    'Anexo',
+                    'Local',
+                    'Casa'
                 ],
             ],
-            'Vehiculos' => [
+            'Vehículos' => [
                 'Motos' => [],
-                'Automoviles' => [],
+                'Automóviles' => [],
                 'Camionetas' => [],
                 'Taxis' => [],
                 'Pesados' => [],
-                'Otros Vehiculos' => [],
+                'Otros Vehículos' => [],
             ],
             'Empleos' => [
                 'Empleos generales' => [],
-                'Empleos Especializados' => [],
-                'Empleos de servicio domestico' => [],
+                'Empleos especializados' => [],
+                'Empleos de servicio doméstico' => [],
             ],
             'Servicios' => [
                 'Servicios a domicilio' => [],
-                'Servicios Especializados' => [],
+                'Servicios especializados' => [],
             ],
         ];
 

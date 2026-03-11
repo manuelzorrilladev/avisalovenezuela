@@ -17,19 +17,21 @@ import { Form } from '@inertiajs/vue3';
                     type="number" 
                     placeholder="Min" 
                     class="w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-primary focus:border-primary p-2 "
+                    disabled
                 >
                 <span class="text-gray-500">-</span>
                 <input 
                     type="number" 
                     placeholder="Max" 
                     class="w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-primary focus:border-primary p-2"
+                    disabled
                 >
             </div>
         </div>
 
         <div class="mb-6">
             <h4 class="font-brand text-sm  text-black dark:text-primary mb-3">Ubicación</h4>
-            <select class="w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-primary focus:border-primary p-2">
+            <select class="w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-primary focus:border-primary p-2" disabled>
                 <option value="">Todas las ciudades</option>
                 <option value="caracas">Caracas</option>
                 <option value="maracaibo">Maracaibo</option>

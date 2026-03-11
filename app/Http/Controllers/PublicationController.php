@@ -85,7 +85,7 @@ class PublicationController extends Controller
                     ->latest()
                     ->get();
             });
-
+           
             return Inertia::render('ByCategory', [
                 'canRegister' => Features::enabled(Features::registration()),
                 'publications' => Inertia::defer(fn() => $publications),
@@ -96,7 +96,8 @@ class PublicationController extends Controller
                 'currentFilters' => [
                     'category' => $category->name,
                     'sub_category' => $subCategory?->name
-                ]
+                ],
+                'isEmpty'=>$publications->isEmpty()
             ]);
         } catch (\Exception $e) {
             Log::error("Error cargando el Home con Inertia: " . $e->getMessage());

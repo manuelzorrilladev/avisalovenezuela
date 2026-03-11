@@ -26,6 +26,7 @@ const mainNavItems: NavItem[] = [
         title: 'Comentarios',
         href: '#',
         icon: MessageSquareText,
+        hasMessage:true
     },
     {
         title: 'Métricas',

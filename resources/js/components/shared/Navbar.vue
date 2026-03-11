@@ -26,25 +26,23 @@ const auth = computed(() => page.props.auth);
 <template>
     <nav class="relative">
         <section
-            class="flex h-[10vh] items-center justify-between bg-primary dark:bg-black  md:px-10"
+            class="flex h-[10vh] items-center justify-between bg-primary md:px-10 dark:bg-black"
         >
             <Link href="/">
-            <AppLogo class="pl-4 md:pl-0 w-48" />
+                <AppLogo class="w-48 pl-4 md:pl-0" />
             </Link>
 
-            <div
-                class="text-carbon-black-text flex items-center font-semibold"
-            >
+            <div class="text-carbon-black-text flex items-center font-semibold">
                 <div v-if="isDesktop" class="flex items-center space-x-4">
                     <template v-if="auth.user">
-                        <Link  
+                        <Link
                             :href="dashboard()"
                             class="transition-colors hover:text-white"
                         >
                             Panel de Control
                         </Link>
 
-                        <Link  
+                        <Link
                             href="/logout"
                             method="post"
                             as="button"
@@ -55,27 +53,27 @@ const auth = computed(() => page.props.auth);
                     </template>
 
                     <template v-else>
-                        <Link 
+                        <Link
                             :href="login()"
-                            class="transition-colors hover:text-white px-4 py-2 border border-white dark:border-primary rounded-md"
+                            class="rounded-md border border-white px-4 py-2 transition-colors hover:text-white dark:border-primary"
                         >
                             Iniciar Sesión
                         </Link>
 
-                        <Link 
+                        <Link
                             v-if="canRegister"
                             :href="register()"
-                            class="rounded-md bg-white text-black dark:text-primary px-4 py-2 shadow-sm transition-all hover:bg-gray-100"
+                            class="rounded-md bg-white px-4 py-2 text-black shadow-sm transition-all hover:bg-gray-100 dark:text-primary"
                         >
                             Registrarse
                         </Link>
                     </template>
                 </div>
-                <ThemeChanger class="ml-5"/>
-                <button class="group cursor-pointer p-3 ">
+                <ThemeChanger class="ml-5" />
+                <button class="group cursor-pointer p-3">
                     <Menu
                         @click="isActive = !isActive"
-                        class="size-12 md:size-10 duration-300 group-hover:scale-115"
+                        class="size-12 duration-300 group-hover:scale-115 md:size-10"
                     />
                 </button>
             </div>
@@ -94,74 +92,123 @@ const auth = computed(() => page.props.auth);
                 </div>
 
                 <hr class="my-2 border-black" />
-                <Link href="/anuncios/inmuebles" @click="isActive = !isActive"
+                <Link
+                    href="/anuncios/inmuebles"
+                    @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Inmuebles <ChevronDown
                 /></Link>
-                <Link href="/anuncios/inmuebles/venta" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/inmuebles/venta"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Venta
                 </Link>
 
-                <Link href="/anuncios/inmuebles/alquiler" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/inmuebles/alquiler"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Alquiler</Link
                 >
 
-                <Link href="/anuncios/vehiculos"  @click="isActive = !isActive"
+                <Link
+                    href="/anuncios/vehiculos"
+                    @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
-                    >Vehiculo <ChevronDown
+                    >Vehículo <ChevronDown
                 /></Link>
-                <Link href="/anuncios/vehiculos/motos" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/vehiculos/motos"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Motos</Link
                 >
-                <Link href="/anuncios/vehiculos/automoviles" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
-                    >Automoviles</Link
+                <Link
+                    href="/anuncios/vehiculos/automoviles"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
+                    >Automóviles</Link
                 >
-                <Link href="/anuncios/vehiculos/camionetas" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/vehiculos/camionetas"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Camionetas</Link
                 >
-                <Link href="/anuncios/vehiculos/taxis" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/vehiculos/taxis"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Taxis</Link
                 >
-                <Link href="/anuncios/vehiculos/pesados" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/vehiculos/pesados"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Pesados</Link
                 >
-                <Link href="/anuncios/vehiculos/otros-vehiculos" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
-                    >Otros Vehiculos
+                <Link
+                    href="/anuncios/vehiculos/otros-vehiculos"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
+                    >Otros Vehículos
                 </Link>
-                <Link href="/anuncios/empleos/"  @click="isActive = !isActive"
+                <Link
+                    href="/anuncios/empleos/"
+                    @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Empleos <ChevronDown />
                 </Link>
-                <Link href="/anuncios/empleos/empleos-generales" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/empleos/empleos-generales"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Empleos generales</Link
                 >
-                <Link href="/anuncios/empleos/empleos-especializados" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/empleos/empleos-especializados"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Empleos Especializados</Link
                 >
-                <Link href="/anuncios/empleos/empleos-de-servicio-domestico" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
-                    >Empleos de servicio domestico
+                <Link
+                    href="/anuncios/empleos/empleos-de-servicio-domestico"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
+                    >Empleos de servicio doméstico
                 </Link>
-                <Link href="/anuncios/servicios/"  @click="isActive = !isActive"
+                <Link
+                    href="/anuncios/servicios/"
+                    @click="isActive = !isActive"
                     class="flex items-center gap-3 text-black duration-200 hover:text-white"
                     >Servicios <ChevronDown />
                 </Link>
-                <Link href="/anuncios/servicios/servicios-a-domicilio" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/servicios/servicios-a-domicilio"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Servicios a domicilio</Link
                 >
-                <Link href="/anuncios/servicios/servicios-especializados" @click="isActive = !isActive" class="ml-8 text-black duration-200 hover:text-white"
+                <Link
+                    href="/anuncios/servicios/servicios-especializados"
+                    @click="isActive = !isActive"
+                    class="ml-8 text-black duration-200 hover:text-white"
                     >Servicios Especializados</Link
                 >
                 <hr class="my-2 border-black" />
-                <div v-if="!isDesktop" class=" space-x-4 text-lg">
+                <div v-if="!isDesktop" class="space-x-4 text-lg">
                     <template v-if="auth.user">
-                        <Link  @click="isActive = !isActive"
+                        <Link
+                            @click="isActive = !isActive"
                             :href="dashboard()"
                             class="flex items-center gap-3 text-black duration-200 hover:text-white"
                         >
                             Panel de Control
                         </Link>
 
-                        <Link  @click="isActive = !isActive"
+                        <Link
+                            @click="isActive = !isActive"
                             href="/logout"
                             method="post"
                             as="button"
@@ -172,14 +219,16 @@ const auth = computed(() => page.props.auth);
                     </template>
 
                     <template v-else>
-                        <Link  @click="isActive = !isActive"
+                        <Link
+                            @click="isActive = !isActive"
                             :href="login()"
                             class="flex items-center gap-3 text-black duration-200 hover:text-white"
                         >
                             Iniciar Sesión
                         </Link>
 
-                        <Link  @click="isActive = !isActive"
+                        <Link
+                            @click="isActive = !isActive"
                             v-if="canRegister"
                             :href="register()"
                             class="flex items-center gap-3 text-black duration-200 hover:text-white"
@@ -189,7 +238,8 @@ const auth = computed(() => page.props.auth);
                     </template>
                 </div>
 
-                <Link  @click="isActive = !isActive" 
+                <Link
+                    @click="isActive = !isActive"
                     class="flex items-center gap-3 text-lg text-black underline duration-200 hover:text-white"
                     >Publica tu anuncio
                 </Link>
@@ -198,8 +248,8 @@ const auth = computed(() => page.props.auth);
         <Transition name="show">
             <section
                 v-if="isActive"
-                 @click="isActive = !isActive" 
-                class="fixed top-0 right-0 z-40 flex h-screen w-full flex-col bg-gray-900/60 backdrop-blur-sm px-10 py-4 shadow-2xl blur-2xl"
+                @click="isActive = !isActive"
+                class="fixed top-0 right-0 z-40 flex h-screen w-full flex-col bg-gray-900/60 px-10 py-4 shadow-2xl blur-2xl backdrop-blur-sm"
             ></section>
         </Transition>
     </nav>
