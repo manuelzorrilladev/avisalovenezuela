@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { Deferred, usePage } from '@inertiajs/vue3';
-import { useWindowScroll, useWindowSize } from '@vueuse/core';
-import { computed, ref } from 'vue';
+import { Deferred } from '@inertiajs/vue3';
+import { useWindowScroll } from '@vueuse/core';
+import { reactive } from 'vue';
 import PublicationCard from '@/components/shared/Cards/PublicationCard.vue';
 import SidebarCard from '@/components/shared/Cards/SidebarCard.vue';
 import CustomLayout from '@/layouts/CustomLayout.vue';
 import type { PublicationCardType } from '@/types/publication';
 const { y } = useWindowScroll();
-interface FilterType {
-    category: string;
-    sub_category: string;
-}
 
-const { width } = useWindowSize();
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -21,7 +16,7 @@ const props = withDefaults(
         url?: string;
         image?: string;
         publications: PublicationCardType[];
-        isEmpty:boolean;
+        isEmpty: boolean;
     }>(),
     {
         canRegister: true,
@@ -33,23 +28,16 @@ const props = withDefaults(
     },
 );
 
-const filters = usePage().props.currentFilters as FilterType;
-const sectionTitle = computed(() => {
-    let title: string = filters.category;
-    if (filters['sub_category']) {
-        title = `${title} - ${filters['sub_category']}`;
-    }
-    return title;
+const filterParams = reactive({
+    minPrice: 0,
+    maxPrice: 0,
+    city: 'All',
+    state: 'All',
+    condition: 'All',
+    search: '',
 });
 
-const layoutRef = ref<InstanceType<typeof CustomLayout> | null>(null);
-function changeModal() {
-    if (layoutRef.value) {
-        layoutRef.value.changeModalState();
-    } else {
-        console.error('El Layout aún no está listo o no se encontró la ref');
-    }
-}
+
 </script>
 
 <template>
@@ -57,20 +45,22 @@ function changeModal() {
         <main
             class="relative flex w-full flex-col justify-center gap-10 px-4 pt-6 md:flex-row md:px-10"
         >
-            <div class="x relative md:w-[28.3%]" @click="changeModal">
+            <div class="x relative md:w-[28.3%]">
                 <SidebarCard
-                    v-if="width > 768"
-                    :class="y > 63 ? 'fixed top-6 w-1/4' : 'relative w-full'"
+                    v-model="filterParams"
+                    :class="
+                        y > 63
+                            ? 'md:fixed md:top-6 md:w-1/4'
+                            : 'md:relative md:w-full'
+                    "
                 />
-                <SidebarCard v-else />'
-                <div class="absolute top-0 z-20 h-full w-full"></div>
             </div>
             <section class="relative w-full pb-10 md:w-3/4">
                 <h3 ref="el" class="pb-4 text-center font-brand text-2xl">
-                    {{ sectionTitle }}
+                    {{ title }}
                 </h3>
                 <div
-                    class="grid grid-cols-1 place-content-center place-items-center gap-6 xl:grid-cols-2"
+                    class="grid grid-cols-1 place-content-center place-items-center gap-6 lg:grid-cols-2"
                 >
                     <Deferred data="publications">
                         <template #fallback>
@@ -81,22 +71,20 @@ function changeModal() {
                                 :keep-tag="false"
                             />
                         </template>
-                        <template
-                            v-if="publications && publications.length > 0"
-                        >
-                            <PublicationCard
-                                v-for="item in publications"
-                                :key="item.id"
-                                :publication="item"
-                                :is-loading="false"
-                                :keep-tag="false"
-                            />
-                        </template>
+                        <PublicationCard
+                            v-for="item in publications"
+                            :key="item.id"
+                            :publication="item"
+                            :is-loading="false"
+                            :keep-tag="false"
+                        />
                     </Deferred>
                 </div>
-                <div class="flex items-center justify-center font-bold text-xl text-foreground h-96">
+                <div
+                    v-if="isEmpty"
+                    class="flex h-96 items-center justify-center text-xl font-bold text-foreground"
+                >
                     <h2>No se encontraron resultados :(</h2>
-                
                 </div>
             </section>
         </main>

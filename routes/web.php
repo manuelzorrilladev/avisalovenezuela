@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::get('/', [PublicationController::class, 'getAll'])->name('home');
+Route::get('/', [PublicationController::class, 'getHome'])->name('home');
 
 Route::get(
-    '/anuncios/{category_slug}/{sub_category_slug?}', [PublicationController::class,'getByCategory']
+    '/anuncios/{category_slug?}/{sub_category_slug?}', [PublicationController::class,'getByCategory']
 )->name('search-category');
 
 

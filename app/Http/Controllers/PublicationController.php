@@ -14,7 +14,7 @@ use Laravel\Fortify\Features;
 class PublicationController extends Controller
 {
 
-    public function getAll()
+    public function getHome()
     {
         try {
             $homeData = Cache::remember('home_page_data', 600, function () {
@@ -63,10 +63,17 @@ class PublicationController extends Controller
         }
     }
 
+    public function getAllPaginated(){
+
+    }
+
     public function getByCategory($category_slug, $sub_category_slug = null)
     {
 
         try {
+
+
+
             $category = Category::where('name', $category_slug)->firstOrFail();
 
             $subCategory = $sub_category_slug
@@ -97,7 +104,7 @@ class PublicationController extends Controller
                     'category' => $category->name,
                     'sub_category' => $subCategory?->name
                 ],
-                'isEmpty'=>$publications->isEmpty()
+                'isEmpty'=>$publications->isEmpty(),
             ]);
         } catch (\Exception $e) {
             Log::error("Error cargando el Home con Inertia: " . $e->getMessage());
