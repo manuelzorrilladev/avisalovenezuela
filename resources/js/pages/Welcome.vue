@@ -52,7 +52,7 @@ function changeModal(){
                 <h1
                     class="w-11/12 md:w-10/12  text-center font-brand text-xl  md:text-4xl"
                 >
-                    Todo lo que necesitas, en un solo lugar
+                    Avisa lo que vendes
                 </h1>
                 <p class="w-11/12 text-center md:w-1/3">
                     Consigue todo aquello que necesitas o publica tus bienes y
@@ -60,7 +60,7 @@ function changeModal(){
                 </p>
                 <div class="mx-auto w-11/12 max-w-md md:w-1/3">
                     <div
-                        class="relative overflow-hidden rounded-lg border border-primary bg-card"
+                        class="relative overflow-hidden rounded-lg border border-black dark:border-primary bg-card"
                     >
                         <div
                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3"
@@ -85,14 +85,14 @@ function changeModal(){
                         <input
                             type="search"
                             id="search"
-                            class="border-default-medium text-heading rounded-base focus:ring-brand focus:border-brand placeholder:text-body block w-full border bg-muted-foreground p-3 ps-9 text-sm shadow-xs dark:placeholder:text-black"
+                            class="border-default-medium text-heading rounded-base focus:ring-brand  placeholder:text-body block w-full border bg-muted-foreground p-3 ps-9 text-sm shadow-xs dark:placeholder:text-black"
                             placeholder="Buscar..."
                             required
                         />
                         <button
                          @click="changeModal"
                             type="button"
-                            class="hover:bg-brand-strong focus:ring-brand-medium absolute end-1.5 bottom-1.5 box-border cursor-pointer rounded border border-transparent bg-primary px-3 py-1.5 text-xs leading-5 font-medium text-white shadow-xs focus:ring-4 focus:outline-none"
+                            class="hover:bg-brand-strong focus:ring-brand-medium absolute end-1.5 bottom-1.5 box-border cursor-pointer rounded border border-transparent bg-primary px-3 py-1.5 text-xs leading-5 font-medium text-black shadow-xs focus:ring-4 focus:outline-none"
                         >
                             Buscar
                         </button>

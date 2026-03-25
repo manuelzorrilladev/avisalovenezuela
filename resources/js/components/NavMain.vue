@@ -21,22 +21,45 @@ const { isCurrentUrl } = useCurrentUrl();
     <SidebarGroup class="px-2 py-0">
         <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
         <SidebarMenu>
-            <SidebarMenuItem v-for="item in items" :key="item.title" class="relative border rounded-lg border-primary">
-                <div v-if="item.hasMessage" class="absolute right-3 top-1">
-                    <p class=" bg-red-500  rounded-full text-white text-sm w-6 h-6 text-center relative z-10 p-0.5">1</p>
-                    <p class="absolute top-0 bg-red-500  rounded-full text-white text-sm w-6 h-6 text-center animate-ping ">1</p>
+            <SidebarMenuItem
+                v-for="item in items"
+                :key="item.title"
+                class="relative rounded-lg border border-primary"
+            >
+                <div v-if="item.hasMessage" class="absolute top-1 right-3">
+                    <p
+                        class="relative z-10 h-6 w-6 rounded-full bg-red-500 p-0.5 text-center text-sm text-white"
+                    >
+                        1
+                    </p>
+                    <p
+                        class="absolute top-0 h-6 w-6 animate-ping rounded-full bg-red-500 text-center text-sm text-white"
+                    >
+                        1
+                    </p>
                 </div>
                 <SidebarMenuButton
                     as-child
                     :is-active="isCurrentUrl(item.href)"
                     :tooltip="item.title"
-                    class="hover:bg-primary dark:hover:text-black duration-200"
-                    :class="isCurrentUrl(item.href) ? 'bg-primary dark:bg-primary dark:text-black':'bg-transparent'"
+                    :disabled="item.disabled"
+                    class="duration-200 hover:bg-primary dark:hover:text-black"
+                    :class="[
+                        isCurrentUrl(item.href)
+                            ? 'bg-primary dark:text-black'
+                            : 'bg-transparent',
+                        item.disabled
+                            ? 'pointer-events-none cursor-not-allowed opacity-50'
+                            : '',
+                    ]"
                 >
-                    <Link :href="item.href">
+                    <component
+                        :is="item.disabled ? 'span' : Link"
+                        :href="item.disabled ? null : item.href"
+                    >
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>
-                    </Link>
+                    </component>
                 </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>

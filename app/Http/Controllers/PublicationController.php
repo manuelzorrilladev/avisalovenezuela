@@ -144,6 +144,11 @@ class PublicationController extends Controller
 
 
 
+    public function publicationCreate(){
+         return Inertia::render('PublicationForm');
+    }
+
+
 
     
 }

@@ -26,12 +26,15 @@ const mainNavItems: NavItem[] = [
         title: 'Comentarios',
         href: '#',
         icon: MessageSquareText,
-        hasMessage:true
+        hasMessage:true,
+        disabled:true
+
     },
     {
         title: 'Métricas',
         href: '#',
         icon: ChartNoAxesCombined,
+        disabled:true
     },
 ];
 

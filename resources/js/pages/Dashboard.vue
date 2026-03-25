@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { Eye, PenIcon, Trash, CalendarIcon } from 'lucide-vue-next';
+import {
+    Eye,
+    PenIcon,
+    Trash,
+    CalendarIcon,
+    CirclePlus,
+} from 'lucide-vue-next';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
@@ -29,7 +35,16 @@ function prepareDate(date: string): string {
     <Head title="Panel de control" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex flex-1 flex-col gap-4 rounded-xl p-4">
+        <div class="relative flex flex-1 flex-col gap-4 rounded-xl p-4">
+            <Link href="/dashboard/publicacion/crear"
+                class="group fixed right-6 bottom-4 flex cursor-pointer items-center gap-1 rounded-full bg-primary"
+                title="Crear aviso"
+            >
+                <CirclePlus
+                    class="size-12 rounded-full bg-amber-400 p-2 text-white"
+                />
+            </Link>
+
             <div class="flex flex-col gap-4">
                 <div
                     v-for="item in props.publications"
@@ -59,7 +74,7 @@ function prepareDate(date: string): string {
                                 class="flex items-center gap-1 text-[10px] text-foreground italic opacity-80 sm:text-xs"
                             >
                                 <CalendarIcon class="h-3 w-3" />
-                                <span class="  hidden md:inline"
+                                <span class="hidden md:inline"
                                     >Publicado el</span
                                 >
                                 {{ prepareDate(item.created_at) }}
