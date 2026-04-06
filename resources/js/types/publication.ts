@@ -99,3 +99,44 @@ export interface Publication {
     user: User;
     comments: Comment[];
 }
+
+interface SubCategory {
+    [subCategoryName: string]: string[];
+}
+
+
+export interface CategoryStructure {
+    [categoryName: string]: SubCategory;
+}
+
+
+
+export interface FullTag {
+    id: number;
+    sub_category_id: number;
+    name: string;
+    slug: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface FullSubCategory {
+    id: number;
+    category_id: number;
+    name: string;
+    slug: string;
+    created_at: string;
+    updated_at: string;
+    tags: FullTag[]; 
+}
+
+export interface FullCategory {
+    id: number;
+    name: string;
+    slug: string;
+    icon: string | null;
+    created_at: string;
+    updated_at: string;
+    sub_categories: FullSubCategory[]; // Relación HasMany
+}
+
