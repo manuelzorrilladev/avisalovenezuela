@@ -85,20 +85,22 @@ function prepareDate(date: string): string {
                     <div
                         class="flex w-full items-center justify-end gap-1 border-t border-primary/10 bg-primary/5 px-4 py-2 sm:w-auto sm:gap-2 sm:border-none sm:bg-transparent sm:px-6 sm:py-0"
                     >
-                        <button
+                        <Link
+                            :href="`/anuncio/${item.slug}`"
                             class="cursor-pointer rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
                             title="Ver anuncio"
                         >
                             <Eye class="h-4 w-4 sm:h-5 sm:w-5" />
-                        </button>
+                        </Link>
 
-                        <button
+                        <Link
+                            :href="`dashboard/publicacion/${item.id}/editar`"
                             @click.stop.prevent="console.log('Editar clicked!')"
                             class="cursor-pointer rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
                             title="Editar anuncio"
                         >
                             <PenIcon class="h-4 w-4 sm:h-5 sm:w-5" />
-                        </button>
+                        </Link>
 
                         <button
                             @click.stop.prevent="

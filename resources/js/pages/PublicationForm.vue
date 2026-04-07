@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm,Link } from '@inertiajs/vue3';
 import {
     CameraIcon,
     TrashIcon,
@@ -7,21 +7,23 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
 } from 'lucide-vue-next';
-import { computed, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
+import CityDropdown from '@/components/shared/CityDropdown.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { type FullCategory } from '@/types/publication';
-
+import { type Publication, type FullCategory } from '@/types/publication';
 interface ImagePreview {
     id: string;
-    file: File;
+    file?: File;
     url: string;
+    isExisting?: boolean;
 }
 
 const props = defineProps<{
     categories: FullCategory[];
-    errors:object
+    results?: Publication;
+    isEditing?: boolean;
 }>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -38,15 +40,27 @@ const actualCategory = ref('');
 
 const specsStructure: any = reactive({
     vehiculos: {
-        marca: '',
-        año: '',
-        modelo: '',
-        kilometraje: '',
-        transmision: '',
+        marca: props.results?.specs.marca ?? '',
+        año: props.results?.specs.año ?? '',
+        modelo: props.results?.specs.modelo ?? '',
+        kilometraje: props.results?.specs.kilometraje ?? '',
+        transmision: props.results?.specs.transmision ?? '',
     },
-    inmuebles: { habitaciones: '', baños: '', area: '', estacionamiento: '' },
-    empleos: { tipo_empleo: '', experiencia: '', salario: '' },
-    servicios: { precio_minimo: '', duracion: '' },
+    inmuebles: {
+        habitaciones: props.results?.specs.habitaciones ?? '',
+        baños: props.results?.specs.baños ?? '',
+        area: props.results?.specs.area ?? '',
+        estacionamiento: props.results?.specs.estacionamiento ?? '',
+    },
+    empleos: {
+        tipo_empleo: props.results?.specs.tipo_empleo ?? '',
+        experiencia: props.results?.specs.experiencia ?? '',
+        salario: props.results?.specs.salario ?? '',
+    },
+    servicios: {
+        precio_minimo: props.results?.specs.precio_minimo ?? '',
+        duracion: props.results?.specs.duracion ?? '',
+    },
 });
 
 const labels: Record<string, string> = {
@@ -70,17 +84,17 @@ const labels: Record<string, string> = {
 };
 
 const form = useForm({
-    title: '',
-    category: 0,
-    sub_category: 0,
-    item_type: 0,
-    description: '',
-    price: '',
-    state: '',
-    city: '',
-    condition: 'Usado',
-    specs: {},
+    title: props.results?.name ?? '',
+    category: props.results?.category_id ?? 0,
+    sub_category: props.results?.sub_category_id ?? 0,
+    item_type: props.results?.tag_id ?? 0,
+    description: props.results?.description ?? '',
+    state: props.results?.state ?? '',
+    city: props.results?.city ?? '',
+    condition: props.results?.condition ?? 'Usado',
+    specs: props.results?.specs ?? ({} as any),
     images: [] as File[],
+    existing_images: [] as string[],
 });
 
 const availableSubCategories = computed(() => {
@@ -158,36 +172,60 @@ const setAsCover = (index: number) => {
 };
 
 const syncImagesWithForm = () => {
-    form.images = previews.value.map((p) => p.file);
+    form.images = previews.value
+        .filter((p) => p.file)
+        .map((p) => p.file as File);
+
+    form.existing_images = previews.value
+        .filter((p) => p.isExisting)
+        .map((p) => p.url);
+};
+
+const getSpecError = (key: string) => {
+    return (form.errors as Record<string, string | string[] | undefined>)[
+        `specs.${key}`
+    ];
 };
 
 // =======================
 
-function fillFormDebug() {
-    form.title = 'Titulo de prueba';
-    form.category = 2;
-    form.sub_category = 4;
-    form.item_type = 1;
-    form.description = 'asdasd';
-    form.price = '54545';
-    form.state = 'adasd';
-    form.city = 'asdasd';
-    form.condition = 'Usado';
-}
-
 const submit = () => {
     form.specs = specsStructure[actualCategory.value];
-    console.log(form);
 
-    form.post('/publicacion/crear', {
+    const url = props.isEditing
+        ? `/dashboard/publicacion/${props.results?.id}`
+        : '/dashboard/publicacion';
+   
+    form.post(url, {
         forceFormData: true,
         preserveScroll: true,
+        _method: props.isEditing ? 'put' : 'post',
         onSuccess: () => {
-            form.reset();
-            previews.value = [];
+            if (!props.isEditing) {
+                form.reset();
+                previews.value = [];
+            }
         },
     });
 };
+
+onMounted(() => {
+    if (props.results) {
+        actualCategory.value = props.categories[form.category - 1].slug;
+
+        if (props.results.images && Array.isArray(props.results.images)) {
+            props.results.images.map((object) => {
+                const itemToPush: ImagePreview = {
+                    id: 'object.id',
+                    url: `/storage/${object.path}`,
+                    isExisting: object.isExisting,
+                };
+
+                previews.value.push(itemToPush);
+            });
+        }
+    }
+});
 </script>
 
 <template>
@@ -200,10 +238,9 @@ const submit = () => {
                     class="rounded-xl border border-primary/50 bg-secondary-background/50 p-6 shadow-md shadow-primary/10"
                 >
                     <h3
-                        @click="fillFormDebug()"
                         class="mb-6 border-b border-primary/20 pb-2 font-brand text-xl font-bold"
                     >
-                        Información del Anuncio {{ form }}
+                        Información del Anuncio 
                     </h3>
 
                     <div class="flex flex-col gap-6">
@@ -214,9 +251,17 @@ const submit = () => {
                             <input
                                 v-model="form.title"
                                 type="text"
-                                placeholder="Ej. Vendo Toyota Corolla 2015 en Chacao"
+                                placeholder="Ej. Vendo Toyota Corolla 2015"
                                 class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 transition-all outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                                :class="{
+                                    'border-red-500': form.errors.title,
+                                }"
                             />
+                            <span
+                                v-if="form.errors.title"
+                                class="text-xs text-red-500"
+                                >{{ form.errors.title }}</span
+                            >
                         </div>
 
                         <div
@@ -224,12 +269,15 @@ const submit = () => {
                         >
                             <div class="flex w-full flex-col gap-2 md:w-1/2">
                                 <label class="text-sm font-semibold italic"
-                                    >Categoría {{ form.category }}
+                                    >Categoría
                                 </label>
                                 <select
                                     v-model="form.category"
                                     @change="onCategoryChange"
                                     class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 transition-all outline-none focus:border-primary"
+                                    :class="{
+                                        'border-red-500': form.errors.category,
+                                    }"
                                 >
                                     <option value="0" disabled>
                                         Selecciona una opción
@@ -242,6 +290,11 @@ const submit = () => {
                                         {{ subs.name }}
                                     </option>
                                 </select>
+                                <span
+                                    v-if="form.errors.category"
+                                    class="text-xs text-red-500"
+                                    >{{ form.errors.category }}</span
+                                >
                             </div>
 
                             <div class="flex w-full flex-col gap-2 md:w-1/2">
@@ -253,6 +306,10 @@ const submit = () => {
                                     :disabled="!form.category"
                                     @change="onSubCategoryChange"
                                     class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 transition-all outline-none focus:border-primary disabled:opacity-50"
+                                    :class="{
+                                        'border-red-500':
+                                            form.errors.sub_category,
+                                    }"
                                 >
                                     <option value="0" default disabled>
                                         Primero elige una categoría
@@ -265,6 +322,11 @@ const submit = () => {
                                         {{ sub.name }}
                                     </option>
                                 </select>
+                                <span
+                                    v-if="form.errors.sub_category"
+                                    class="text-xs text-red-500"
+                                    >{{ form.errors.sub_category }}</span
+                                >
                             </div>
                         </div>
 
@@ -278,8 +340,11 @@ const submit = () => {
                             <select
                                 v-model="form.item_type"
                                 class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 transition-all outline-none focus:border-primary"
+                                :class="{
+                                    'border-red-500': form.errors.item_type,
+                                }"
                             >
-                                <option value="0" disabled>
+                                <option value="1" disabled>
                                     Selecciona el tipo
                                 </option>
                                 <option
@@ -290,6 +355,11 @@ const submit = () => {
                                     {{ type.name }}
                                 </option>
                             </select>
+                            <span
+                                v-if="form.errors.item_type"
+                                class="text-xs text-red-500"
+                                >{{ form.errors.item_type }}</span
+                            >
                         </div>
 
                         <div class=" ">
@@ -382,49 +452,74 @@ const submit = () => {
                                     accept="image/*"
                                     multiple
                                     @change="handleFileSelect"
+                                    :class="{
+                                        'border-red-500': form.errors.images,
+                                    }"
                                 />
                             </label>
+                            <span
+                                v-if="form.errors.images"
+                                class="mt-1 block text-xs text-red-500"
+                                >{{ form.errors.images }}</span
+                            >
                         </div>
 
                         <!--  -->
 
                         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                            <div class="flex flex-col gap-2">
-                                <label class="text-sm font-semibold italic"
-                                    >Estado (Ubicación)</label
-                                >
-                                <input
+                            <div>
+                                <CityDropdown
+                                    type="state"
                                     v-model="form.state"
-                                    type="text"
-                                    placeholder="Ej. Miranda"
-                                    class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 outline-none focus:border-primary"
+                                    @update:model-value="form.city = ''"
+                                    :class="{
+                                        'border-red-500': form.errors.state,
+                                    }"
                                 />
-                            </div>
-                            <div class="flex flex-col gap-2">
-                                <label class="text-sm font-semibold italic"
-                                    >Ciudad</label
+                                <span
+                                    v-if="form.errors.state"
+                                    class="text-xs text-red-500"
+                                    >{{ form.errors.state }}</span
                                 >
-                                <input
-                                    v-model="form.city"
-                                    type="text"
-                                    placeholder="Ej. Caracas"
-                                    class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 outline-none focus:border-primary"
-                                />
                             </div>
+                            <div>
+                                <CityDropdown
+                                    type="city"
+                                    v-model="form.city"
+                                    :selected-state="form.state"
+                                    :class="{
+                                        'border-red-500': form.errors.city,
+                                    }"
+                                />
+                                <span
+                                    v-if="form.errors.city"
+                                    class="text-xs text-red-500"
+                                    >{{ form.errors.city }}</span
+                                >
+                            </div>
+
                             <div class="flex flex-col gap-2">
                                 <label class="text-sm font-semibold italic"
-                                    >Condición</label
+                                    >Condición </label
                                 >
                                 <select
                                     v-model="form.condition"
                                     class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 outline-none focus:border-primary"
+                                    :class="{
+                                        'border-red-500': form.errors.condition,
+                                    }"
                                 >
-                                    <option value="Nuevo">Nuevo</option>
-                                    <option value="Usado">Usado</option>
+                                    <option value="nuevo">Nuevo</option>
+                                    <option value="usado">Usado</option>
                                     <option value="N/A">
                                         No aplica / Servicio
                                     </option>
                                 </select>
+                                <span
+                                    v-if="form.errors.condition"
+                                    class="text-xs text-red-500"
+                                    >{{ form.errors.condition }}</span
+                                >
                             </div>
                         </div>
 
@@ -435,10 +530,21 @@ const submit = () => {
                             >
                             <textarea
                                 v-model="form.description"
+                                maxlength="255"
                                 rows="3"
                                 class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 outline-none focus:border-primary"
                                 placeholder="Publica la descripción de tu producto/servicio."
                             ></textarea>
+                            <span
+                                class="text-xs opacity-40"
+                                :class="
+                                    form.description.length == 255
+                                        ? 'text-red-500'
+                                        : ''
+                                "
+                                >{{ form.description.length }}/255 (Min
+                                20)</span
+                            >
                         </div>
 
                         <div
@@ -460,35 +566,33 @@ const submit = () => {
                                         specsStructure[actualCategory][key]
                                     "
                                     type="text"
-                                    placeholder="Ej. Caracas"
+                                    placeholder="..."
                                     class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 outline-none focus:border-primary"
+                                    :class="[
+                                        'w-full rounded-lg border bg-background px-4 py-2 transition-all outline-none focus:border-primary',
+                                        getSpecError(key as string)
+                                            ? 'border-red-500'
+                                            : 'border-primary/30',
+                                    ]"
                                 />
+                                <span
+                                    v-if="getSpecError(key as string)"
+                                    class="text-xs font-medium text-red-500"
+                                >
+                                    {{ getSpecError(key as string) }}
+                                </span>
                             </div>
                         </div>
-
-                        <!-- specsStructure[actualCategory]
-                        <div>
-                            <label
-                                class="mb-2 block text-sm font-semibold text-foreground italic"
-                                >Especificaciones Técnicas (Opcional)</label
-                            >
-                            <textarea
-                                v-model="form.specs"
-                                rows="3"
-                                class="w-full rounded-lg border border-primary/30 bg-background px-4 py-2 outline-none focus:border-primary"
-                                placeholder="Ej. Motor 2.0, Kilometraje 50.000, 3 Habitaciones..."
-                            ></textarea>
-                        </div> -->
                     </div>
                 </div>
 
                 <div class="flex items-center justify-end gap-4 pt-4">
-                    <button
-                        type="button"
+                    <Link
+                        href="/dashboard"
                         class="px-6 py-2 font-semibold text-foreground hover:underline"
                     >
                         Cancelar
-                    </button>
+                    </Link>
 
                     <button
                         type="submit"

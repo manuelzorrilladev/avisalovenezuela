@@ -64,4 +64,5 @@ const mainNavItems: NavItem[] = [
         </SidebarFooter>
     </Sidebar>
     <slot />
+    
 </template>
