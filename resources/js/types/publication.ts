@@ -9,6 +9,7 @@ export interface PublicationImage {
     id: number;
     publication_id: number;
     path: string;
+    isExisting?: boolean;
 }
 
 export interface PublicationCardType {
@@ -17,9 +18,9 @@ export interface PublicationCardType {
     description: string;
     category_id: number;
     views: number;
-    created_at: string; 
+    created_at: string;
     category: Category;
-    slug:string;
+    slug: string;
     images: PublicationImage[];
 }
 
@@ -29,11 +30,11 @@ export interface PublicationCardType {
 export interface User {
     id: number;
     name: string;
-    last_name?:string;
-    phone?:string;
-    created_at?:string;
-    state?:string;
-    city?:string;
+    last_name?: string;
+    phone?: string;
+    created_at?: string;
+    state?: string;
+    city?: string;
 }
 
 /**
@@ -44,8 +45,6 @@ export interface CategoryInfo {
     slug: string;
     name: string;
 }
-
-
 
 /**
  * Nested Comments with their authors
@@ -59,7 +58,7 @@ export interface Comment {
     created_at: string;
     updated_at: string;
     user: User;
-    replies:Comment[]
+    replies: Comment[];
 }
 
 /**
@@ -70,7 +69,7 @@ export interface Specs {
     baños?: number;
     habitaciones?: number;
     estacionamiento?: number;
-    [key: string]: any; 
+    [key: string]: any;
 }
 
 /**
@@ -104,12 +103,9 @@ interface SubCategory {
     [subCategoryName: string]: string[];
 }
 
-
 export interface CategoryStructure {
     [categoryName: string]: SubCategory;
 }
-
-
 
 export interface FullTag {
     id: number;
@@ -127,7 +123,7 @@ export interface FullSubCategory {
     slug: string;
     created_at: string;
     updated_at: string;
-    tags: FullTag[]; 
+    tags: FullTag[];
 }
 
 export interface FullCategory {
@@ -139,4 +135,3 @@ export interface FullCategory {
     updated_at: string;
     sub_categories: FullSubCategory[]; // Relación HasMany
 }
-

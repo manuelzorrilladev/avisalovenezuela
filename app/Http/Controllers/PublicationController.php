@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Publication;
 use App\Models\SubCategory;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -167,11 +167,10 @@ class PublicationController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|min:5|max:100',
-            'category_id'  => 'required|exists:categories,id',
-            'sub_category_id' => 'required|exists:sub_categories,id',
-            'item_type_id' => 'nullable|exists:item_types,id',
+            'category'  => 'required|exists:categories,id',
+            'sub_category' => 'required|exists:sub_categories,id',
+            'item_type' => ['nullable', 'required_if:category,1|exists:tags,id'],
             'description' => 'required|string|min:20',
-            'price' => 'required|numeric|min:0',
             'state' => 'required|string',
             'city' => 'required|string',
             'condition' => 'required|in:Nuevo,Usado,N/A',
@@ -190,7 +189,7 @@ class PublicationController extends Controller
 
             'specs.tipo_empleo' => 'required_if:actualCategory,empleos|string',
             'specs.experiencia' => 'required_if:actualCategory,empleos|string',
-            'specs.salario'     => 'required|string', // A veces es "A convenir"
+            'specs.salario'     => 'required_if:actualCategory,empleos|string',
 
             'specs.precio_minimo' => 'required_if:actualCategory,servicios|numeric|min:0',
             'specs.duracion'      => 'required_if:actualCategory,servicios|string',
@@ -203,17 +202,16 @@ class PublicationController extends Controller
             return DB::transaction(function () use ($request, $validated) {
                 $user = Auth::user();
 
-                // 2. Crear la publicación principal
-                // Usamos Str::slug() para generar el slug único
+                $tag_validate = $validated['category'] == 1 ? $validated['item_type'] : null;
+
                 $publication = Publication::create([
                     'user_id'         => $user->id,
-                    'title'           => $validated['title'],
+                    'name'            => $validated['title'],
                     'slug'            => Str::slug($validated['title']) . '-' . Str::random(5), // Slug único
-                    'category_id'     => $validated['category_id'],
-                    'sub_category_id' => $validated['sub_category_id'],
-                    'item_type_id'    => $validated['item_type_id'] ?? null,
+                    'category_id'     => $validated['category'] ?? 0,
+                    'sub_category_id' => $validated['sub_category'] ?? 0,
+                    'tag_id'          => $tag_validate,
                     'description'     => $validated['description'],
-                    'price'           => $validated['price'],
                     'state'           => $validated['state'],
                     'city'            => $validated['city'],
                     'condition'       => $validated['condition'],
@@ -226,7 +224,7 @@ class PublicationController extends Controller
 
                         $publication->images()->create([
                             'path'       => $path,
-                            'is_cover'   => $index === 0,
+                            'is_featured'   => $index === 0,
                             'sort_order' => $index
                         ]);
                     }
@@ -236,6 +234,127 @@ class PublicationController extends Controller
             });
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Error al procesar: ' . $e->getMessage()]);
+        }
+    }
+
+    public function publicationEdit(Publication $publication)
+    {
+        try {
+            $publication->load([
+                'category:id,slug,name',
+                'subCategory:id,slug,name',
+                'images',
+            ]);
+            $categories = Category::with(['subCategories.tags'])->get();
+
+
+            return Inertia::render('PublicationForm', [
+                'results'     => $publication,
+                'categories' => $categories,
+                'isEditing'   => true
+
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error cargando la descripción: " . $e->getMessage());
+            return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
+        }
+    }
+
+
+
+    public function publicationUpdate(Request $request, Publication $publication)
+    {
+
+        $validated = $request->validate([
+            'title' => 'required|string|min:5|max:100',
+            'category'  => 'required|exists:categories,id',
+            'sub_category' => 'required|exists:sub_categories,id',
+            'item_type' => ['nullable', 'required_if:category,1|exists:tags,id'],
+            'description' => 'required|string|min:20',
+            'state' => 'required|string',
+            'city' => 'required|string',
+            'condition' => 'required|in:Nuevo,Usado,N/A',
+            'images' => 'nullable|array|max:5',
+            'existing_images' => 'nullable|array',
+
+            'specs.marca'       => 'required_if:actualCategory,vehiculos|string|max:50',
+            'specs.año'         => 'required_if:actualCategory,vehiculos|numeric|digits:4',
+            'specs.modelo'      => 'required_if:actualCategory,vehiculos|string|max:50',
+            'specs.kilometraje' => 'required_if:actualCategory,vehiculos|numeric|min:0',
+            'specs.transmision' => 'required_if:actualCategory,vehiculos|string',
+
+            'specs.habitaciones'    => 'required_if:actualCategory,inmuebles|numeric|min:0',
+            'specs.baños'           => 'required_if:actualCategory,inmuebles|numeric|min:0',
+            'specs.area'            => 'required_if:actualCategory,inmuebles|numeric|min:1',
+            'specs.estacionamiento' => 'required_if:actualCategory,inmuebles|numeric|min:0',
+
+            'specs.tipo_empleo' => 'required_if:actualCategory,empleos|string',
+            'specs.experiencia' => 'required_if:actualCategory,empleos|string',
+            'specs.salario'     => 'required_if:actualCategory,empleos|string',
+
+            'specs.precio_minimo' => 'required_if:actualCategory,servicios|numeric|min:0',
+            'specs.duracion'      => 'required_if:actualCategory,servicios|string',
+        ]);
+
+
+        try {
+            return DB::transaction(function () use ($request, $validated, $publication) {
+
+                // 2. Actualizar datos básicos
+                $tag_validate = $validated['category'] == 1 ? $validated['item_type'] : null;
+
+                $publication->update([
+                    'name'            => $validated['title'],
+                    'category_id'     => $validated['category'],
+                    'sub_category_id' => $validated['sub_category'],
+                    'tag_id'          => $tag_validate,
+                    'description'     => $validated['description'],
+                    'state'           => $validated['state'],
+                    'city'            => $validated['city'],
+                    'condition'       => $validated['condition'],
+                    'specs'           => $request->specs,
+                ]);
+
+                // 3. Gestión de Imágenes existentes (Borrado de las que el usuario quitó)
+                $keepItems = $request->input('existing_images', []); // URLs que el usuario conservó
+
+                // Obtenemos las imágenes actuales en DB que NO están en la lista de "conservar"
+                $imagesToDelete = $publication->images()
+                    ->whereNotIn('path', array_map(fn($url) => str_replace('/storage/', '', parse_url($url, PHP_URL_PATH)), $keepItems))
+                    ->get();
+
+                foreach ($imagesToDelete as $img) {
+                    Storage::disk('public')->delete($img->path);
+                    $img->delete();
+                }
+
+                // 4. Subida de Imágenes Nuevas
+                if ($request->hasFile('images')) {
+                    foreach ($request->file('images') as $file) {
+                        $path = $file->store("publications/{$publication->id}", 'public');
+
+                        $publication->images()->create([
+                            'path' => $path,
+                            'is_featured' => false, // Luego podemos reordenar
+                            'sort_order' => 99 // Temporal
+                        ]);
+                    }
+                }
+
+                // 5. Reordenar y definir Portada (Importante para la lógica de tu galería)
+                // Esto asegura que la primera imagen en la lista de la UI sea la 'featured'
+                $allImages = $publication->images()->orderBy('id', 'asc')->get();
+                foreach ($allImages as $index => $image) {
+                    $image->update([
+                        'is_featured' => $index === 0,
+                        'sort_order' => $index
+                    ]);
+                }
+
+                return redirect()->route('dashboard')->with('success', 'Publicación actualizada correctamente.');
+            });
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error al actualizar: ' . $e->getMessage()]);
         }
     }
 }
