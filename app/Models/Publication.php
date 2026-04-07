@@ -19,6 +19,21 @@ class Publication extends Model
         'specs' => 'array',
     ];
 
+    protected $fillable = [
+        'user_id',
+        'name',
+        'slug',
+        'category_id',
+        'sub_category_id',
+        'tag_id',
+        'description',
+        'price',
+        'state',
+        'city',
+        'condition',
+        'specs'
+    ];
+
 
     protected static function boot()
     {
@@ -27,8 +42,6 @@ class Publication extends Model
         static::creating(function ($publication) {
             $publication->slug = \Illuminate\Support\Str::slug($publication->name);
         });
-
-     
     }
 
     public function images()
@@ -49,6 +62,10 @@ class Publication extends Model
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
+    }
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class);
     }
     public function userRelations()
     {

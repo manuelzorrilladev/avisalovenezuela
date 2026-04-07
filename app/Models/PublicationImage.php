@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class PublicationImage extends Model
 {
-     public function publication()
+
+    protected $fillable = [
+        'path',
+        'is_featured',
+        'sort_order',
+
+    ];
+    public function publication()
     {
         return $this->belongsTo(Publication::class);
     }
