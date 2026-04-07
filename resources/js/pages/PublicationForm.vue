@@ -118,7 +118,6 @@ const onCategoryChange = () => {
     form.sub_category = 0;
     form.item_type = 0;
     actualCategory.value = props.categories[form.category - 1].slug;
-    console.log('changed');
 };
 
 const onSubCategoryChange = () => {
@@ -177,8 +176,9 @@ const syncImagesWithForm = () => {
         .map((p) => p.file as File);
 
     form.existing_images = previews.value
-        .filter((p) => p.isExisting)
+        .filter((p) => !p.file) 
         .map((p) => p.url);
+        
 };
 
 const getSpecError = (key: string) => {
@@ -187,43 +187,64 @@ const getSpecError = (key: string) => {
     ];
 };
 
-// =======================
 
 const submit = () => {
+    syncImagesWithForm();
     form.specs = specsStructure[actualCategory.value];
 
-    const url = props.isEditing
-        ? `/dashboard/publicacion/${props.results?.id}`
+
+    const url = props.isEditing 
+        ? `/dashboard/publicacion/${props.results?.id}` 
         : '/dashboard/publicacion';
-   
-    form.post(url, {
-        forceFormData: true,
-        preserveScroll: true,
-        _method: props.isEditing ? 'put' : 'post',
-        onSuccess: () => {
-            if (!props.isEditing) {
-                form.reset();
-                previews.value = [];
-            }
-        },
-    });
+
+    
+    if (props.isEditing) {
+        form.transform((data) => ({
+            ...data,
+            _method: 'PUT',
+        })).post(url, {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: handleSuccess,
+        });
+    } else {
+        form.post(url, {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: handleSuccess,
+        });
+    }
+};
+
+const handleSuccess = () => {
+    if (!props.isEditing) {
+        form.reset();
+        previews.value = [];
+    }
 };
 
 onMounted(() => {
+    syncImagesWithForm()
+
+
     if (props.results) {
         actualCategory.value = props.categories[form.category - 1].slug;
 
         if (props.results.images && Array.isArray(props.results.images)) {
-            props.results.images.map((object) => {
+            previews.value = [];
+            props.results.images.map((object,index) => {
                 const itemToPush: ImagePreview = {
-                    id: 'object.id',
+                    id: index.toLocaleString(),
                     url: `/storage/${object.path}`,
-                    isExisting: object.isExisting,
+                    isExisting: true,
                 };
 
                 previews.value.push(itemToPush);
             });
+            syncImagesWithForm();
         }
+
+        
     }
 });
 </script>

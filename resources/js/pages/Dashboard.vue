@@ -44,7 +44,6 @@ function prepareDate(date: string): string {
                     class="size-12 rounded-full bg-amber-400 p-2 text-white"
                 />
             </Link>
-
             <div class="flex flex-col gap-4">
                 <div
                     v-for="item in props.publications"
@@ -65,6 +64,7 @@ function prepareDate(date: string): string {
                         <div
                             class="flex min-w-0 flex-1 flex-col space-y-1 px-3 sm:px-4"
                         >
+
                             <h2
                                 class="line-clamp-2 font-brand text-sm font-bold text-foreground sm:line-clamp-1 sm:text-base"
                             >
@@ -95,7 +95,6 @@ function prepareDate(date: string): string {
 
                         <Link
                             :href="`dashboard/publicacion/${item.id}/editar`"
-                            @click.stop.prevent="console.log('Editar clicked!')"
                             class="cursor-pointer rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
                             title="Editar anuncio"
                         >
