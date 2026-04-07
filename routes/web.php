@@ -38,11 +38,11 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         
         Route::post('/publicacion', 'publicationStore')->name('publicacion.store');
         
-        Route::get('/publicacion/{publication}/editar', 'publicationEdit')->name('publicacion.edit');
+        Route::get('/publicacion/{publication:id}/editar', 'publicationEdit')->name('publicacion.edit');
         
-        Route::put('/publicacion/{publication}', 'publicationUpdate')->name('publicacion.update');
+        Route::put('/publicacion/{publication:id}', 'publicationUpdate')->name('publicacion.update');
         
-        Route::patch('/publicacion/{publication}/status', 'toggleStatus')->name('publicacion.status');
+        Route::patch('/publicacion/{publication_id}/status', 'toggleStatus')->name('publicacion.status');
         
         // Eliminar (opcional, si no usas solo desactivar)
         // Route::delete('/publicacion/{publication}', 'destroy')->name('publicacion.destroy');
