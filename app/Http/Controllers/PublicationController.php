@@ -173,7 +173,7 @@ class PublicationController extends Controller
             'description' => 'required|string|min:20',
             'state' => 'required|string',
             'city' => 'required|string',
-            'condition' => 'required|in:Nuevo,Usado,N/A',
+            'condition' => 'required|in:nuevo,usado,N/A',
             'images' => 'required|array|min:1|max:5',
 
             'specs.marca'       => 'required_if:actualCategory,vehiculos|string|max:50',
@@ -194,7 +194,6 @@ class PublicationController extends Controller
             'specs.precio_minimo' => 'required_if:actualCategory,servicios|numeric|min:0',
             'specs.duracion'      => 'required_if:actualCategory,servicios|string',
         ]);
-
 
 
         try {
@@ -273,7 +272,7 @@ class PublicationController extends Controller
             'description' => 'required|string|min:20',
             'state' => 'required|string',
             'city' => 'required|string',
-            'condition' => 'required|in:Nuevo,Usado,N/A',
+            'condition' => 'required|in:nuevo,usado,N/A',
             'images' => 'nullable|array|max:5',
             'existing_images' => 'nullable|array',
 
@@ -300,7 +299,6 @@ class PublicationController extends Controller
         try {
             return DB::transaction(function () use ($request, $validated, $publication) {
 
-                // 2. Actualizar datos básicos
                 $tag_validate = $validated['category'] == 1 ? $validated['item_type'] : null;
 
                 $publication->update([
@@ -315,12 +313,16 @@ class PublicationController extends Controller
                     'specs'           => $request->specs,
                 ]);
 
-                // 3. Gestión de Imágenes existentes (Borrado de las que el usuario quitó)
-                $keepItems = $request->input('existing_images', []); // URLs que el usuario conservó
-
-                // Obtenemos las imágenes actuales en DB que NO están en la lista de "conservar"
+                $keepItems = $request->input('existing_images', []);
+              
+                $cleanPaths = array_values(array_filter(array_map(function ($url) {
+                    $path = parse_url($url, PHP_URL_PATH);
+                    $relative = str_replace('/storage/', '', $path);
+                    return ltrim($relative, '/');
+                }, $keepItems)));
+             
                 $imagesToDelete = $publication->images()
-                    ->whereNotIn('path', array_map(fn($url) => str_replace('/storage/', '', parse_url($url, PHP_URL_PATH)), $keepItems))
+                    ->whereNotIn('path', $cleanPaths)
                     ->get();
 
                 foreach ($imagesToDelete as $img) {
@@ -328,26 +330,34 @@ class PublicationController extends Controller
                     $img->delete();
                 }
 
-                // 4. Subida de Imágenes Nuevas
                 if ($request->hasFile('images')) {
                     foreach ($request->file('images') as $file) {
                         $path = $file->store("publications/{$publication->id}", 'public');
-
                         $publication->images()->create([
                             'path' => $path,
-                            'is_featured' => false, // Luego podemos reordenar
-                            'sort_order' => 99 // Temporal
+                            'is_featured' => false,
+                            'sort_order' => 99
                         ]);
                     }
                 }
 
-                // 5. Reordenar y definir Portada (Importante para la lógica de tu galería)
-                // Esto asegura que la primera imagen en la lista de la UI sea la 'featured'
-                $allImages = $publication->images()->orderBy('id', 'asc')->get();
-                foreach ($allImages as $index => $image) {
-                    $image->update([
+
+                $publication->refresh();
+                $allCurrentImages = $publication->images()->get();
+
+                foreach ($cleanPaths as $index => $path) {
+                    $allCurrentImages->where('path', $path)->first()?->update([
                         'is_featured' => $index === 0,
                         'sort_order' => $index
+                    ]);
+                }
+
+                $newImages = $publication->images()->whereNotIn('path', $cleanPaths)->get();
+                foreach ($newImages as $index => $image) {
+                    $newOrder = count($cleanPaths) + $index;
+                    $image->update([
+                        'is_featured' => $newOrder === 0,
+                        'sort_order' => $newOrder
                     ]);
                 }
 
