@@ -1,18 +1,31 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
-import { Eye,EyeClosed, PenIcon, Trash, CalendarIcon, CirclePlus } from 'lucide-vue-next';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
+
+import {
+    Eye,
+    EyeClosed,
+    PenIcon,
+    CalendarIcon,
+    CirclePlus,
+} from 'lucide-vue-next';
+import { onMounted, ref } from 'vue';
+import NotificationCard from '@/components/shared/Cards/NotificationCard.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import type { PublicationCardType } from '@/types/publication';
-
+const page = usePage();
 const props = withDefaults(
     defineProps<{
         user: string[];
         publications: PublicationCardType[];
+        messageTitle?:string;
+        messageDescription?:string;
     }>(),
     {},
 );
+
+const showToast = ref<boolean>(false);
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Panel de control',
@@ -34,11 +47,29 @@ const toggleStatus = (id: number) => {
         },
     );
 };
+onMounted(() => {
+    const flash = page.props.flash as { success?: string } | undefined;
+    if (flash && flash.success != null) {
+        showToast.value = true
+    }
+})
 </script>
 
 <template>
     <Head title="Panel de control" />
 
+    <NotificationCard
+        v-if="showToast"
+        :show="showToast"
+        @close="showToast = false"
+        :duration="4000"
+    >
+        <template #title>Publicación Actualizada</template>
+        <template #description
+            >Los cambios se han guardado y la caché ha sido
+            invalidada.</template
+        >
+    </NotificationCard>
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="relative flex flex-1 flex-col gap-4 rounded-xl p-4">
             <Link
@@ -51,6 +82,8 @@ const toggleStatus = (id: number) => {
                 />
             </Link>
             <div class="flex flex-col gap-4">
+           
+                {{ page.props.flash.success }}
                 <div
                     v-for="item in props.publications"
                     :key="item.id"
@@ -141,9 +174,16 @@ const toggleStatus = (id: number) => {
                         <button
                             @click="toggleStatus(item.id)"
                             class="cursor-pointer rounded-full p-2 text-foreground transition-colors hover:bg-red-500 hover:text-white"
-                            :title="item.status == 'disponible'? 'Desactivar anuncio':'Activar Anuncio'"
+                            :title="
+                                item.status == 'disponible'
+                                    ? 'Desactivar anuncio'
+                                    : 'Activar Anuncio'
+                            "
                         >
-                            <EyeClosed v-if="item.status == 'disponible'" class="h-4 w-4 sm:h-5 sm:w-5" />
+                            <EyeClosed
+                                v-if="item.status == 'disponible'"
+                                class="h-4 w-4 sm:h-5 sm:w-5"
+                            />
                             <Eye v-else class="h-4 w-4 sm:h-5 sm:w-5" />
                         </button>
                     </div>
