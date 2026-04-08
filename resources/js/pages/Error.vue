@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue'
 import AppLogo from '@/components/AppLogo.vue';
 import CustomLayout from '@/layouts/CustomLayout.vue';
+
+
 
 
 const props = withDefaults(
@@ -11,6 +14,7 @@ const props = withDefaults(
         description?: string;
         url?: string;
         image?: string;
+        status: number,
     }>(),
     {
         canRegister: true,
@@ -21,6 +25,25 @@ const props = withDefaults(
         image: '/assets/img/avisalo.png',
     },
 );
+
+
+const title = computed(() => {
+  return {
+    403: ['403', 'Acceso Prohibido'],
+    404: ['404', 'Página no encontrada'],
+    500: ['500', 'Error del servidor'],
+    503: ['503', 'Servicio no disponible'],
+  }[props.status] || ['Error', 'Error desconocido']
+})
+
+const description = computed(() => {
+  return {
+    403: 'Lo sentimos, no tienes permisos para ver esta publicación o para realizar esta acción.',
+    404: 'La página que buscas no existe o ha sido movida.',
+    500: 'Vaya, algo salió mal en nuestros servidores.',
+    503: 'Estamos en mantenimiento, vuelve pronto.',
+  }[props.status] || 'Lo sentimos, hemos tenido un error desconocido y no podemos procesar tu solicitud'
+})
 </script>
 
 <template>
@@ -32,23 +55,22 @@ const props = withDefaults(
                     <h1
                         class="font-brand text-[150px] leading-none text-black dark:text-primary opacity-20 select-none md:text-[200px]"
                     >
-                        404
+                        {{title[0]}} 
                     </h1>
                     <div
                         class="absolute inset-0 flex items-center justify-center"
                     >
                         <p
-                            class="mt-10 font-brand text-2xl text-main md:text-4xl"
+                            class="mt-10 font-brand text-center text-2xl text-main md:text-4xl"
                         >
-                            ¡Ups! Página perdida
+                            ¡Ups! {{ props }} {{title[1]}}
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-4 max-w-md text-center relative z-10">
                     <p class="mb-8 text-lg text-main">
-                        Lo sentimos, la publicación que buscas ya no está
-                        disponible o el enlace es incorrecto. ¡No te preocupes!
+                        {{ description }} ¡No te preocupes!
                         Aún hay miles de cosas esperando por ti.
                     </p>
 
