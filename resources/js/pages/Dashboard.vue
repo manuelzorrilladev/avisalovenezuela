@@ -48,6 +48,7 @@ const toggleStatus = (id: number) => {
     );
 };
 onMounted(() => {
+    showToast.value = false
     const flash = page.props.flash as { success?: string } | undefined;
     if (flash && flash.success != null) {
         showToast.value = true
@@ -83,7 +84,6 @@ onMounted(() => {
             </Link>
             <div class="flex flex-col gap-4">
            
-                {{ page.props.flash.success }}
                 <div
                     v-for="item in props.publications"
                     :key="item.id"

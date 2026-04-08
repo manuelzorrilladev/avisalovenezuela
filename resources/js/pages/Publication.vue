@@ -128,7 +128,7 @@ const props = withDefaults(
                 </button>
             </aside>
          <div class="w-11/12 md:w-4/5">
-         <header class=" w-full  rounded-lg border bg-red-500 p-4 shadow-lg shadow-primary/30 mb-4 text-white flex items-center justify-center gap-2">
+         <header v-if="results.status != 'disponible' " class=" w-full  rounded-lg border bg-red-500 p-4 shadow-lg shadow-primary/30 mb-4 text-white flex items-center justify-center gap-2">
             <Hand/>
             <h2> ¡Alto! Esta publicación ha sido marcada como desactivada o cerrada por el autor, por lo que ya no está disponible.</h2>
          </header>
