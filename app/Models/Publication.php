@@ -31,7 +31,8 @@ class Publication extends Model
         'state',
         'city',
         'condition',
-        'specs'
+        'specs',
+        'status'
     ];
 
 

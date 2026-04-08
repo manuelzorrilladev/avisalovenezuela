@@ -161,6 +161,30 @@ class PublicationController extends Controller
     }
 
 
+
+    public function publicationEdit(Publication $publication)
+    {
+        try {
+            $publication->load([
+                'category:id,slug,name',
+                'subCategory:id,slug,name',
+                'images',
+            ]);
+            $categories = Category::with(['subCategories.tags'])->get();
+
+
+            return Inertia::render('PublicationForm', [
+                'results'     => $publication,
+                'categories' => $categories,
+                'isEditing'   => true
+
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error cargando la descripción: " . $e->getMessage());
+            return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
+        }
+    }
+
     public function publicationStore(Request $request)
     {
 
@@ -236,31 +260,6 @@ class PublicationController extends Controller
         }
     }
 
-    public function publicationEdit(Publication $publication)
-    {
-        try {
-            $publication->load([
-                'category:id,slug,name',
-                'subCategory:id,slug,name',
-                'images',
-            ]);
-            $categories = Category::with(['subCategories.tags'])->get();
-
-
-            return Inertia::render('PublicationForm', [
-                'results'     => $publication,
-                'categories' => $categories,
-                'isEditing'   => true
-
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Error cargando la descripción: " . $e->getMessage());
-            return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
-        }
-    }
-
-
-
     public function publicationUpdate(Request $request, Publication $publication)
     {
 
@@ -314,13 +313,13 @@ class PublicationController extends Controller
                 ]);
 
                 $keepItems = $request->input('existing_images', []);
-              
+
                 $cleanPaths = array_values(array_filter(array_map(function ($url) {
                     $path = parse_url($url, PHP_URL_PATH);
                     $relative = str_replace('/storage/', '', $path);
                     return ltrim($relative, '/');
                 }, $keepItems)));
-             
+
                 $imagesToDelete = $publication->images()
                     ->whereNotIn('path', $cleanPaths)
                     ->get();
@@ -365,6 +364,36 @@ class PublicationController extends Controller
             });
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Error al actualizar: ' . $e->getMessage()]);
+        }
+    }
+
+
+
+    public function toggleStatus(Request $request,Publication $publication)
+    {
+
+        try {
+
+            $nuevoStatus = ($publication->status === 'disponible')
+                ? 'no disponible'
+                : 'disponible';
+
+            $publication->update([
+                'status' => $nuevoStatus
+            ]);
+
+            $mensaje = $nuevoStatus === 'disponible'
+                ? 'La publicación ahora está visible para todos.'
+                : 'La publicación ha sido pausada correctamente.';
+
+            return redirect()
+                ->route('dashboard')
+                ->with('success', $mensaje);
+                
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => 'No se pudo cambiar el estatus: ' . $e->getMessage()
+            ]);
         }
     }
 }

@@ -21,6 +21,7 @@ export interface PublicationCardType {
     created_at: string;
     category: Category;
     slug: string;
+    status:string;
     images: PublicationImage[];
 }
 
