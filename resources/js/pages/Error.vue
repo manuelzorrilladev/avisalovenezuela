@@ -63,7 +63,7 @@ const description = computed(() => {
                         <p
                             class="mt-10 font-brand text-center text-2xl text-main md:text-4xl"
                         >
-                            ¡Ups! {{ props }} {{title[1]}}
+                            ¡Ups!  {{title[1]}}
                         </p>
                     </div>
                 </div>

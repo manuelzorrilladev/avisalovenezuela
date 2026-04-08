@@ -47,7 +47,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 
 Route::fallback(function () {
     return Inertia::render('Error', [
-        'canRegister' => Features::enabled(Features::registration())
+        'canRegister' => Features::enabled(Features::registration()),
+        'status'=>404
     ]);
 });
 

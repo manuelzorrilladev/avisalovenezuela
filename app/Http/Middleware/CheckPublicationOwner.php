@@ -16,7 +16,6 @@ class CheckPublicationOwner
     */
     public function handle(Request $request, Closure $next): Response
     {
-       /** @var \App\Models\User $user */
         $user = Auth::user();
         $publication = $request->route('publication');
 

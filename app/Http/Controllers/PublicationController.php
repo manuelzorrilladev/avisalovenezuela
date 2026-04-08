@@ -369,7 +369,7 @@ class PublicationController extends Controller
 
 
 
-    public function toggleStatus(Request $request,Publication $publication)
+    public function toggleStatus(Publication $publication)
     {
 
         try {
