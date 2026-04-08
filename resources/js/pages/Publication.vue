@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Hand } from 'lucide-vue-next';
 import Slider from '@/components/shared/Cards/Slider.vue';
 import CustomLayout from '@/layouts/CustomLayout.vue';
 import type { Publication } from '@/types/publication';
@@ -23,13 +24,17 @@ const props = withDefaults(
 );
 
 
+
+//
+
 </script>
 
 <template>
     <CustomLayout v-bind="props">
         <main class="flex flex-col-reverse md:flex-row items-center md:items-start justify-center  w-full  gap-4 md:px-6 pt-6">
             <aside
-                class="flex h-fit min-h-[80vh] w-11/12 md:w-1/5 flex-col items-center gap-6 rounded-lg border p-6 text-center shadow-lg shadow-primary/30"
+                class="flex h-fit  w-11/12 md:w-1/5 flex-col items-center gap-6 rounded-lg border p-6 text-center shadow-lg shadow-primary/30"
+                :class="results.status == 'disponible'? 'min-h-[80vh]' : ''"
             >
                 <div class="group relative h-32 w-32">
                     <img
@@ -46,7 +51,7 @@ const props = withDefaults(
                     <h3
                         class="mb-4 border-b border-black pb-2 text-lg font-bold text-primary"
                     >
-                        Información del autor
+                        Información del autor 
                     </h3>
 
                     <ul class="space-y-4 text-left text-sm">
@@ -61,7 +66,7 @@ const props = withDefaults(
                             </span>
                         </li>
 
-                        <li class="flex flex-col">
+                        <li class="flex flex-col" v-if="results.status == 'disponible'">
                             <span
                                 class="text-xs font-semibold text-primary uppercase"
                                 >Teléfono</span
@@ -74,7 +79,7 @@ const props = withDefaults(
                             </a>
                         </li>
 
-                        <li class="flex flex-col">
+                        <li class="flex flex-col"   >
                             <span
                                 class="text-xs font-semibold text-primary uppercase"
                                 >Activo desde</span
@@ -116,14 +121,22 @@ const props = withDefaults(
                 </div>
 
                 <button
+                    v-if="results.status == 'disponible'"
                     class="w-full cursor-pointer rounded-lg border border-primary bg-primary px-3 py-2 text-center text-sm font-semibold text-black duration-200 hover:bg-white dark:border-black dark:bg-black dark:text-primary dark:hover:bg-white"
                 >
                     Contactar ahora
                 </button>
             </aside>
+         <div class="w-11/12 md:w-4/5">
+         <header class=" w-full  rounded-lg border bg-red-500 p-4 shadow-lg shadow-primary/30 mb-4 text-white flex items-center justify-center gap-2">
+            <Hand/>
+            <h2> ¡Alto! Esta publicación ha sido marcada como desactivada o cerrada por el autor, por lo que ya no está disponible.</h2>
+         </header>
             <section
-                class="flex w-11/12 md:w-4/5 flex-col items-center rounded-lg border bg-card p-4 shadow-lg shadow-primary/30 mb-10"
+                class="flex w-full flex-col items-center rounded-lg border bg-card p-4 shadow-lg shadow-primary/30 mb-10"
             >
+
+            
                 <section class="mb-8 w-full">
                     <Slider
                         :items="results.images"
@@ -281,6 +294,8 @@ const props = withDefaults(
                     </div>
                 </section>
             </section>
+         
+         </div>
         </main>
         <section>
             <!-- Related post -->
