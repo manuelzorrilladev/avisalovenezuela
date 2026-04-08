@@ -1,12 +1,6 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
-import {
-    Eye,
-    PenIcon,
-    Trash,
-    CalendarIcon,
-    CirclePlus,
-} from 'lucide-vue-next';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { Eye,EyeClosed, PenIcon, Trash, CalendarIcon, CirclePlus } from 'lucide-vue-next';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
@@ -29,6 +23,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 function prepareDate(date: string): string {
     return date.slice(0, 10);
 }
+
+const toggleStatus = (id: number) => {
+    router.patch(
+        `/dashboard/publicacion/${id}/status`,
+        {},
+        {
+            preserveScroll: true,
+            onSuccess: () => {},
+        },
+    );
+};
 </script>
 
 <template>
@@ -36,7 +41,8 @@ function prepareDate(date: string): string {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="relative flex flex-1 flex-col gap-4 rounded-xl p-4">
-            <Link href="/dashboard/publicacion/crear"
+            <Link
+                href="/dashboard/publicacion/crear"
                 class="group fixed right-6 bottom-4 flex cursor-pointer items-center gap-1 rounded-full bg-primary"
                 title="Crear aviso"
             >
@@ -48,30 +54,56 @@ function prepareDate(date: string): string {
                 <div
                     v-for="item in props.publications"
                     :key="item.id"
-                    class="group flex min-h-24 flex-col items-start overflow-hidden rounded-xl border border-primary/50 bg-secondary-background/50 shadow-md transition-all hover:shadow-primary/20 sm:h-24 sm:flex-row sm:items-center"
+                    class="group flex min-h-24 flex-col items-start overflow-hidden rounded-xl border transition-all sm:h-24 sm:flex-row sm:items-center"
+                    :class="[
+                        item.status === 'no disponible'
+                            ? 'border-gray-300 bg-gray-50/50 opacity-75 grayscale-[0.5]'
+                            : 'border-primary/50 bg-secondary-background/50 shadow-md hover:shadow-primary/20',
+                    ]"
                 >
                     <div class="flex h-full w-full flex-1 items-center">
                         <div
-                            class="h-24 w-24 shrink-0 overflow-hidden bg-muted sm:h-full sm:w-32"
+                            class="relative h-24 w-24 shrink-0 overflow-hidden bg-muted sm:h-full sm:w-32"
                         >
                             <img
                                 :src="`/storage/${item.images[0].path}`"
                                 alt="Miniatura"
                                 class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                :class="{
+                                    'brightness-75':
+                                        item.status === 'no disponible',
+                                }"
                             />
+                            <div
+                                v-if="item.status === 'no disponible'"
+                                class="absolute inset-0 flex items-center justify-center bg-black/20"
+                            >
+                                <span
+                                    class="rounded bg-black/60 px-2 py-1 text-[10px] font-bold tracking-wider text-white uppercase"
+                                    >Pausado</span
+                                >
+                            </div>
                         </div>
 
                         <div
                             class="flex min-w-0 flex-1 flex-col space-y-1 px-3 sm:px-4"
                         >
+                            <div class="flex items-center gap-2">
+                                <h2
+                                    class="line-clamp-2 font-brand text-sm font-bold text-foreground sm:line-clamp-1 sm:text-base"
+                                >
+                                    {{ item.name }}
+                                </h2>
+                                <span
+                                    v-if="item.status === 'no disponible'"
+                                    class="hidden rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-medium text-gray-600 sm:inline-block"
+                                >
+                                    Fuera de línea
+                                </span>
+                            </div>
 
-                            <h2
-                                class="line-clamp-2 font-brand text-sm font-bold text-foreground sm:line-clamp-1 sm:text-base"
-                            >
-                                {{ item.name }}
-                            </h2>
                             <p
-                                class="flex items-center gap-1 text-[10px] text-foreground italic opacity-80 sm:text-xs"
+                                class="flex items-center gap-1 text-[10px] text-foreground italic opacity-60 sm:text-xs"
                             >
                                 <CalendarIcon class="h-3 w-3" />
                                 <span class="hidden md:inline"
@@ -83,11 +115,16 @@ function prepareDate(date: string): string {
                     </div>
 
                     <div
-                        class="flex w-full items-center justify-end gap-1 border-t border-primary/10 bg-primary/5 px-4 py-2 sm:w-auto sm:gap-2 sm:border-none sm:bg-transparent sm:px-6 sm:py-0"
+                        class="flex w-full items-center justify-end gap-1 border-t px-4 py-2 sm:w-auto sm:gap-2 sm:border-none sm:bg-transparent sm:px-6 sm:py-0"
+                        :class="
+                            item.status === 'no disponible'
+                                ? 'border-gray-200'
+                                : 'border-primary/10 bg-primary/5'
+                        "
                     >
                         <Link
                             :href="`/anuncio/${item.slug}`"
-                            class="cursor-pointer rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
+                            class="rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
                             title="Ver anuncio"
                         >
                             <Eye class="h-4 w-4 sm:h-5 sm:w-5" />
@@ -95,20 +132,19 @@ function prepareDate(date: string): string {
 
                         <Link
                             :href="`dashboard/publicacion/${item.id}/editar`"
-                            class="cursor-pointer rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
+                            class="rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
                             title="Editar anuncio"
                         >
                             <PenIcon class="h-4 w-4 sm:h-5 sm:w-5" />
                         </Link>
 
                         <button
-                            @click.stop.prevent="
-                                console.log('Eliminar clicked!')
-                            "
+                            @click="toggleStatus(item.id)"
                             class="cursor-pointer rounded-full p-2 text-foreground transition-colors hover:bg-red-500 hover:text-white"
-                            title="Desactivar anuncio"
+                            :title="item.status == 'disponible'? 'Desactivar anuncio':'Activar Anuncio'"
                         >
-                            <Trash class="h-4 w-4 sm:h-5 sm:w-5" />
+                            <EyeClosed v-if="item.status == 'disponible'" class="h-4 w-4 sm:h-5 sm:w-5" />
+                            <Eye v-else class="h-4 w-4 sm:h-5 sm:w-5" />
                         </button>
                     </div>
                 </div>
