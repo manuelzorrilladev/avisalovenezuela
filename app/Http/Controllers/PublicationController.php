@@ -29,6 +29,7 @@ class PublicationController extends Controller
 
                 $baseQuery = Publication::query()
                     ->with(['category:id,name', 'images:id,publication_id,path'])
+                    ->where('status','disponible')
                     ->select('id', 'name', 'description', 'category_id', 'views', 'created_at', 'slug');
 
                 return [
@@ -385,10 +386,12 @@ class PublicationController extends Controller
             $mensaje = $nuevoStatus === 'disponible'
                 ? 'La publicación ahora está visible para todos.'
                 : 'La publicación ha sido pausada correctamente.';
+                
 
             return redirect()
                 ->route('dashboard')
-                ->with('success', $mensaje);
+                ->with('success', 'Publicación actualizada')
+                ->with('description', $mensaje);
                 
         } catch (\Exception $e) {
             return back()->withErrors([

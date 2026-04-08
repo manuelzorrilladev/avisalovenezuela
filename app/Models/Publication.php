@@ -7,9 +7,12 @@ use App\Models\Comment;
 use App\Models\PublicationImage;
 use App\Models\PublicationView;
 use App\Models\SubCategory;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -43,6 +46,22 @@ class Publication extends Model
         static::creating(function ($publication) {
             $publication->slug = \Illuminate\Support\Str::slug($publication->name);
         });
+    }
+
+    protected static function booted()
+    {
+        $clearCache = function ($publication) {
+            Cache::forget('publications_search_all');
+            
+            Cache::forget("publications_category_{$publication->category_id}");
+            
+            Cache::forget("publication_show_{$publication->slug}");
+            
+            Log::info("Caché invalidada para la publicación ID: {$publication->id}");
+        };
+
+        static::saved($clearCache);   
+        static::deleted($clearCache); 
     }
 
     public function images()
