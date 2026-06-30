@@ -122,6 +122,7 @@ class PublicationController extends Controller
             ]);
         }
     }
+    
     public function getDescription(Publication $publication)
     {
         try {
@@ -149,8 +150,6 @@ class PublicationController extends Controller
         }
     }
 
-
-
     public function publicationCreate()
     {
 
@@ -160,8 +159,6 @@ class PublicationController extends Controller
 
         ]);
     }
-
-
 
     public function publicationEdit(Publication $publication)
     {
