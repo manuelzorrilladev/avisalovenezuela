@@ -6,44 +6,46 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::get('/', [PublicationController::class, 'getHome'])->name('home');
-
-Route::get(
-    '/anuncios/{category_slug?}/{sub_category_slug?}',
-    [PublicationController::class, 'getByCategory']
-)->name('search-category');
-
-
-
-
-Route::get(
-    '/anuncio/{publication:slug}',
-    [PublicationController::class, 'getDescription']
-)->name('view-description');
+// Route::get('/', [PublicationController::class, 'getHome'])->name('home');
+Route::get('/', [PublicationController::class, 'HomeForm'])->name('home');
+// Route::post('/', [PublicationController::class, 'HomeFormHandle'])->name('homeForm');
 
 // Route::get(
-//     'dashboard',
-//     [UserController::class, 'dashboard']
-// )->middleware(['auth', 'verified'])->name('dashboard');
+//     '/anuncios/{category_slug?}/{sub_category_slug?}',
+//     [PublicationController::class, 'getByCategory']
+// )->name('search-category');
 
-// Route::get('dashboard/publicacion/',[PublicationController::class,'publication'])->name('publicacion');
 
-Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
 
-    Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
 
-    Route::controller(PublicationController::class)->group(function () {
+// Route::get(
+//     '/anuncio/{publication:slug}',
+//     [PublicationController::class, 'getDescription']
+// )->name('view-description');
 
-        Route::get('/publicacion/crear', 'publicationCreate')->name('publicacion.create');
+Route::get(
+    'dashboard',
+    [UserController::class, 'dashboard']
+)->middleware(['auth', 'verified'])->name('dashboard');
 
-        Route::middleware('owner')->group(function () {
-            Route::post('/publicacion', 'publicationStore')->name('publicacion.store');
-            Route::get('/publicacion/{publication:id}/editar', 'publicationEdit')->name('publicacion.edit');
-            Route::put('/publicacion/{publication:id}', 'publicationUpdate')->name('publicacion.update');
-            Route::patch('/publicacion/{publication:id}/status', 'toggleStatus')->name('publicacion.status');
-        });
-    });
-});
+// // Route::get('dashboard/publicacion/',[PublicationController::class,'publication'])->name('publicacion');
+
+// Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
+
+//     Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
+
+//     Route::controller(PublicationController::class)->group(function () {
+
+//         Route::get('/publicacion/crear', 'publicationCreate')->name('publicacion.create');
+
+//         Route::middleware('owner')->group(function () {
+//             Route::post('/publicacion', 'publicationStore')->name('publicacion.store');
+//             Route::get('/publicacion/{publication:id}/editar', 'publicationEdit')->name('publicacion.edit');
+//             Route::put('/publicacion/{publication:id}', 'publicationUpdate')->name('publicacion.update');
+//             Route::patch('/publicacion/{publication:id}/status', 'toggleStatus')->name('publicacion.status');
+//         });
+//     });
+// });
 
 Route::fallback(function () {
     return Inertia::render('Error', [

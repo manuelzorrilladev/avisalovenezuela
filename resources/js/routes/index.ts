@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults, validateParameters } from './../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../wayfinder'
 /**
 * @see \Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::login
  * @see vendor/laravel/fortify/src/Http/Controllers/AuthenticatedSessionController.php:47
@@ -212,7 +212,7 @@ register.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     register.form = registerForm
 /**
 * @see \App\Http\Controllers\PublicationController::home
- * @see app/Http/Controllers/PublicationController.php:25
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ home.definition = {
 
 /**
 * @see \App\Http\Controllers\PublicationController::home
- * @see app/Http/Controllers/PublicationController.php:25
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
 home.url = (options?: RouteQueryOptions) => {
@@ -236,7 +236,7 @@ home.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\PublicationController::home
- * @see app/Http/Controllers/PublicationController.php:25
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -245,7 +245,7 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\PublicationController::home
- * @see app/Http/Controllers/PublicationController.php:25
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -255,7 +255,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\PublicationController::home
- * @see app/Http/Controllers/PublicationController.php:25
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
     const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -265,7 +265,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\PublicationController::home
- * @see app/Http/Controllers/PublicationController.php:25
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
         homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -274,7 +274,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\PublicationController::home
- * @see app/Http/Controllers/PublicationController.php:25
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
         homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -288,208 +288,6 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
     
     home.form = homeForm
-/**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-export const searchCategory = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: searchCategory.url(args, options),
-    method: 'get',
-})
-
-searchCategory.definition = {
-    methods: ["get","head"],
-    url: '/anuncios/{category_slug?}/{sub_category_slug?}',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-searchCategory.url = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions) => {
-    if (Array.isArray(args)) {
-        args = {
-                    category_slug: args[0],
-                    sub_category_slug: args[1],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    validateParameters(args, [
-            "category_slug",
-            "sub_category_slug",
-        ])
-
-    const parsedArgs = {
-                        category_slug: args?.category_slug,
-                                sub_category_slug: args?.sub_category_slug,
-                }
-
-    return searchCategory.definition.url
-            .replace('{category_slug?}', parsedArgs.category_slug?.toString() ?? '')
-            .replace('{sub_category_slug?}', parsedArgs.sub_category_slug?.toString() ?? '')
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-searchCategory.get = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: searchCategory.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-searchCategory.head = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: searchCategory.url(args, options),
-    method: 'head',
-})
-
-    /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-    const searchCategoryForm = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-        action: searchCategory.url(args, options),
-        method: 'get',
-    })
-
-            /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-        searchCategoryForm.get = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: searchCategory.url(args, options),
-            method: 'get',
-        })
-            /**
-* @see \App\Http\Controllers\PublicationController::searchCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-        searchCategoryForm.head = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: searchCategory.url(args, {
-                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                            _method: 'HEAD',
-                            ...(options?.query ?? options?.mergeQuery ?? {}),
-                        }
-                    }),
-            method: 'get',
-        })
-    
-    searchCategory.form = searchCategoryForm
-/**
-* @see \App\Http\Controllers\PublicationController::viewDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-export const viewDescription = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: viewDescription.url(args, options),
-    method: 'get',
-})
-
-viewDescription.definition = {
-    methods: ["get","head"],
-    url: '/anuncio/{publication}',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\PublicationController::viewDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-viewDescription.url = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { publication: args }
-    }
-
-            if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
-            args = { publication: args.slug }
-        }
-    
-    if (Array.isArray(args)) {
-        args = {
-                    publication: args[0],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-                        publication: typeof args.publication === 'object'
-                ? args.publication.slug
-                : args.publication,
-                }
-
-    return viewDescription.definition.url
-            .replace('{publication}', parsedArgs.publication.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\PublicationController::viewDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-viewDescription.get = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: viewDescription.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\PublicationController::viewDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-viewDescription.head = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: viewDescription.url(args, options),
-    method: 'head',
-})
-
-    /**
-* @see \App\Http\Controllers\PublicationController::viewDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-    const viewDescriptionForm = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-        action: viewDescription.url(args, options),
-        method: 'get',
-    })
-
-            /**
-* @see \App\Http\Controllers\PublicationController::viewDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-        viewDescriptionForm.get = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: viewDescription.url(args, options),
-            method: 'get',
-        })
-            /**
-* @see \App\Http\Controllers\PublicationController::viewDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-        viewDescriptionForm.head = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: viewDescription.url(args, {
-                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                            _method: 'HEAD',
-                            ...(options?.query ?? options?.mergeQuery ?? {}),
-                        }
-                    }),
-            method: 'get',
-        })
-    
-    viewDescription.form = viewDescriptionForm
 /**
 * @see \App\Http\Controllers\UserController::dashboard
  * @see app/Http/Controllers/UserController.php:19

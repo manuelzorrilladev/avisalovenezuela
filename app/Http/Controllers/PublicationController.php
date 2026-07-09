@@ -20,8 +20,17 @@ use Laravel\Fortify\Features;
 class PublicationController extends Controller
 {
 
+    public function HomeForm()
+    {
+        return Inertia::render('WelcomeForm', [
+            'canRegister' => Features::enabled(Features::registration()),
+        ]);
+    }
+    public function HomeFormHandle(Request $request)
+    {
 
-
+        return redirect()->route('home');
+    }
     public function getHome()
     {
         try {
@@ -123,32 +132,32 @@ class PublicationController extends Controller
         }
     }
     
-    public function getDescription(Publication $publication)
-    {
-        try {
-            $publication->load([
-                'category:id,slug,name',
-                'subCategory:id,slug,name',
-                'images',
-                'user:id,name,last_name,phone,created_at,state,city',
-                'comments' => function ($query) {
-                    $query
-                        ->with(['user:id,name,last_name', 'replies.user:id,name,last_name'])
-                        ->latest();
-                }
-            ]);
+    // public function getDescription(Publication $publication)
+    // {
+    //     try {
+    //         $publication->load([
+    //             'category:id,slug,name',
+    //             'subCategory:id,slug,name',
+    //             'images',
+    //             'user:id,name,last_name,phone,created_at,state,city',
+    //             'comments' => function ($query) {
+    //                 $query
+    //                     ->with(['user:id,name,last_name', 'replies.user:id,name,last_name'])
+    //                     ->latest();
+    //             }
+    //         ]);
 
-            return Inertia::render('Publication', [
-                'results'     => $publication,
-                'title'       => $publication->name,
-                'description' => $publication->description,
-                'url'         => url()->current()
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Error cargando la descripción: " . $e->getMessage());
-            return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
-        }
-    }
+    //         return Inertia::render('Publication', [
+    //             'results'     => $publication,
+    //             'title'       => $publication->name,
+    //             'description' => $publication->description,
+    //             'url'         => url()->current()
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         Log::error("Error cargando la descripción: " . $e->getMessage());
+    //         return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
+    //     }
+    // }
 
     public function publicationCreate()
     {
