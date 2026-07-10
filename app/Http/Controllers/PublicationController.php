@@ -22,7 +22,7 @@ class PublicationController extends Controller
 
     public function HomeForm()
     {
-        return Inertia::render('WelcomeForm', [
+        return Inertia::render('Welcome', [
             'canRegister' => Features::enabled(Features::registration()),
         ]);
     }
