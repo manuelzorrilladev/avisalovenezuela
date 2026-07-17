@@ -20,41 +20,19 @@ return new class extends Migration
         });
 
 
-        Schema::create('sub_categories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->timestamps();
-        });
-
-        Schema::create('tags', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sub_category_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->string('slug');
-            $table->timestamps();
-        });
-
-
 
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('category_id')->constrained();
-            $table->foreignId('sub_category_id')->constrained();
-            $table->foreignId('tag_id')->nullable()->constrained();
-
+       
             $table->string('name');
             $table->text('description');
-            $table->enum('condition', ['nuevo', 'usado', 'n/a']);
-            $table->enum('status', ['disponible', 'en negociacion', 'no disponible'])->default('disponible');
+            $table->enum('status', ['por realizar', 'por aprobacion', 'aprobada por publicar','publicada'])->default('por realizar');
 
-            $table->unsignedInteger('views')->default(0);
             $table->string('state');
             $table->string('city');
 
-            $table->json('specs');
 
             $table->timestamp('published_at')->useCurrent();
             $table->timestamps();
