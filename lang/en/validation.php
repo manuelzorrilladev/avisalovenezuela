@@ -178,10 +178,25 @@ return [
     |
     */
 
+
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'email' => [
+            'required' => 'Necesitamos tu correo electrónico para poder activar tu cuenta.',
+            'email' => 'El formato del correo electrónico no es válido. Ej: usuario@gmail.com',
+            'unique' => 'Este correo ya está registrado en Avisalo. ¿Quieres iniciar sesión?',
         ],
+        'password' => [
+            'required' => 'La contraseña es obligatoria para proteger tu cuenta.',
+            'min' => 'Por seguridad, tu contraseña debe tener al menos :min caracteres.',
+            'confirmed' => 'Las contraseñas ingresadas no coinciden. Inténtalo de nuevo.',
+        ],
+        'name' => [
+            'required' => 'Por favor, dinos tu nombre completo para el contacto de tus avisos.',
+        ],
+        'identity_number' => [
+            'required' => 'El documento de identidad es obligatorio para verificar tu cuenta.',
+            'regex' => 'El formato del documento debe ser válido (Ej: V-12345678).',
+        ]
     ],
 
     /*

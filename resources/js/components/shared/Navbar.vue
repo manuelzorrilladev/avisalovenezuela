@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { useWindowSize } from '@vueuse/core';
-import { Menu, XCircle, ChevronDown } from 'lucide-vue-next';
+import { Menu, XCircle } from 'lucide-vue-next';
 import { computed, ref, type Ref } from 'vue';
 import { dashboard, login, register } from '@/routes';
 import AppLogo from '../AppLogo.vue';
@@ -70,10 +70,72 @@ const auth = computed(() => page.props.auth);
                     </template>
                 </div>
                 <ThemeChanger class="ml-5" />
-             
+                <button class="group cursor-pointer p-3">
+                    <Menu
+                        @click="isActive = !isActive"
+                        class="size-12 duration-300 group-hover:scale-115 md:size-10"
+                    />
+                </button>
             </div>
         </section>
-      
+        <Transition name="slide-bounce">
+            <section
+                v-if="isActive"
+                class="fixed top-0 right-0 z-50 flex h-screen w-80 flex-col bg-primary px-10 py-4 shadow-2xl"
+            >
+                <div class="flex items-center gap-4">
+                    <XCircle
+                        @click="isActive = false"
+                        class="text-carbon-black-text h-full cursor-pointer pt-2 duration-300 hover:scale-115"
+                    />
+                    <AppLogo class="w-34" />
+                </div>
+
+                <hr class="my-2 border-black" />
+             
+
+                 <div v-if="auth.user">
+                        <Link
+                            :href="dashboard()"
+                            class="ml-8 text-black duration-200 hover:text-white"
+                        >
+                            Panel de Control
+                        </Link>
+
+                        <Link
+                            href="/logout"
+                            method="post"
+                            as="button"
+                            class="ml-8 text-black duration-200 hover:text-white"
+                        >
+                            Cerrar Sesión
+                        </Link>
+                    </div>
+                 <div v-else>
+                        <Link
+                            :href="login()"
+                            class="ml-8 text-black duration-200 hover:text-white"
+                        >
+                            Iniciar Sesión
+                        </Link>
+
+                        <Link
+                            v-if="canRegister"
+                            :href="register()"
+                            class="ml-8 text-black duration-200 hover:text-white"
+                        >
+                            Registrarse
+                        </Link>
+                    </div>
+            </section>
+        </Transition>
+        <Transition name="show">
+            <section
+                v-if="isActive"
+                @click="isActive = !isActive"
+                class="fixed top-0 right-0 z-40 flex h-screen w-full flex-col bg-gray-900/60 px-10 py-4 shadow-2xl blur-2xl backdrop-blur-sm"
+            ></section>
+        </Transition>
     </nav>
 </template>
 

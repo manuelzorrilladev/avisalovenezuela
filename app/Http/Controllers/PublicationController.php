@@ -162,8 +162,8 @@ class PublicationController extends Controller
     public function publicationCreate()
     {
 
-        $categories = Category::with(['subCategories.tags'])->get();
-        return Inertia::render('PublicationForm', [
+        $categories = Category::all();
+        return Inertia::render('DashboardForm', [
             'categories' => $categories
 
         ]);

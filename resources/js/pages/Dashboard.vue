@@ -1,59 +1,96 @@
 <script setup lang="ts">
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-
 import {
-    Eye,
-    EyeClosed,
-    PenIcon,
     CalendarIcon,
     CirclePlus,
+    EyeIcon,
+    ClockIcon,
+    CheckCircle2Icon,
+    AlertCircleIcon,
 } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import DescriptionCard from '@/components/shared/Cards/DescriptionCard.vue';
 import NotificationCard from '@/components/shared/Cards/NotificationCard.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import type { PublicationCardType } from '@/types/publication';
-const page = usePage();
-const props = withDefaults(
-    defineProps<{
-        user: string[];
-        publications: PublicationCardType[];
-        messageTitle?:string;
-        messageDescription?:string;
-    }>(),
-    {},
-);
+// --- TYPES & INTERFACES ---
+type StatusKey =
+    'por realizar' | 'por aprobacion' | 'aprobada por publicar' | 'publicada';
 
-const showToast = ref<boolean>(false);
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Panel de control',
-        href: dashboard().url,
-    },
-];
-
-function prepareDate(date: string): string {
-    return date.slice(0, 10);
+interface StatusItem {
+    color: string;
+    text: string;
+    icon: any;
 }
+console.log(router);
+// --- PROPS ---
+const props = defineProps<{
+    user: any; // Ajustado de string[] a any para evitar errores de objeto de usuario
+    publications: PublicationCardType[];
+}>();
 
-const toggleStatus = (id: number) => {
-    router.patch(
-        `/dashboard/publicacion/${id}/status`,
-        {},
-        {
-            preserveScroll: true,
-            onSuccess: () => {},
-        },
-    );
+// --- STATE ---
+const page = usePage();
+const showToast = ref<boolean>(false);
+const activeItem = ref<number>(-1);
+const pubModal = ref<boolean>(false);
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Panel de control', href: dashboard().url },
+];
+const activeImageIndex = ref(0);
+
+// Cada vez que cambie el item activo del modal, reiniciamos el carrusel a la primera imagen
+watch(
+    () => activeItem,
+    () => {
+        activeImageIndex.value = 0;
+    },
+);
+// --- LOGIC ---
+const formatDate = (date: string): string => {
+    return new Date(date).toLocaleDateString('es-VE', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+    });
 };
+
+const statusMap: Record<StatusKey, StatusItem> = {
+    'por realizar': {
+        color: 'bg-red-200 text-red-800 border-red-500/50',
+        text: 'Por realizar',
+        icon: ClockIcon,
+    },
+    'por aprobacion': {
+        color: 'bg-amber-200 text-amber-800 border-amber-500/50',
+        text: 'En revisión',
+        icon: AlertCircleIcon,
+    },
+    'aprobada por publicar': {
+        color: 'bg-blue-200 text-blue-800 border-blue-500/50',
+        text: 'Por publicar',
+        icon: ClockIcon,
+    },
+    publicada: {
+        color: 'bg-green-200 text-green-800 border-green-500/50',
+        text: 'Publicada',
+        icon: CheckCircle2Icon,
+    },
+};
+
+function toggleModal(pos: number) {
+    activeItem.value = pos;
+    pubModal.value = !pubModal.value;
+}
 onMounted(() => {
-    showToast.value = false
-    const flash = page.props.flash as { success?: string } | undefined;
-    if (flash && flash.success != null) {
-        showToast.value = true
+    const flash = page.props.flash as { success?: string };
+    if (flash?.success) {
+        showToast.value = true;
     }
-})
+});
 </script>
 
 <template>
@@ -65,130 +102,157 @@ onMounted(() => {
         @close="showToast = false"
         :duration="4000"
     >
-        <template #title>Publicación Actualizada</template>
+        <template #title>¡Acción Exitosa!</template>
         <template #description
-            >Los cambios se han guardado y la caché ha sido
-            invalidada.</template
+            >La publicación se ha actualizado correctamente en el
+            sistema.</template
         >
     </NotificationCard>
+
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="relative flex flex-1 flex-col gap-4 rounded-xl p-4">
-            <Link
-                href="/dashboard/publicacion/crear"
-                class="group fixed right-6 bottom-4 flex cursor-pointer items-center gap-1 rounded-full bg-primary"
-                title="Crear aviso"
+        <div class="space-y-8 p-4 md:p-8">
+            <!-- <div
+                class="debug fixed top-2 left-4 z-50 flex h-[90vh] w-full max-w-lg flex-col items-center justify-start gap-6 overflow-y-scroll rounded-2xl border bg-white p-4 text-center shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
             >
-                <CirclePlus
-                    class="size-12 rounded-full bg-amber-400 p-2 text-white"
+                {{ pubModal }}-{{ props.publications[activeItem] }}
+            </div> -->
+            <Transition name="popup">
+            <div v-if="pubModal" class="fixed z-99 flex items-center justify-center  inset-0 bg-secondary-background/70 backdrop-blur-sm h-screen">
+                <DescriptionCard
+                    :publications="props.publications"
+                    :activeItem="activeItem"
+                    @close="toggleModal(-1)"
                 />
-            </Link>
-            <div class="flex flex-col gap-4">
-           
-                <div
-                    v-for="item in props.publications"
-                    :key="item.id"
-                    class="group flex min-h-24 flex-col items-start overflow-hidden rounded-xl border transition-all sm:h-24 sm:flex-row sm:items-center"
-                    :class="[
-                        item.status === 'no disponible'
-                            ? 'border-gray-300 bg-gray-50/50 opacity-75 grayscale-[0.5]'
-                            : 'border-primary/50 bg-secondary-background/50 shadow-md hover:shadow-primary/20',
-                    ]"
+            </div>
+            </Transition>
+
+            <div
+                class="fixed right-4 bottom-4 flex flex-col justify-between gap-4 md:flex-row md:items-center"
+            >
+                <Link
+                    href="/dashboard/publicacion/crear"
+                    class="group flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-bold text-black shadow-lg shadow-primary/20 transition-all duration-300 hover:bg-white"
                 >
-                    <div class="flex h-full w-full flex-1 items-center">
+                    <CirclePlus class="size-5" />
+                    Crear Nuevo Aviso
+                </Link>
+            </div>
+
+            <div
+                v-if="props.publications.length > 0"
+                class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+                <div
+                    v-for="(item, key) in props.publications"
+                    :key="item.id"
+                    class="group relative flex flex-col overflow-hidden rounded-2xl border border-primary/20 bg-secondary-background/40 backdrop-blur-sm shadow-lg shadow-primary/10 transition-all duration-300 hover:border-primary/60 hover:shadow-xl hover:shadow-primary/50"
+                >
+                    <div class="relative h-48 w-full overflow-hidden bg-muted">
+                        <img
+                            v-if="item.images && item.images.length > 0"
+                            :src="`/storage/${item.images[0].path}`"
+                            :alt="item.name"
+                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
                         <div
-                            class="relative h-24 w-24 shrink-0 overflow-hidden bg-muted sm:h-full sm:w-32"
+                            v-else
+                            class="flex h-full items-center justify-center text-foreground/20"
                         >
-                            <img
-                                :src="`/storage/${item.images[0].path}`"
-                                alt="Miniatura"
-                                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                                :class="{
-                                    'brightness-75':
-                                        item.status === 'no disponible',
-                                }"
-                            />
-                            <div
-                                v-if="item.status === 'no disponible'"
-                                class="absolute inset-0 flex items-center justify-center bg-black/20"
-                            >
-                                <span
-                                    class="rounded bg-black/60 px-2 py-1 text-[10px] font-bold tracking-wider text-white uppercase"
-                                    >Pausado</span
-                                >
-                            </div>
+                            <CirclePlus class="size-12" />
                         </div>
 
                         <div
-                            class="flex min-w-0 flex-1 flex-col space-y-1 px-3 sm:px-4"
-                        >
-                            <div class="flex items-center gap-2">
-                                <h2
-                                    class="line-clamp-2 font-brand text-sm font-bold text-foreground sm:line-clamp-1 sm:text-base"
-                                >
-                                    {{ item.name }}
-                                </h2>
-                                <span
-                                    v-if="item.status === 'no disponible'"
-                                    class="hidden rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-medium text-gray-600 sm:inline-block"
-                                >
-                                    Fuera de línea
-                                </span>
-                            </div>
-
-                            <p
-                                class="flex items-center gap-1 text-[10px] text-foreground italic opacity-60 sm:text-xs"
-                            >
-                                <CalendarIcon class="h-3 w-3" />
-                                <span class="hidden md:inline"
-                                    >Publicado el</span
-                                >
-                                {{ prepareDate(item.created_at) }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="flex w-full items-center justify-end gap-1 border-t px-4 py-2 sm:w-auto sm:gap-2 sm:border-none sm:bg-transparent sm:px-6 sm:py-0"
-                        :class="
-                            item.status === 'no disponible'
-                                ? 'border-gray-200'
-                                : 'border-primary/10 bg-primary/5'
-                        "
-                    >
-                        <Link
-                            :href="`/anuncio/${item.slug}`"
-                            class="rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
-                            title="Ver anuncio"
-                        >
-                            <Eye class="h-4 w-4 sm:h-5 sm:w-5" />
-                        </Link>
-
-                        <Link
-                            :href="`dashboard/publicacion/${item.id}/editar`"
-                            class="rounded-full p-2 text-foreground transition-colors hover:bg-primary/70 hover:text-white"
-                            title="Editar anuncio"
-                        >
-                            <PenIcon class="h-4 w-4 sm:h-5 sm:w-5" />
-                        </Link>
-
-                        <button
-                            @click="toggleStatus(item.id)"
-                            class="cursor-pointer rounded-full p-2 text-foreground transition-colors hover:bg-red-500 hover:text-white"
-                            :title="
-                                item.status == 'disponible'
-                                    ? 'Desactivar anuncio'
-                                    : 'Activar Anuncio'
+                            class="absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase backdrop-blur-md"
+                            :class="
+                                statusMap[item.status as unknown as StatusKey]
+                                    ?.color || 'bg-gray-500/20'
                             "
                         >
-                            <EyeClosed
-                                v-if="item.status == 'disponible'"
-                                class="h-4 w-4 sm:h-5 sm:w-5"
+                            <component
+                                :is="
+                                    statusMap[
+                                        item.status as unknown as StatusKey
+                                    ]?.icon
+                                "
+                                class="size-3"
                             />
-                            <Eye v-else class="h-4 w-4 sm:h-5 sm:w-5" />
-                        </button>
+                            {{
+                                statusMap[item.status as unknown as StatusKey]
+                                    ?.text
+                            }}
+                        </div>
+                        <div
+                            class="absolute top-0 h-1/3 w-full bg-linear-180 from-foreground to-transparent"
+                        ></div>
+                    </div>
+
+                    <div class="flex flex-1 flex-col p-5">
+                        <h2
+                            class="mb-2 line-clamp-2 font-brand text-lg font-bold text-foreground transition-colors group-hover:text-primary"
+                        >
+                            {{ item.name }}
+                        </h2>
+
+                        <div
+                            class="mb-6 flex items-center gap-2 text-xs text-foreground/50"
+                        >
+                            <CalendarIcon class="size-3.5" />
+                            <span
+                                >Publicado el
+                                {{ formatDate(item.created_at) }}</span
+                            >
+                        </div>
+
+                        <div
+                            class="mt-auto flex items-center justify-between gap-3 border-t border-primary pt-4"
+                        >
+                            <button
+                                @click="toggleModal(key)"
+                                class="flex flex-1 items-center justify-center gap-2 rounded-lg border border-primary/30 bg-background py-2.5 text-xs font-bold transition-all hover:bg-primary hover:text-black"
+                            >
+                                <EyeIcon class="size-3.5" />
+                                Ver detalles
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div
+                v-else
+                class="flex flex-col items-center justify-center space-y-4 py-20 text-center"
+            >
+                <div
+                    class="rounded-full border border-primary/10 bg-primary/5 p-6"
+                >
+                    <CirclePlus class="size-12 text-primary/40" />
+                </div>
+                <div class="max-w-xs">
+                    <h3 class="text-xl font-bold text-foreground">
+                        No hay avisos aún
+                    </h3>
+                    <p class="text-sm text-foreground/60">
+                        Comienza a crear tu primer aviso para verlo listado
+                        aquí.
+                    </p>
+                </div>
+            </div>
         </div>
+
+        <Link
+            href="/dashboard/publicacion/crear"
+            class="fixed right-6 bottom-6 z-50 flex size-14 items-center justify-center rounded-full bg-primary text-black shadow-2xl shadow-primary/40 transition-transform active:scale-95 md:hidden"
+        >
+            <CirclePlus class="size-8" />
+        </Link>
     </AppLayout>
 </template>
+
+<style scoped>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { Deferred } from '@inertiajs/vue3';
-import {  ref } from 'vue'
-import PublicationCard from '@/components/shared/Cards/PublicationCard.vue';
+import { ref } from 'vue';
 import CustomLayout from '@/layouts/CustomLayout.vue';
 import type { PublicationCardType } from '@/types/publication';
 import WelcomeForm from './WelcomeForm.vue';
@@ -31,21 +29,13 @@ const props = withDefaults(
     },
 );
 const layoutRef = ref<InstanceType<typeof CustomLayout> | null>(null);
-function changeModal(){
-    if(layoutRef.value){
-        layoutRef.value.changeModalState()
-
-    } else {
-        console.error("El Layout aún no está listo o no se encontró la ref");
-    }
-}
 
 </script>
 
 <template>
     <CustomLayout ref="layoutRef" v-bind="props">
-    
-
-        <WelcomeForm/>
+        <section>
+            <WelcomeForm />
+        </section>
     </CustomLayout>
 </template>

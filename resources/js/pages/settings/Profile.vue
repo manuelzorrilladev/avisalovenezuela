@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import DeleteUser from '@/components/DeleteUser.vue';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -44,7 +43,6 @@ const user = page.props.auth.user;
                     title="Información del perfil"
                     description="Actualiza la información referente a tu perfil"
                 />
-
                 <Form
                     v-bind="ProfileController.update.form()"
                     class="space-y-6"
@@ -77,6 +75,28 @@ const user = page.props.auth.user;
                             placeholder="Correo electrónico "
                         />
                         <InputError class="mt-2" :message="errors.email" />
+                    </div>
+
+                    
+                    <div class="flex flex-col gap-2">
+                        <Label for="contact_phone" class="">
+                            Teléfono / WhatsApp
+                        </Label>
+                        <div class="relative flex items-center">
+                            <span class="absolute left-4 border-r border-primary/20 pr-2 text-sm font-bold text-primary/80" id="phone-prefix">
+                                +58
+                            </span>
+                            <Input
+                                id="contact_phone"
+                                type="tel"
+                                name="contact_phone"
+                                placeholder="4121234567"
+                                aria-describedby="phone-prefix phone-hint"
+                                class="w-full rounded-lg border  bg-background py-6 pr-4 pl-16 text-base transition-all outline-none focus:border-primary"
+                                required
+                            />
+                        </div>
+                      
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
@@ -123,7 +143,6 @@ const user = page.props.auth.user;
                 </Form>
             </div>
 
-            <DeleteUser />
         </SettingsLayout>
     </AppLayout>
 </template>

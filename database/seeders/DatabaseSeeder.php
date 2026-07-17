@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use Database\Seeders\CategoryHierarchySeeder;
-use Database\Seeders\CommentSeeder;
+use Database\Seeders\CategorySeeder;
 use Database\Seeders\PublicationImageSeeder;
 use Database\Seeders\PublicationSeeder;
-use Database\Seeders\PublicationViewSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Database\Seeder;
 
@@ -20,12 +18,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            CategoryHierarchySeeder::class,
             UserSeeder::class,
+            CategorySeeder::class,
             PublicationSeeder::class,
-            CommentSeeder::class,
             PublicationImageSeeder::class,
-            PublicationViewSeeder::class
         ]);
     }
 }

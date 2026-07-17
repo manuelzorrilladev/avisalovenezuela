@@ -16,12 +16,15 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'Admin',
-            'last_name' => 'Marketplace',
             'email' => 'admin@test.com',
             'password' => Hash::make('password'),
             'id_card' => 'V-00000000',
             'phone' => '04120000000',
-            'is_admin' => true
+            'birth_date' => '1990-01-01',
+            'role'=>3,
+            'city' => 'Caracas',
+            'state' => 'Distrito Capital',
+
         ]);
 
         User::factory()->count(9)->create();

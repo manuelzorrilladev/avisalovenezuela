@@ -25,16 +25,16 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('123456'),
             'remember_token' => Str::random(10),
             'phone' => fake()->phoneNumber(),
             'id_card' => 'V-' . fake()->randomNumber(8),
-            'address' => fake()->address(),
             'city' => 'Caracas',
             'state' => 'Distrito Capital',
+            'role'=>0,
+            'birth_date' => fake()->dateTimeBetween('-60 years', '-18 years')->format('Y-m-d')
         ];
     }
 
