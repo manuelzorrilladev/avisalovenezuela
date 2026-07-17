@@ -11,7 +11,12 @@ export interface PublicationImage {
     path: string;
     isExisting?: boolean;
 }
-
+enum Status {
+'por realizar',
+'por aprobacion',
+'aprobada por publicar',
+'publicada',
+}
 export interface PublicationCardType {
     id: number;
     name: string;
@@ -21,7 +26,7 @@ export interface PublicationCardType {
     created_at: string;
     category: Category;
     slug: string;
-    status:string;
+    status:Status;
     images: PublicationImage[];
 }
 
@@ -135,4 +140,18 @@ export interface FullCategory {
     created_at: string;
     updated_at: string;
     sub_categories: FullSubCategory[]; // Relación HasMany
+}
+
+
+export interface formData {
+    category_type: string;
+    title: string;
+    description: string;
+    images: File[] | any[]; // Soporta Files para subidas o previews
+    contact_name: string;
+    contact_email: string;
+    contact_phone: string;
+    identity_document: string;
+    state: string;
+    city: string;
 }
