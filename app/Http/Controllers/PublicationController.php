@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Publication;
-use App\Models\SubCategory;
-use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -16,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use ZipArchive;
 
 class PublicationController extends Controller
 {
@@ -38,7 +38,7 @@ class PublicationController extends Controller
 
                 $baseQuery = Publication::query()
                     ->with(['category:id,name', 'images:id,publication_id,path'])
-                    ->where('status','disponible')
+                    ->where('status', 'disponible')
                     ->select('id', 'name', 'description', 'category_id', 'views', 'created_at', 'slug');
 
                 return [
@@ -81,83 +81,7 @@ class PublicationController extends Controller
         }
     }
 
-    public function getAllPaginated() {}
 
-    public function getByCategory($category_slug, $sub_category_slug = null)
-    {
-
-        try {
-
-
-
-            $category = Category::where('name', $category_slug)->firstOrFail();
-
-            $subCategory = $sub_category_slug
-                ? SubCategory::where('name', $sub_category_slug)->first()
-                : null;
-
-            $cacheKey = "pubs_cat_{$category_slug}" . ($sub_category_slug ? "_sub_{$sub_category_slug}" : "");
-
-            $publications = Cache::remember($cacheKey, 600, function () use ($category, $subCategory) {
-                return Publication::query()
-                    ->with(['category:id,slug,name', 'subCategory:id,slug,name', 'images:id,publication_id,path'])
-                    ->where('category_id', $category->id)
-                    ->when($subCategory, function ($q) use ($subCategory) {
-                        return $q->where('sub_category_id', $subCategory->id);
-                    })
-                    ->latest()
-                    ->get();
-            });
-
-            return Inertia::render('ByCategory', [
-                'canRegister' => Features::enabled(Features::registration()),
-                'publications' => Inertia::defer(fn() => $publications),
-                'status' => session('status'),
-                'title'       => $subCategory ? $subCategory->name : $category->name,
-                'description' => "Explora las mejores publicaciones en {$category->name}" . ($subCategory ? " - {$subCategory->name}" : ""),
-                'url'         => url()->current(),
-                'currentFilters' => [
-                    'category' => $category->name,
-                    'sub_category' => $subCategory?->name
-                ],
-                'isEmpty' => $publications->isEmpty(),
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Error cargando el Home con Inertia: " . $e->getMessage());
-
-            return Inertia::render('Error', [
-                'message' => 'No pudimos cargar las secciones de la página.',
-                'error' => config('app.debug') ? $e->getMessage() : null
-            ]);
-        }
-    }
-    
-    // public function getDescription(Publication $publication)
-    // {
-    //     try {
-    //         $publication->load([
-    //             'category:id,slug,name',
-    //             'subCategory:id,slug,name',
-    //             'images',
-    //             'user:id,name,last_name,phone,created_at,state,city',
-    //             'comments' => function ($query) {
-    //                 $query
-    //                     ->with(['user:id,name,last_name', 'replies.user:id,name,last_name'])
-    //                     ->latest();
-    //             }
-    //         ]);
-
-    //         return Inertia::render('Publication', [
-    //             'results'     => $publication,
-    //             'title'       => $publication->name,
-    //             'description' => $publication->description,
-    //             'url'         => url()->current()
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         Log::error("Error cargando la descripción: " . $e->getMessage());
-    //         return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
-    //     }
-    // }
 
     public function publicationCreate()
     {
@@ -169,6 +93,75 @@ class PublicationController extends Controller
         ]);
     }
 
+    public function publicationView(Publication $publication)
+    {
+        try {
+            $publication->load([
+                'category:id,slug,name',
+                'subCategory:id,slug,name',
+                'images',
+            ]);
+            $user = Auth::user();
+
+            $workerId = $publication->worker_id;
+            $worker = User::where('id', $workerId)->select(['id', 'name'])->get();
+
+
+
+
+            return Inertia::render('PublicationView', [
+                'publication'   => $publication,
+                'worker'        => $worker,
+                'user'          => $user->only('id', 'name', 'email'),
+
+
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error cargando la descripción: " . $e->getMessage());
+            return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
+        }
+    }
+
+ public function publicationDownload(int $id)
+    {
+        $publication = Publication::with('images')->findOrFail($id);
+
+        if ($publication->images->isEmpty()) {
+            return back()->with('error', 'Esta publicación no contiene imágenes para descargar.');
+        }
+
+        $slug = Str::slug($publication->title ?? "publicacion-{$publication->id}");
+        $zipFileName = "imagenes-{$slug}.zip";
+        
+        $zipDirectory = storage_path('app/public/temp');
+        if (!file_exists($zipDirectory)) {
+            mkdir($zipDirectory, 0755, true);
+        }
+
+        $zipPath = "{$zipDirectory}/{$zipFileName}";
+
+        $zip = new ZipArchive();
+
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+            foreach ($publication->images as $index => $image) {
+                $imagePath = storage_path("app/public/{$image->path}");
+
+                if (file_exists($imagePath)) {
+                    $extension = pathinfo($imagePath, PATHINFO_EXTENSION);
+                    
+                    $internalName = "imagen-" . ($index + 1) . ".{$extension}";
+
+                    $zip->addFile($imagePath, $internalName);
+                }
+            }
+            
+            $zip->close();
+        } else {
+            return back()->with('error', 'No se pudo generar el archivo comprimido.');
+        }
+
+        return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
+    }
     public function publicationEdit(Publication $publication)
     {
         try {
@@ -188,7 +181,7 @@ class PublicationController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error("Error cargando la descripción: " . $e->getMessage());
-            return Inertia::render('Error', ['message' => 'Error al cargar la publicación.']);
+            return Inertia::render('Error', ['message' => 'Error al cargar la publicación.','error'=>$e]);
         }
     }
 
@@ -196,56 +189,31 @@ class PublicationController extends Controller
     {
 
 
+
         $validated = $request->validate([
             'title' => 'required|string|min:5|max:100',
-            'category'  => 'required|exists:categories,id',
-            'sub_category' => 'required|exists:sub_categories,id',
-            'item_type' => ['nullable', 'required_if:category,1|exists:tags,id'],
             'description' => 'required|string|min:20',
             'state' => 'required|string',
             'city' => 'required|string',
-            'condition' => 'required|in:nuevo,usado,N/A',
-            'images' => 'required|array|min:1|max:5',
-
-            'specs.marca'       => 'required_if:actualCategory,vehiculos|string|max:50',
-            'specs.año'         => 'required_if:actualCategory,vehiculos|numeric|digits:4',
-            'specs.modelo'      => 'required_if:actualCategory,vehiculos|string|max:50',
-            'specs.kilometraje' => 'required_if:actualCategory,vehiculos|numeric|min:0',
-            'specs.transmision' => 'required_if:actualCategory,vehiculos|string',
-
-            'specs.habitaciones'    => 'required_if:actualCategory,inmuebles|numeric|min:0',
-            'specs.baños'           => 'required_if:actualCategory,inmuebles|numeric|min:0',
-            'specs.area'            => 'required_if:actualCategory,inmuebles|numeric|min:1',
-            'specs.estacionamiento' => 'required_if:actualCategory,inmuebles|numeric|min:0',
-
-            'specs.tipo_empleo' => 'required_if:actualCategory,empleos|string',
-            'specs.experiencia' => 'required_if:actualCategory,empleos|string',
-            'specs.salario'     => 'required_if:actualCategory,empleos|string',
-
-            'specs.precio_minimo' => 'required_if:actualCategory,servicios|numeric|min:0',
-            'specs.duracion'      => 'required_if:actualCategory,servicios|string',
+            'images' => 'required|array|min:1|max:5'
         ]);
 
 
         try {
-
             return DB::transaction(function () use ($request, $validated) {
+                $category = DB::table('categories')->where('slug', $request['category_type'])->get();
                 $user = Auth::user();
 
-                $tag_validate = $validated['category'] == 1 ? $validated['item_type'] : null;
 
                 $publication = Publication::create([
                     'user_id'         => $user->id,
                     'name'            => $validated['title'],
-                    'slug'            => Str::slug($validated['title']) . '-' . Str::random(5), // Slug único
-                    'category_id'     => $validated['category'] ?? 0,
-                    'sub_category_id' => $validated['sub_category'] ?? 0,
-                    'tag_id'          => $tag_validate,
+                    'slug'            => Str::slug($validated['title']) . '-' . Str::random(5),
+                    'category_id'     => $category[0]->id,
                     'description'     => $validated['description'],
                     'state'           => $validated['state'],
                     'city'            => $validated['city'],
-                    'condition'       => $validated['condition'],
-                    'specs'           => $request->specs,
+                    'status'           => 'por realizar',
                 ]);
 
                 if ($request->hasFile('images')) {
@@ -260,7 +228,7 @@ class PublicationController extends Controller
                     }
                 }
 
-                return redirect()->route('dashboard')->with('success', 'Publicación creada.');
+                return redirect()->route('dashboard')->with('success', 'Aviso enviado!.');
             });
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Error al procesar: ' . $e->getMessage()]);
@@ -374,35 +342,49 @@ class PublicationController extends Controller
         }
     }
 
+    public function assign(Request $request, int $id)
+    {
 
+        try {
+            $request->validate([
+                'worker_id' => 'nullable|exists:users,id',
+            ]);
 
-    public function toggleStatus(Publication $publication)
+            $publication = Publication::findOrFail($id);
+
+            $publication->update([
+                'worker_id' => $request->worker_id,
+            ]);
+
+            return back()->with('success', 'Aviso asignado correctamente.');
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => 'No se pudo cambiar el estatus: ' . $e->getMessage()
+            ])
+                ->with('error', 'Hubo un error al asignar! Intenta nuevamente');
+        }
+    }
+
+    public function toggleStatus(Request $request, int $id)
     {
 
         try {
 
-            $nuevoStatus = ($publication->status === 'disponible')
-                ? 'no disponible'
-                : 'disponible';
-
+            $request->validate([
+                'status' => 'string',
+            ]);
+            $publication = Publication::findOrFail($id);
             $publication->update([
-                'status' => $nuevoStatus
+                'status' => $request->status
             ]);
 
-            $mensaje = $nuevoStatus === 'disponible'
-                ? 'La publicación ahora está visible para todos.'
-                : 'La publicación ha sido pausada correctamente.';
-                
 
-            return redirect()
-                ->route('dashboard')
-                ->with('success', 'Publicación actualizada')
-                ->with('description', $mensaje);
-                
+
+            return back()->with('success', 'Estatus actualizado');
         } catch (\Exception $e) {
             return back()->withErrors([
                 'error' => 'No se pudo cambiar el estatus: ' . $e->getMessage()
-            ]);
+            ])->with('error', 'Hubo un error al asignar! Intenta nuevamente');
         }
     }
 }

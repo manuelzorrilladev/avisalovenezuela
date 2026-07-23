@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
+import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
+import { register } from '@/routes';
 import { store } from '@/routes/login';
 
 defineProps<{
@@ -36,7 +38,6 @@ defineProps<{
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6"
         >
-        error:{{ errors }}
             <div class="grid gap-6">
                 <div class="grid gap-2 ">
                     <Label for="email">Correo electronico</Label>
@@ -99,13 +100,13 @@ defineProps<{
                 </Button>
             </div>
 
-            <!-- <div
+            <div
                 class="text-center text-sm text-text-main"
                 v-if="canRegister"
             >
                 No tienes una cuenta?
                 <TextLink :href="register()" :tabindex="5">Registrarse</TextLink>
-            </div> -->
+            </div>
         </Form>
     </AuthBase>
 </template>

@@ -23,6 +23,9 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
+         $role_array = ['empleado','usuario'];
+        $random_value = array_rand($role_array,1);
         return [
             'name' => fake()->firstName(),
             'email' => fake()->unique()->safeEmail(),
@@ -33,7 +36,7 @@ class UserFactory extends Factory
             'id_card' => 'V-' . fake()->randomNumber(8),
             'city' => 'Caracas',
             'state' => 'Distrito Capital',
-            'role'=>0,
+            'role'=>$role_array[$random_value],
             'birth_date' => fake()->dateTimeBetween('-60 years', '-18 years')->format('Y-m-d')
         ];
     }

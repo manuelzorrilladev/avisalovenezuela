@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'id_card' => 'V-00000000',
             'phone' => '04120000000',
             'birth_date' => '1990-01-01',
-            'role'=>3,
+            'role'=>'admin',
             'city' => 'Caracas',
             'state' => 'Distrito Capital',
 

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'Estas credenciales no coinciden con nuestros registros.',
+    'failed' => 'El correo electrónico o la contraseña que ingresaste no son correctos. Por favor, verifica e inténtalo de nuevo.',
     'password' => 'La contraseña es incorrecta.',
     'throttle' => 'Demasiados intentos de inicio de sesión. Por favor inténtalo de nuevo en :seconds seconds.',
 

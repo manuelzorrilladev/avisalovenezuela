@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import type { PageProps } from '@inertiajs/core';
 import { Link, usePage } from '@inertiajs/vue3';
+
 import { useWindowSize } from '@vueuse/core';
 import { Menu, XCircle } from 'lucide-vue-next';
 import { computed, ref, type Ref } from 'vue';
 import { dashboard, login, register } from '@/routes';
+import { useFormStore } from '@/state/formState.js';
 import AppLogo from '../AppLogo.vue';
 import ThemeChanger from './ThemeChanger.vue';
 const { width } = useWindowSize();
@@ -19,8 +22,14 @@ withDefaults(
     },
 );
 const isActive: Ref<boolean> = ref(false);
-const page = usePage();
+const page = usePage<PageProps>();
 const auth = computed(() => page.props.auth);
+const formStore = useFormStore();
+
+
+function logout(){
+    formStore.resetForm()
+}
 </script>
 
 <template>
@@ -46,6 +55,7 @@ const auth = computed(() => page.props.auth);
                             href="/logout"
                             method="post"
                             as="button"
+                            @click="logout"
                             class="transition-colors hover:text-white"
                         >
                             Cerrar Sesión

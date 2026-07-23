@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -29,6 +29,16 @@ function handleSubmit(data: Record<string, any>) {
     return payloadFinal;
 }
 
+function handleAuthSuccess() {
+    // 1. Analizamos los parámetros de la URL actual
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectTarget = urlParams.get('redirect');
+
+    if (redirectTarget === 'publicar') {
+        router.visit('/dashboard/publicacion/crear');
+    }
+}
+
 </script>
 
 <template>
@@ -45,6 +55,7 @@ function handleSubmit(data: Record<string, any>) {
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6"
             :transform="handleSubmit"
+              @success="handleAuthSuccess" 
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">

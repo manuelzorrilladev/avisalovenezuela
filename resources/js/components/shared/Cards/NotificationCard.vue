@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { CheckCircle2Icon, XIcon } from 'lucide-vue-next';
+import { CheckCircle2Icon, XIcon,CircleAlertIcon } from 'lucide-vue-next';
 import { ref, watch, onUnmounted, nextTick } from 'vue';
 
 const props = defineProps({
     duration: { type: Number, default: 5000 },
-    show: { type: Boolean, default: false }
+    show: { type: Boolean, default: false },
+    isError:{type:Boolean, default:false}
 });
 
 const emit = defineEmits(['close']);
@@ -68,10 +69,11 @@ onUnmounted(() => clearTimers());
     >
         <div
             v-if="isVisible"
-            class="fixed right-4 top-4 z-[100] flex w-full max-w-sm flex-col overflow-hidden rounded-lg border border-primary/20 bg-white shadow-2xl"
+            class="fixed right-4 top-4 z-100 flex w-full max-w-sm flex-col overflow-hidden rounded-lg border border-primary/20 bg-white shadow-2xl"
         >
             <div class="flex items-start gap-3 p-4">
-                <CheckCircle2Icon class="h-6 w-6 shrink-0 text-primary" />
+                <CheckCircle2Icon v-if="!isError" class="h-6 w-6 shrink-0 text-primary" />
+                <CircleAlertIcon v-else class="h-6 w-6 shrink-0 text-red-700" />
                 
                 <div class="flex-1 min-w-0">
                     <h2 class="font-brand text-sm font-bold text-gray-900">

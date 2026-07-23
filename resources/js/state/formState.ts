@@ -72,6 +72,7 @@ export const useFormStore = defineStore('formStore', () => {
         docType.value = 'V';
         docNumber.value = '';
         localStorage.removeItem('avisalo_draft_form');
+        console.log("form Reset");
     };
 
     return {

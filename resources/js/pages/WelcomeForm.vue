@@ -11,6 +11,8 @@ import {
     MegaphoneIcon,
     TagIcon,
     UsersIcon,
+    MailIcon,
+    UserIcon,
     TvIcon,
     HeartCrackIcon,
     Ellipsis,
@@ -64,8 +66,8 @@ const categories: CategoryLabel[] = [
     { value: 'compra', label: 'Compra', icon: ShoppingBagIcon },
     { value: 'empleo', label: 'Empleo', icon: BriefcaseIcon },
     { value: 'servicios', label: 'Servicios', icon: HandHeart },
-    { value: 'busqueda_personal', label: 'Búsqueda de Personal', icon: UsersIcon },
-    { value: 'valla_digital', label: 'Valla Digital', icon: TvIcon },
+    { value: 'busqueda-de-personal', label: 'Búsqueda de Personal', icon: UsersIcon },
+    { value: 'valla-digital', label: 'Valla Digital', icon: TvIcon },
     { value: 'obituario', label: 'Obituario', icon: HeartCrackIcon },
     { value: 'convocatoria', label: 'Convocatoria', icon: MegaphoneIcon },
     { value: 'otros', label: 'Otros', icon: Ellipsis },
@@ -159,7 +161,7 @@ const submit = () => {
 
     // Redirección si el usuario no ha iniciado sesión
     if (!user.value) {
-        window.location.href = '/register';
+        window.location.href = '/register?redirect=publicar';
         return;
     }
 
@@ -167,15 +169,17 @@ const submit = () => {
 
     const formToSend = useForm({ ...form.value });
     processing.value = true
-    formToSend.post('/publicacion', {
-        forceFormData: true, // Forzar Multipart/FormData obligatorio para subir archivos binarios (Files)
+
+    formToSend.post('/dashboard/publicacion', {
+        forceFormData: true,
         preserveScroll: true,
         onError: (backendErrors) => {
-            formStore.setErrors(backendErrors); // Sincroniza los fallos de validación de Laravel en Pinia
+            formStore.setErrors(backendErrors); 
+            console.log("Failed: ", backendErrors);
         },
         onSuccess: () => {
-            // Limpieza completa tras envío exitoso
             previews.value.forEach((p) => URL.revokeObjectURL(p.url));
+            console.log("Success");
             previews.value = [];
             formStore.resetForm();
             currentStep.value = 1;

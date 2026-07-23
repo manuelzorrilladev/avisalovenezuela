@@ -10,13 +10,17 @@ import {
 import UserInfo from '@/components/UserInfo.vue';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
+import { useFormStore } from '@/state/formState';
 import type { User } from '@/types';
 
 type Props = {
     user: User;
 };
+const formStore = useFormStore();
+
 
 const handleLogout = () => {
+    formStore.resetForm()
     router.flushAll();
 };
 

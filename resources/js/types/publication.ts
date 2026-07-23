@@ -28,6 +28,10 @@ export interface PublicationCardType {
     slug: string;
     status:Status;
     images: PublicationImage[];
+    published_at:string;
+    state:string;
+    city:string;
+    worker_id:number
 }
 
 /**
@@ -41,6 +45,14 @@ export interface User {
     created_at?: string;
     state?: string;
     city?: string;
+}
+/**
+ * Generic Workers interface used in multiple places
+ */
+export interface Workers {
+    id: number;
+    name: string;
+  
 }
 
 /**

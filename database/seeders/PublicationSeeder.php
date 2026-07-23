@@ -18,7 +18,8 @@ class PublicationSeeder extends Seeder
     {
         // 1. Obtener únicamente los IDs de usuarios que tengan el rol igual a 0
         // Usar el query builder DB para evitar posibles conflictos con métodos del modelo User
-        $userIds = DB::table('users')->where('role', 0)->pluck('id');
+        $userIds = DB::table('users')->where('role', 'usuario')->pluck('id');
+        $worker = DB::table('users')->where('role', 'empleado')->pluck('id');
 
         if ($userIds->isEmpty()) {
             $this->command->warn('No se encontraron usuarios con roles = 0. Asegúrate de sembrar usuarios antes.');
@@ -84,22 +85,25 @@ class PublicationSeeder extends Seeder
                 // Seleccionamos ubicación y usuario al azar
                 $location = $locations[array_rand($locations)];
                 $userId = $userIds->random();
+                $workerId = $worker->random();
+                $getRandomNum = random_int(1,2);
+
                 
                 // Fecha de creación aleatoria en los últimos 30 días
                 $createdAt = Carbon::now()->subDays(rand(1, 30))->subHours(rand(1, 23));
-
                 $publications[] = [
                     'user_id'       => $userId,
                     'category_id'   => $categoryId,
                     'name'          => $name,
-                    'slug'          => Str::slug($name) . '-' . rand(100, 999), // Slug amigable con sufijo único
+                    'slug'          => Str::slug($name) . '-' . rand(100, 999), 
                     'description'   => $description,
-                    'status'        => $statuses[array_rand($statuses,1)], // O "published" según tus reglas de negocio
+                    'status'        => $statuses[array_rand($statuses,1)],
                     'state'         => $location['state'],
                     'city'          => $location['city'],
                     'published_at'  => $createdAt,
                     'created_at'    => $createdAt,
                     'updated_at'    => $createdAt,
+                    'worker_id' => $getRandomNum == 1?$workerId:null
                 ];
             }
         }

@@ -36,6 +36,7 @@ const page = usePage();
 const showToast = ref<boolean>(false);
 const activeItem = ref<number>(-1);
 const pubModal = ref<boolean>(false);
+const activePublication = ref<PublicationCardType|undefined>(undefined)
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Panel de control', href: dashboard().url },
@@ -81,10 +82,22 @@ const statusMap: Record<StatusKey, StatusItem> = {
     },
 };
 
+
 function toggleModal(pos: number) {
     activeItem.value = pos;
     pubModal.value = !pubModal.value;
+    if(pos>=0){
+        const item = props.publications.find((pub)=>{
+            return pub
+        })
+        activePublication.value = item
+    }else{
+        activePublication.value = undefined
+    }
+
 }
+
+
 onMounted(() => {
     const flash = page.props.flash as { success?: string };
     if (flash?.success) {
@@ -111,15 +124,11 @@ onMounted(() => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="space-y-8 p-4 md:p-8">
-            <!-- <div
-                class="debug fixed top-2 left-4 z-50 flex h-[90vh] w-full max-w-lg flex-col items-center justify-start gap-6 overflow-y-scroll rounded-2xl border bg-white p-4 text-center shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
-            >
-                {{ pubModal }}-{{ props.publications[activeItem] }}
-            </div> -->
+           
             <Transition name="popup">
             <div v-if="pubModal" class="fixed z-99 flex items-center justify-center  inset-0 bg-secondary-background/70 backdrop-blur-sm h-screen">
                 <DescriptionCard
-                    :publications="props.publications"
+                    :publication="activePublication"
                     :activeItem="activeItem"
                     @close="toggleModal(-1)"
                 />
@@ -254,5 +263,32 @@ onMounted(() => {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+.popup-enter-from,
+.popup-leave-to {
+    opacity: 0;
+}
+
+.popup-enter-active,
+.popup-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.popup-enter-active .modal-content {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.popup-leave-active .modal-content {
+    transition: all 0.25s ease-in;
+}
+
+.popup-enter-from .modal-content {
+    transform: scale(0.7) translateY(20px);
+    opacity: 0;
+}
+
+.popup-leave-to .modal-content {
+    transform: scale(0.9);
+    opacity: 0;
 }
 </style>
