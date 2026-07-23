@@ -55,7 +55,7 @@ const fullPublicationUrl = `https://avisalovenezuela.com/${url}`;
 
 const rawText = `¡Hola! Tengo una publicación activa en Avisalo y quisiera verificar el estatus del aviso, por favor. El link a mi publicación es: ${fullPublicationUrl}`;
 
-const message = `https://wa.me/584241424867?text=${encodeURIComponent(rawText)}`;
+const message = `https://wa.me/58xxxxxxxxx?text=${encodeURIComponent(rawText)}`;
 const prevImage = () => {
     if (!props.publication?.images) return;
     if (activeImageIndex.value > 0) {
