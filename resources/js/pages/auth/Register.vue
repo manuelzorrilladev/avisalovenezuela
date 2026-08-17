@@ -104,7 +104,7 @@ import { store } from '@/routes/register';
                     :href="login()"
                     class="underline underline-offset-4"
                     :tabindex="6"
-                    >Iniciar sesión</TextLink
+                    >Inicia sesión</TextLink
                 >
             </div>
         </Form>

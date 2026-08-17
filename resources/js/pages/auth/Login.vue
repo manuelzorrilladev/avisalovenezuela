@@ -106,7 +106,7 @@ defineProps<{
                 v-if="canRegister"
             >
                 No tienes una cuenta?
-                <TextLink :href="register()" :tabindex="5">Registrarse</TextLink>
+                <TextLink :href="register()" :tabindex="5">Regístrate</TextLink>
             </div>
         </Form>
     </AuthBase>
