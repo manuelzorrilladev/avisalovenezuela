@@ -195,31 +195,14 @@ class PublicationController extends Controller
             'description' => 'required|string|min:20',
             'state' => 'required|string',
             'city' => 'required|string',
-            'condition' => 'required|in:nuevo,usado,N/A',
-            'images' => 'required|array|min:1|max:5',
-
-            'specs.marca'       => 'required_if:actualCategory,vehiculos|string|max:50',
-            'specs.año'         => 'required_if:actualCategory,vehiculos|numeric|digits:4',
-            'specs.modelo'      => 'required_if:actualCategory,vehiculos|string|max:50',
-            'specs.kilometraje' => 'required_if:actualCategory,vehiculos|numeric|min:0',
-            'specs.transmision' => 'required_if:actualCategory,vehiculos|string',
-
-            'specs.habitaciones'    => 'required_if:actualCategory,inmuebles|numeric|min:0',
-            'specs.baños'           => 'required_if:actualCategory,inmuebles|numeric|min:0',
-            'specs.area'            => 'required_if:actualCategory,inmuebles|numeric|min:1',
-            'specs.estacionamiento' => 'required_if:actualCategory,inmuebles|numeric|min:0',
-
-            'specs.tipo_empleo' => 'required_if:actualCategory,empleos|string',
-            'specs.experiencia' => 'required_if:actualCategory,empleos|string',
-            'specs.salario'     => 'required_if:actualCategory,empleos|string',
-
-            'specs.precio_minimo' => 'required_if:actualCategory,servicios|numeric|min:0',
-            'specs.duracion'      => 'required_if:actualCategory,servicios|string',
         ]);
 
 
         try {
+            if($request['city']=="Otro"){
+                $validated['city'] = $request['customCity'];
 
+            };
             return DB::transaction(function () use ($request, $validated) {
                 $user = Auth::user();
 
