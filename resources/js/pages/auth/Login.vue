@@ -10,7 +10,6 @@ import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
 
 defineProps<{
     status?: string;
@@ -59,7 +58,7 @@ defineProps<{
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
                         <Label for="password">Contraseña</Label>
-                        <TextLink
+                        <!-- <TextLink
                             v-if="canResetPassword"
                             :href="request()"
                             class="text-sm "
@@ -67,7 +66,7 @@ defineProps<{
                             
                         >
                             Olvidaste tu contraseña?
-                        </TextLink>
+                        </TextLink> -->
                     </div>
                     <Input
                         id="password"

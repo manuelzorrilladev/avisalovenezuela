@@ -22,20 +22,20 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
-    {
-        title: 'Comentarios',
-        href: '#',
-        icon: MessageSquareText,
-        hasMessage:true,
-        disabled:true
+    // {
+    //     title: 'Comentarios',
+    //     href: '#',
+    //     icon: MessageSquareText,
+    //     hasMessage:true,
+    //     disabled:true
 
-    },
-    {
-        title: 'Métricas',
-        href: '#',
-        icon: ChartNoAxesCombined,
-        disabled:true
-    },
+    // },
+    // {
+    //     title: 'Métricas',
+    //     href: '#',
+    //     icon: ChartNoAxesCombined,
+    //     disabled:true
+    // },
 ];
 
 

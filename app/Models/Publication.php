@@ -35,7 +35,8 @@ class Publication extends Model
         'city',
         'condition',
         'specs',
-        'status'
+        'status',
+        'worker_id'
     ];
 
 
@@ -46,6 +47,12 @@ class Publication extends Model
         static::creating(function ($publication) {
             $publication->slug = \Illuminate\Support\Str::slug($publication->name);
         });
+    }
+
+    public function worker()
+    {
+        // Retorna el usuario (empleado) o null si no está asignado
+        return $this->belongsTo(User::class, 'worker_id'); 
     }
 
     protected static function booted()

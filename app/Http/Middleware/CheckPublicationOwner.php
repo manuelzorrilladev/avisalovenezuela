@@ -19,13 +19,13 @@ class CheckPublicationOwner
         $user = Auth::user();
         $publication = $request->route('publication');
 
-        if ($user && $user->is_admin) {
+        if ($user && $user->role !=0) {
             return $next($request);
         }
 
         
         if ($publication && $publication->user_id !== $user->id) {
-            abort(403, 'No tienes permiso para editar esta publicación.');
+            abort(403, 'No tienes permiso para ver esta publicación.');
         }
 
         return $next($request);

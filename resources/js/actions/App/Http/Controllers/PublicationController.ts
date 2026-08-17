@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults, validateParameters } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\PublicationController::getAll
  * @see app/Http/Controllers/PublicationController.php:0
@@ -78,74 +78,74 @@ getAll.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     getAll.form = getAllForm
 /**
-* @see \App\Http\Controllers\PublicationController::getHome
- * @see app/Http/Controllers/PublicationController.php:25
+* @see \App\Http\Controllers\PublicationController::HomeForm
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
-export const getHome = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: getHome.url(options),
+export const HomeForm = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: HomeForm.url(options),
     method: 'get',
 })
 
-getHome.definition = {
+HomeForm.definition = {
     methods: ["get","head"],
     url: '/',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\PublicationController::getHome
- * @see app/Http/Controllers/PublicationController.php:25
+* @see \App\Http\Controllers\PublicationController::HomeForm
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
-getHome.url = (options?: RouteQueryOptions) => {
-    return getHome.definition.url + queryParams(options)
+HomeForm.url = (options?: RouteQueryOptions) => {
+    return HomeForm.definition.url + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\PublicationController::getHome
- * @see app/Http/Controllers/PublicationController.php:25
+* @see \App\Http\Controllers\PublicationController::HomeForm
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
-getHome.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: getHome.url(options),
+HomeForm.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: HomeForm.url(options),
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\PublicationController::getHome
- * @see app/Http/Controllers/PublicationController.php:25
+* @see \App\Http\Controllers\PublicationController::HomeForm
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
-getHome.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: getHome.url(options),
+HomeForm.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: HomeForm.url(options),
     method: 'head',
 })
 
     /**
-* @see \App\Http\Controllers\PublicationController::getHome
- * @see app/Http/Controllers/PublicationController.php:25
+* @see \App\Http\Controllers\PublicationController::HomeForm
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
-    const getHomeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-        action: getHome.url(options),
+    const HomeFormForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: HomeForm.url(options),
         method: 'get',
     })
 
             /**
-* @see \App\Http\Controllers\PublicationController::getHome
- * @see app/Http/Controllers/PublicationController.php:25
+* @see \App\Http\Controllers\PublicationController::HomeForm
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
-        getHomeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: getHome.url(options),
+        HomeFormForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: HomeForm.url(options),
             method: 'get',
         })
             /**
-* @see \App\Http\Controllers\PublicationController::getHome
- * @see app/Http/Controllers/PublicationController.php:25
+* @see \App\Http\Controllers\PublicationController::HomeForm
+ * @see app/Http/Controllers/PublicationController.php:23
  * @route '/'
  */
-        getHomeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: getHome.url({
+        HomeFormForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: HomeForm.url({
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
                             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -154,212 +154,10 @@ getHome.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
     
-    getHome.form = getHomeForm
-/**
-* @see \App\Http\Controllers\PublicationController::getByCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-export const getByCategory = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: getByCategory.url(args, options),
-    method: 'get',
-})
-
-getByCategory.definition = {
-    methods: ["get","head"],
-    url: '/anuncios/{category_slug?}/{sub_category_slug?}',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\PublicationController::getByCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-getByCategory.url = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions) => {
-    if (Array.isArray(args)) {
-        args = {
-                    category_slug: args[0],
-                    sub_category_slug: args[1],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    validateParameters(args, [
-            "category_slug",
-            "sub_category_slug",
-        ])
-
-    const parsedArgs = {
-                        category_slug: args?.category_slug,
-                                sub_category_slug: args?.sub_category_slug,
-                }
-
-    return getByCategory.definition.url
-            .replace('{category_slug?}', parsedArgs.category_slug?.toString() ?? '')
-            .replace('{sub_category_slug?}', parsedArgs.sub_category_slug?.toString() ?? '')
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\PublicationController::getByCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-getByCategory.get = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: getByCategory.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\PublicationController::getByCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-getByCategory.head = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: getByCategory.url(args, options),
-    method: 'head',
-})
-
-    /**
-* @see \App\Http\Controllers\PublicationController::getByCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-    const getByCategoryForm = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-        action: getByCategory.url(args, options),
-        method: 'get',
-    })
-
-            /**
-* @see \App\Http\Controllers\PublicationController::getByCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-        getByCategoryForm.get = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: getByCategory.url(args, options),
-            method: 'get',
-        })
-            /**
-* @see \App\Http\Controllers\PublicationController::getByCategory
- * @see app/Http/Controllers/PublicationController.php:77
- * @route '/anuncios/{category_slug?}/{sub_category_slug?}'
- */
-        getByCategoryForm.head = (args?: { category_slug?: string | number, sub_category_slug?: string | number } | [category_slug: string | number, sub_category_slug: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: getByCategory.url(args, {
-                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                            _method: 'HEAD',
-                            ...(options?.query ?? options?.mergeQuery ?? {}),
-                        }
-                    }),
-            method: 'get',
-        })
-    
-    getByCategory.form = getByCategoryForm
-/**
-* @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-export const getDescription = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: getDescription.url(args, options),
-    method: 'get',
-})
-
-getDescription.definition = {
-    methods: ["get","head"],
-    url: '/anuncio/{publication}',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-getDescription.url = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { publication: args }
-    }
-
-            if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
-            args = { publication: args.slug }
-        }
-    
-    if (Array.isArray(args)) {
-        args = {
-                    publication: args[0],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-                        publication: typeof args.publication === 'object'
-                ? args.publication.slug
-                : args.publication,
-                }
-
-    return getDescription.definition.url
-            .replace('{publication}', parsedArgs.publication.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-getDescription.get = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: getDescription.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-getDescription.head = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: getDescription.url(args, options),
-    method: 'head',
-})
-
-    /**
-* @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-    const getDescriptionForm = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-        action: getDescription.url(args, options),
-        method: 'get',
-    })
-
-            /**
-* @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-        getDescriptionForm.get = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: getDescription.url(args, options),
-            method: 'get',
-        })
-            /**
-* @see \App\Http\Controllers\PublicationController::getDescription
- * @see app/Http/Controllers/PublicationController.php:125
- * @route '/anuncio/{publication}'
- */
-        getDescriptionForm.head = (args: { publication: string | number | { slug: string | number } } | [publication: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: getDescription.url(args, {
-                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                            _method: 'HEAD',
-                            ...(options?.query ?? options?.mergeQuery ?? {}),
-                        }
-                    }),
-            method: 'get',
-        })
-    
-    getDescription.form = getDescriptionForm
+    HomeForm.form = HomeFormForm
 /**
 * @see \App\Http\Controllers\PublicationController::publicationCreate
- * @see app/Http/Controllers/PublicationController.php:154
+ * @see app/Http/Controllers/PublicationController.php:86
  * @route '/dashboard/publicacion/crear'
  */
 export const publicationCreate = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -374,7 +172,7 @@ publicationCreate.definition = {
 
 /**
 * @see \App\Http\Controllers\PublicationController::publicationCreate
- * @see app/Http/Controllers/PublicationController.php:154
+ * @see app/Http/Controllers/PublicationController.php:86
  * @route '/dashboard/publicacion/crear'
  */
 publicationCreate.url = (options?: RouteQueryOptions) => {
@@ -383,7 +181,7 @@ publicationCreate.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\PublicationController::publicationCreate
- * @see app/Http/Controllers/PublicationController.php:154
+ * @see app/Http/Controllers/PublicationController.php:86
  * @route '/dashboard/publicacion/crear'
  */
 publicationCreate.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -392,7 +190,7 @@ publicationCreate.get = (options?: RouteQueryOptions): RouteDefinition<'get'> =>
 })
 /**
 * @see \App\Http\Controllers\PublicationController::publicationCreate
- * @see app/Http/Controllers/PublicationController.php:154
+ * @see app/Http/Controllers/PublicationController.php:86
  * @route '/dashboard/publicacion/crear'
  */
 publicationCreate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -402,7 +200,7 @@ publicationCreate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 
     /**
 * @see \App\Http\Controllers\PublicationController::publicationCreate
- * @see app/Http/Controllers/PublicationController.php:154
+ * @see app/Http/Controllers/PublicationController.php:86
  * @route '/dashboard/publicacion/crear'
  */
     const publicationCreateForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -412,7 +210,7 @@ publicationCreate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 
             /**
 * @see \App\Http\Controllers\PublicationController::publicationCreate
- * @see app/Http/Controllers/PublicationController.php:154
+ * @see app/Http/Controllers/PublicationController.php:86
  * @route '/dashboard/publicacion/crear'
  */
         publicationCreateForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -421,7 +219,7 @@ publicationCreate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
         })
             /**
 * @see \App\Http\Controllers\PublicationController::publicationCreate
- * @see app/Http/Controllers/PublicationController.php:154
+ * @see app/Http/Controllers/PublicationController.php:86
  * @route '/dashboard/publicacion/crear'
  */
         publicationCreateForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -436,81 +234,26 @@ publicationCreate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
     
     publicationCreate.form = publicationCreateForm
 /**
-* @see \App\Http\Controllers\PublicationController::publicationStore
- * @see app/Http/Controllers/PublicationController.php:189
- * @route '/dashboard/publicacion'
+* @see \App\Http\Controllers\PublicationController::publicationView
+ * @see app/Http/Controllers/PublicationController.php:96
+ * @route '/dashboard/publicacion/{publication}'
  */
-export const publicationStore = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: publicationStore.url(options),
-    method: 'post',
-})
-
-publicationStore.definition = {
-    methods: ["post"],
-    url: '/dashboard/publicacion',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\PublicationController::publicationStore
- * @see app/Http/Controllers/PublicationController.php:189
- * @route '/dashboard/publicacion'
- */
-publicationStore.url = (options?: RouteQueryOptions) => {
-    return publicationStore.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\PublicationController::publicationStore
- * @see app/Http/Controllers/PublicationController.php:189
- * @route '/dashboard/publicacion'
- */
-publicationStore.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: publicationStore.url(options),
-    method: 'post',
-})
-
-    /**
-* @see \App\Http\Controllers\PublicationController::publicationStore
- * @see app/Http/Controllers/PublicationController.php:189
- * @route '/dashboard/publicacion'
- */
-    const publicationStoreForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-        action: publicationStore.url(options),
-        method: 'post',
-    })
-
-            /**
-* @see \App\Http\Controllers\PublicationController::publicationStore
- * @see app/Http/Controllers/PublicationController.php:189
- * @route '/dashboard/publicacion'
- */
-        publicationStoreForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-            action: publicationStore.url(options),
-            method: 'post',
-        })
-    
-    publicationStore.form = publicationStoreForm
-/**
-* @see \App\Http\Controllers\PublicationController::publicationEdit
- * @see app/Http/Controllers/PublicationController.php:166
- * @route '/dashboard/publicacion/{publication}/editar'
- */
-export const publicationEdit = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: publicationEdit.url(args, options),
+export const publicationView = (args: { publication: number | { id: number } } | [publication: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: publicationView.url(args, options),
     method: 'get',
 })
 
-publicationEdit.definition = {
+publicationView.definition = {
     methods: ["get","head"],
-    url: '/dashboard/publicacion/{publication}/editar',
+    url: '/dashboard/publicacion/{publication}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\PublicationController::publicationEdit
- * @see app/Http/Controllers/PublicationController.php:166
- * @route '/dashboard/publicacion/{publication}/editar'
+* @see \App\Http\Controllers\PublicationController::publicationView
+ * @see app/Http/Controllers/PublicationController.php:96
+ * @route '/dashboard/publicacion/{publication}'
  */
-publicationEdit.url = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+publicationView.url = (args: { publication: number | { id: number } } | [publication: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { publication: args }
     }
@@ -533,56 +276,56 @@ publicationEdit.url = (args: { publication: string | number | { id: string | num
                 : args.publication,
                 }
 
-    return publicationEdit.definition.url
+    return publicationView.definition.url
             .replace('{publication}', parsedArgs.publication.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\PublicationController::publicationEdit
- * @see app/Http/Controllers/PublicationController.php:166
- * @route '/dashboard/publicacion/{publication}/editar'
+* @see \App\Http\Controllers\PublicationController::publicationView
+ * @see app/Http/Controllers/PublicationController.php:96
+ * @route '/dashboard/publicacion/{publication}'
  */
-publicationEdit.get = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: publicationEdit.url(args, options),
+publicationView.get = (args: { publication: number | { id: number } } | [publication: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: publicationView.url(args, options),
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\PublicationController::publicationEdit
- * @see app/Http/Controllers/PublicationController.php:166
- * @route '/dashboard/publicacion/{publication}/editar'
+* @see \App\Http\Controllers\PublicationController::publicationView
+ * @see app/Http/Controllers/PublicationController.php:96
+ * @route '/dashboard/publicacion/{publication}'
  */
-publicationEdit.head = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: publicationEdit.url(args, options),
+publicationView.head = (args: { publication: number | { id: number } } | [publication: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: publicationView.url(args, options),
     method: 'head',
 })
 
     /**
-* @see \App\Http\Controllers\PublicationController::publicationEdit
- * @see app/Http/Controllers/PublicationController.php:166
- * @route '/dashboard/publicacion/{publication}/editar'
+* @see \App\Http\Controllers\PublicationController::publicationView
+ * @see app/Http/Controllers/PublicationController.php:96
+ * @route '/dashboard/publicacion/{publication}'
  */
-    const publicationEditForm = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-        action: publicationEdit.url(args, options),
+    const publicationViewForm = (args: { publication: number | { id: number } } | [publication: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: publicationView.url(args, options),
         method: 'get',
     })
 
             /**
-* @see \App\Http\Controllers\PublicationController::publicationEdit
- * @see app/Http/Controllers/PublicationController.php:166
- * @route '/dashboard/publicacion/{publication}/editar'
+* @see \App\Http\Controllers\PublicationController::publicationView
+ * @see app/Http/Controllers/PublicationController.php:96
+ * @route '/dashboard/publicacion/{publication}'
  */
-        publicationEditForm.get = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: publicationEdit.url(args, options),
+        publicationViewForm.get = (args: { publication: number | { id: number } } | [publication: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: publicationView.url(args, options),
             method: 'get',
         })
             /**
-* @see \App\Http\Controllers\PublicationController::publicationEdit
- * @see app/Http/Controllers/PublicationController.php:166
- * @route '/dashboard/publicacion/{publication}/editar'
+* @see \App\Http\Controllers\PublicationController::publicationView
+ * @see app/Http/Controllers/PublicationController.php:96
+ * @route '/dashboard/publicacion/{publication}'
  */
-        publicationEditForm.head = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: publicationEdit.url(args, {
+        publicationViewForm.head = (args: { publication: number | { id: number } } | [publication: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: publicationView.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
                             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -591,28 +334,28 @@ publicationEdit.head = (args: { publication: string | number | { id: string | nu
             method: 'get',
         })
     
-    publicationEdit.form = publicationEditForm
+    publicationView.form = publicationViewForm
 /**
-* @see \App\Http\Controllers\PublicationController::publicationUpdate
- * @see app/Http/Controllers/PublicationController.php:264
- * @route '/dashboard/publicacion/{publication}'
+* @see \App\Http\Controllers\PublicationController::publicationDownload
+ * @see app/Http/Controllers/PublicationController.php:125
+ * @route '/dashboard/publicacion/{id}/files'
  */
-export const publicationUpdate = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: publicationUpdate.url(args, options),
-    method: 'put',
+export const publicationDownload = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: publicationDownload.url(args, options),
+    method: 'get',
 })
 
-publicationUpdate.definition = {
-    methods: ["put"],
-    url: '/dashboard/publicacion/{publication}',
-} satisfies RouteDefinition<["put"]>
+publicationDownload.definition = {
+    methods: ["get","head"],
+    url: '/dashboard/publicacion/{id}/files',
+} satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\PublicationController::publicationUpdate
- * @see app/Http/Controllers/PublicationController.php:264
- * @route '/dashboard/publicacion/{publication}'
+* @see \App\Http\Controllers\PublicationController::publicationDownload
+ * @see app/Http/Controllers/PublicationController.php:125
+ * @route '/dashboard/publicacion/{id}/files'
  */
-publicationUpdate.url = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+publicationDownload.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
@@ -772,20 +515,18 @@ assign.url = (args: { id: string | number } | [id: string | number ] | string | 
     
     if (Array.isArray(args)) {
         args = {
-                    publication: args[0],
+                    id: args[0],
                 }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        publication: typeof args.publication === 'object'
-                ? args.publication.id
-                : args.publication,
+                        id: args.id,
                 }
 
-    return publicationUpdate.definition.url
-            .replace('{publication}', parsedArgs.publication.toString())
+    return assign.definition.url
+            .replace('{id}', parsedArgs.id.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
@@ -794,9 +535,9 @@ assign.url = (args: { id: string | number } | [id: string | number ] | string | 
  * @see app/Http/Controllers/PublicationController.php:348
  * @route '/dashboard/publicacion/{id}/asignar'
  */
-publicationUpdate.put = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: publicationUpdate.url(args, options),
-    method: 'put',
+assign.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: assign.url(args, options),
+    method: 'patch',
 })
 
     /**
@@ -804,10 +545,10 @@ publicationUpdate.put = (args: { publication: string | number | { id: string | n
  * @see app/Http/Controllers/PublicationController.php:348
  * @route '/dashboard/publicacion/{id}/asignar'
  */
-    const publicationUpdateForm = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-        action: publicationUpdate.url(args, {
+    const assignForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        action: assign.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                        _method: 'PUT',
+                        _method: 'PATCH',
                         ...(options?.query ?? options?.mergeQuery ?? {}),
                     }
                 }),
@@ -819,30 +560,30 @@ publicationUpdate.put = (args: { publication: string | number | { id: string | n
  * @see app/Http/Controllers/PublicationController.php:348
  * @route '/dashboard/publicacion/{id}/asignar'
  */
-        publicationUpdateForm.put = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-            action: publicationUpdate.url(args, {
+        assignForm.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+            action: assign.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                            _method: 'PUT',
+                            _method: 'PATCH',
                             ...(options?.query ?? options?.mergeQuery ?? {}),
                         }
                     }),
             method: 'post',
         })
     
-    publicationUpdate.form = publicationUpdateForm
+    assign.form = assignForm
 /**
 * @see \App\Http\Controllers\PublicationController::toggleStatus
  * @see app/Http/Controllers/PublicationController.php:371
  * @route '/dashboard/publicacion/{id}/status'
  */
-export const toggleStatus = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggleStatus = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus.url(args, options),
     method: 'patch',
 })
 
 toggleStatus.definition = {
     methods: ["patch"],
-    url: '/dashboard/publicacion/{publication}/status',
+    url: '/dashboard/publicacion/{id}/status',
 } satisfies RouteDefinition<["patch"]>
 
 /**
@@ -850,31 +591,26 @@ toggleStatus.definition = {
  * @see app/Http/Controllers/PublicationController.php:371
  * @route '/dashboard/publicacion/{id}/status'
  */
-toggleStatus.url = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+toggleStatus.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { publication: args }
+        args = { id: args }
     }
 
-            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-            args = { publication: args.id }
-        }
     
     if (Array.isArray(args)) {
         args = {
-                    publication: args[0],
+                    id: args[0],
                 }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        publication: typeof args.publication === 'object'
-                ? args.publication.id
-                : args.publication,
+                        id: args.id,
                 }
 
     return toggleStatus.definition.url
-            .replace('{publication}', parsedArgs.publication.toString())
+            .replace('{id}', parsedArgs.id.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
@@ -883,7 +619,7 @@ toggleStatus.url = (args: { publication: string | number | { id: string | number
  * @see app/Http/Controllers/PublicationController.php:371
  * @route '/dashboard/publicacion/{id}/status'
  */
-toggleStatus.patch = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggleStatus.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus.url(args, options),
     method: 'patch',
 })
@@ -893,7 +629,7 @@ toggleStatus.patch = (args: { publication: string | number | { id: string | numb
  * @see app/Http/Controllers/PublicationController.php:371
  * @route '/dashboard/publicacion/{id}/status'
  */
-    const toggleStatusForm = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const toggleStatusForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: toggleStatus.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PATCH',
@@ -908,7 +644,7 @@ toggleStatus.patch = (args: { publication: string | number | { id: string | numb
  * @see app/Http/Controllers/PublicationController.php:371
  * @route '/dashboard/publicacion/{id}/status'
  */
-        toggleStatusForm.patch = (args: { publication: string | number | { id: string | number } } | [publication: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        toggleStatusForm.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: toggleStatus.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PATCH',
@@ -919,6 +655,6 @@ toggleStatus.patch = (args: { publication: string | number | { id: string | numb
         })
     
     toggleStatus.form = toggleStatusForm
-const PublicationController = { getAll, getHome, getByCategory, getDescription, publicationCreate, publicationStore, publicationEdit, publicationUpdate, toggleStatus }
+const PublicationController = { getAll, HomeForm, publicationCreate, publicationView, publicationDownload, publicationStore, assign, toggleStatus }
 
 export default PublicationController

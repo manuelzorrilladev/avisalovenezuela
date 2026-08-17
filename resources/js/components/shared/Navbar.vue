@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import type { PageProps } from '@inertiajs/core';
 import { Link, usePage } from '@inertiajs/vue3';
+
 import { useWindowSize } from '@vueuse/core';
-import { Menu, XCircle, ChevronDown } from 'lucide-vue-next';
+import { Menu, XCircle } from 'lucide-vue-next';
 import { computed, ref, type Ref } from 'vue';
 import { dashboard, login, register } from '@/routes';
+import { useFormStore } from '@/state/formState.js';
 import AppLogo from '../AppLogo.vue';
 import ThemeChanger from './ThemeChanger.vue';
 const { width } = useWindowSize();
@@ -19,8 +22,14 @@ withDefaults(
     },
 );
 const isActive: Ref<boolean> = ref(false);
-const page = usePage();
+const page = usePage<PageProps>();
 const auth = computed(() => page.props.auth);
+const formStore = useFormStore();
+
+
+function logout(){
+    formStore.resetForm()
+}
 </script>
 
 <template>
@@ -46,6 +55,7 @@ const auth = computed(() => page.props.auth);
                             href="/logout"
                             method="post"
                             as="button"
+                            @click="logout"
                             class="transition-colors hover:text-white"
                         >
                             Cerrar Sesión
@@ -92,157 +102,41 @@ const auth = computed(() => page.props.auth);
                 </div>
 
                 <hr class="my-2 border-black" />
-                <Link
-                    href="/anuncios/inmuebles"
-                    @click="isActive = !isActive"
-                    class="flex items-center gap-3 text-black duration-200 hover:text-white"
-                    >Inmuebles <ChevronDown
-                /></Link>
-                <Link
-                    href="/anuncios/inmuebles/venta"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Venta
-                </Link>
+             
 
-                <Link
-                    href="/anuncios/inmuebles/alquiler"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Alquiler</Link
-                >
-
-                <Link
-                    href="/anuncios/vehiculos"
-                    @click="isActive = !isActive"
-                    class="flex items-center gap-3 text-black duration-200 hover:text-white"
-                    >Vehículo <ChevronDown
-                /></Link>
-                <Link
-                    href="/anuncios/vehiculos/motos"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Motos</Link
-                >
-                <Link
-                    href="/anuncios/vehiculos/automoviles"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Automóviles</Link
-                >
-                <Link
-                    href="/anuncios/vehiculos/camionetas"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Camionetas</Link
-                >
-                <Link
-                    href="/anuncios/vehiculos/taxis"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Taxis</Link
-                >
-                <Link
-                    href="/anuncios/vehiculos/pesados"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Pesados</Link
-                >
-                <Link
-                    href="/anuncios/vehiculos/otros-vehiculos"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Otros Vehículos
-                </Link>
-                <Link
-                    href="/anuncios/empleos/"
-                    @click="isActive = !isActive"
-                    class="flex items-center gap-3 text-black duration-200 hover:text-white"
-                    >Empleos <ChevronDown />
-                </Link>
-                <Link
-                    href="/anuncios/empleos/empleos-generales"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Empleos generales</Link
-                >
-                <Link
-                    href="/anuncios/empleos/empleos-especializados"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Empleos Especializados</Link
-                >
-                <Link
-                    href="/anuncios/empleos/empleos-de-servicio-domestico"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Empleos de servicio doméstico
-                </Link>
-                <Link
-                    href="/anuncios/servicios/"
-                    @click="isActive = !isActive"
-                    class="flex items-center gap-3 text-black duration-200 hover:text-white"
-                    >Servicios <ChevronDown />
-                </Link>
-                <Link
-                    href="/anuncios/servicios/servicios-a-domicilio"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Servicios a domicilio</Link
-                >
-                <Link
-                    href="/anuncios/servicios/servicios-especializados"
-                    @click="isActive = !isActive"
-                    class="ml-8 text-black duration-200 hover:text-white"
-                    >Servicios Especializados</Link
-                >
-                <hr class="my-2 border-black" />
-                <div v-if="!isDesktop" class="space-x-4 text-lg">
-                    <template v-if="auth.user">
+                 <div v-if="auth.user">
                         <Link
-                            @click="isActive = !isActive"
                             :href="dashboard()"
-                            class="flex items-center gap-3 text-black duration-200 hover:text-white"
+                            class="ml-8 text-black duration-200 hover:text-white"
                         >
                             Panel de Control
                         </Link>
 
                         <Link
-                            @click="isActive = !isActive"
                             href="/logout"
                             method="post"
                             as="button"
-                            class="flex items-center gap-3 text-black duration-200 hover:text-white"
+                            class="ml-8 text-black duration-200 hover:text-white"
                         >
                             Cerrar Sesión
                         </Link>
-                    </template>
-
-                    <template v-else>
+                    </div>
+                 <div v-else>
                         <Link
-                            @click="isActive = !isActive"
                             :href="login()"
-                            class="flex items-center gap-3 text-black duration-200 hover:text-white"
+                            class="ml-8 text-black duration-200 hover:text-white"
                         >
                             Iniciar Sesión
                         </Link>
 
                         <Link
-                            @click="isActive = !isActive"
                             v-if="canRegister"
                             :href="register()"
-                            class="flex items-center gap-3 text-black duration-200 hover:text-white"
+                            class="ml-8 text-black duration-200 hover:text-white"
                         >
                             Registrarse
                         </Link>
-                    </template>
-                </div>
-
-                <Link
-                    @click="isActive = !isActive"
-                    class="flex items-center gap-3 text-lg text-black underline duration-200 hover:text-white"
-                    >Publica tu anuncio
-                </Link>
+                    </div>
             </section>
         </Transition>
         <Transition name="show">

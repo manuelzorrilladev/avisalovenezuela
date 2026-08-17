@@ -13,13 +13,9 @@ return new class extends Migration
     {
         Schema::table('publications', function (Blueprint $table) {
             // Índices para búsquedas geográficas y de estado
-            $table->index('status');
-            $table->index('city');
-            $table->index('state');
+         
             $table->index('published_at');
-
-            // Índice para ordenar por vistas si decides usar el contador simple
-            $table->index('views');
+            $table->string('slug')->unique();
         });
     }
 

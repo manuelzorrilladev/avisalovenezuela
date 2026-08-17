@@ -23,18 +23,21 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
+         $role_array = ['empleado','usuario'];
+        $random_value = array_rand($role_array,1);
         return [
-            'name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $this->faker->firstName(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('123456'),
             'remember_token' => Str::random(10),
-            'phone' => fake()->phoneNumber(),
-            'id_card' => 'V-' . fake()->randomNumber(8),
-            'address' => fake()->address(),
+            'phone' => $this->faker->phoneNumber(),
+            'id_card' => 'V-' . $this->faker->randomNumber(8),
             'city' => 'Caracas',
             'state' => 'Distrito Capital',
+            'role'=>$role_array[$random_value],
+            'birth_date' => $this->faker->dateTimeBetween('-60 years', '-18 years')->format('Y-m-d')
         ];
     }
 

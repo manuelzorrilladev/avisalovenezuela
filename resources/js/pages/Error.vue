@@ -15,6 +15,7 @@ const props = withDefaults(
         url?: string;
         image?: string;
         status: number,
+        error:string;
     }>(),
     {
         canRegister: true,
@@ -25,7 +26,7 @@ const props = withDefaults(
         image: '/assets/img/avisalo.png',
     },
 );
-
+console.log(props.error);
 
 const title = computed(() => {
   return {

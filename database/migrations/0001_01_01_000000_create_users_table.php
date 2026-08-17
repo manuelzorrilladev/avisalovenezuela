@@ -20,13 +20,12 @@ return new class extends Migration
             $table->rememberToken();
 
 
-            $table->string('last_name');
             $table->string('phone')->nullable();
             $table->string('id_card')->unique(); 
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable(); 
-            
+            $table->date('birth_date')->nullable();
 
             $table->timestamps();
 

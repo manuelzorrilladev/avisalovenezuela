@@ -1,6 +1,7 @@
-import type { AppPageProps } from './index';
+import type { Page, Router, createHeadManager } from '@inertiajs/core';
+import type { AppPageProps } from './index'; // Asegúrate de que la ruta relativa sea correcta
 
-// Extend ImportMeta interface for Vite...
+// 1. Extender las interfaces de Vite
 declare module 'vite/client' {
     interface ImportMetaEnv {
         readonly VITE_APP_NAME: string;
@@ -13,14 +14,20 @@ declare module 'vite/client' {
     }
 }
 
+// 2. Extender el Core de Inertia (AQUÍ ESTABA EL CAMBIO CLAVE)
 declare module '@inertiajs/core' {
-    interface PageProps extends InertiaPageProps, AppPageProps {}
+    // Sobrescribimos la interfaz interna que define los Props globales del objeto Page
+    type PageProps = AppPageProps
 }
 
+// 3. Extender las propiedades globales de Vue para los templates (<template>)
 declare module 'vue' {
     interface ComponentCustomProperties {
-        $inertia: typeof Router;
-        $page: Page;
+        $inertia: Router;
+        // Al pasarle 'PageProps' (que ya extendimos arriba), usePage() y $page.props tendrán autocompletado estricto
+        $page: Page<PageProps>;
         $headManager: ReturnType<typeof createHeadManager>;
     }
 }
+
+export {};
