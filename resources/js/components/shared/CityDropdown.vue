@@ -10,16 +10,18 @@ defineOptions({
 });
 const model = defineModel<string>();
 
+
+
 const venezuelaData: Record<string, string[]> = {
-    "Amazonas": ["Puerto Ayacucho", "San Fernando de Atabapo", "Maroa", "Puerto Páez"],
-    "Anzoátegui": ["Barcelona", "Puerto La Cruz", "Lechería", "Guanta", "El Tigre", "Anaco", "Cantaura", "Puerto Píritu"],
-    "Apure": ["San Fernando de Apure", "Guasdualito", "Elorza", "Bruzual", "Achaguas"],
-    "Aragua": ["Maracay", "Turmero", "La Victoria", "Cagua", "El Limón", "Villa de Cura", "Palo Negro", "Ocumare de la Costa"],
-    "Barinas": ["Barinas", "Sabaneta", "Socopó", "Barinitas", "Santa Bárbara"],
-    "Bolívar": ["Ciudad Guayana (Puerto Ordaz/San Félix)", "Ciudad Bolívar", "Upata", "Caicara del Orinoco", "Tumeremo", "Santa Elena de Uairén"],
-    "Carabobo": ["Valencia", "Puerto Cabello", "Guacara", "Naguanagua", "San Diego", "Mariara", "Bejuma", "Tocuyito"],
-    "Cojedes": ["San Carlos", "Tinaquillo", "El Pao", "Tinaco"],
-    "Delta Amacuro": ["Tucupita", "Pedernales", "Curiapo"],
+    "Amazonas": ["Puerto Ayacucho", "San Fernando de Atabapo", "Maroa", "Puerto Páez","Otro"],
+    "Anzoátegui": ["Barcelona", "Puerto La Cruz", "Lechería", "Guanta", "El Tigre", "Anaco", "Cantaura", "Puerto Píritu","Otro"],
+    "Apure": ["San Fernando de Apure", "Guasdualito", "Elorza", "Bruzual", "Achaguas","Otro"],
+    "Aragua": ["Maracay", "Turmero", "La Victoria", "Cagua", "El Limón", "Villa de Cura", "Palo Negro", "Ocumare de la Costa","Otro"],
+    "Barinas": ["Barinas", "Sabaneta", "Socopó", "Barinitas", "Santa Bárbara","Otro"],
+    "Bolívar": ["Ciudad Guayana (Puerto Ordaz/San Félix)", "Ciudad Bolívar", "Upata", "Caicara del Orinoco", "Tumeremo", "Santa Elena de Uairén","Otro"],
+    "Carabobo": ["Valencia", "Puerto Cabello", "Guacara", "Naguanagua", "San Diego", "Mariara", "Bejuma", "Tocuyito","Otro"],
+    "Cojedes": ["San Carlos", "Tinaquillo", "El Pao", "Tinaco","Otro"],
+    "Delta Amacuro": ["Tucupita", "Pedernales", "Curiapo","Otro"],
     "Distrito Capital": [
         "Caracas - Libertador (Centro)", 
         "Caracas - El Valle", 
@@ -28,12 +30,14 @@ const venezuelaData: Record<string, string[]> = {
         "Caracas - La Candelaria", 
         "Caracas - El Paraíso",
         "Caracas - San Bernardino",
-        "Caracas - Montalbán"
+        "Caracas - Montalbán",
+        "Otro"
     ],
-    "Falcón": ["Coro", "Punto Fijo", "Chichiriviche", "Tucacas", "La Vela de Coro", "Dabajuro"],
-    "Guárico": ["San Juan de los Morros", "Valle de la Pascua", "Calabozo", "Altagracia de Orituco", "Zaraza"],
-    "Lara": ["Barquisimeto", "Cabudare", "Carora", "Quíbor", "El Tocuyo", "Duaca"],
-    "Mérida": ["Mérida", "El Vigía", "Ejido", "Tovar", "Mucuchíes", "Lagunillas"],
+    "Falcón": ["Coro", "Punto Fijo", "Chichiriviche", "Tucacas", "La Vela de Coro", "Dabajuro","Otro"],
+    "Guárico": ["San Juan de los Morros", "Valle de la Pascua", "Calabozo", "Altagracia de Orituco", "Zaraza","Otro"],
+    "La Guaira": ["La Guaira", "Catia La Mar", "Maiquetía", "Caraballeda", "Macuto", "Naiguatá","Otro"],
+    "Lara": ["Barquisimeto", "Cabudare", "Carora", "Quíbor", "El Tocuyo", "Duaca","Otro"],
+    "Mérida": ["Mérida", "El Vigía", "Ejido", "Tovar", "Mucuchíes", "Lagunillas","Otro"],
     "Miranda": [
         "Chacao (Altamira/Los Palos Grandes)",
         "Baruta (Las Mercedes/Prados del Este)",
@@ -46,23 +50,33 @@ const venezuelaData: Record<string, string[]> = {
         "Charallave", 
         "Cúa", 
         "Higuerote", 
-        "Río Chico"
+        "Río Chico",
+        "Otro"
     ],
-    "Monagas": ["Maturín", "Punta de Mata", "Caripe", "Temblador", "Caicara de Maturín"],
-    "Nueva Esparta": ["Porlamar", "Pampatar", "La Asunción", "Juan Griego", "Punta de Piedras", "El Valle del Espíritu Santo"],
-    "Portuguesa": ["Acarigua", "Araure", "Guanare", "Turén", "Ospino"],
-    "Sucre": ["Cumaná", "Carúpano", "Güiria", "Cumanacoa", "Cariaco"],
-    "Táchira": ["San Cristóbal", "Táriba", "Rubio", "San Antonio del Táchira", "La Grita", "Ureña", "Palmira"],
-    "Trujillo": ["Valera", "Trujillo", "Boconó", "La Puerta", "Pampán"],
-    "Vargas (La Guaira)": ["La Guaira", "Catia La Mar", "Maiquetía", "Caraballeda", "Macuto", "Naiguatá"],
-    "Yaracuy": ["San Felipe", "Yaritagua", "Nirgua", "Chivacoa"],
-    "Zulia": ["Maracaibo", "Cabimas", "Ciudad Ojeda", "San Francisco", "Santa Bárbara del Zulia", "Machiques", "La Concepción"]
+    "Monagas": ["Maturín", "Punta de Mata", "Caripe", "Temblador", "Caicara de Maturín","Otro"],
+    "Nueva Esparta": ["Porlamar", "Pampatar", "La Asunción", "Juan Griego", "Punta de Piedras", "El Valle del Espíritu Santo","Otro"],
+    "Portuguesa": ["Acarigua", "Araure", "Guanare", "Turén", "Ospino","Otro"],
+    "Sucre": ["Cumaná", "Carúpano", "Güiria", "Cumanacoa", "Cariaco","Otro"],
+    "Táchira": ["San Cristóbal", "Táriba", "Rubio", "San Antonio del Táchira", "La Grita", "Ureña", "Palmira","Otro"],
+    "Trujillo": ["Valera", "Trujillo", "Boconó", "La Puerta", "Pampán","Otro"],
+    "Yaracuy": ["San Felipe", "Yaritagua", "Nirgua", "Chivacoa","Otro"],
+    "Zulia": ["Maracaibo", "Cabimas", "Ciudad Ojeda", "San Francisco", "Santa Bárbara del Zulia", "Machiques", "La Concepción","Otro"]
 };
 const states = Object.keys(venezuelaData).sort();
 
 const cities = computed(() => {
     if (type === 'city' && selectedState && venezuelaData[selectedState]) {
-        return [...venezuelaData[selectedState]].sort();
+        const rawCities = venezuelaData[selectedState];
+        
+        const filteredCities = rawCities
+            .filter(city => city !== 'Otro')
+            .sort((a, b) => a.localeCompare(b, 'es'));
+
+        if (rawCities.includes('Otro')) {
+            filteredCities.push('Otro');
+        }
+
+        return filteredCities;
     }
     return [];
 });
@@ -70,6 +84,7 @@ const cities = computed(() => {
 
 <template>
     <div class="flex flex-col gap-2">
+
         <label class="text-sm font-semibold italic">
             {{ type === 'state' ? 'Estado (Ubicación)' : 'Ciudad' }}
         </label>
@@ -100,5 +115,7 @@ const cities = computed(() => {
                 {{ city }}
             </option>
         </select>
+
+        
     </div>
 </template>
