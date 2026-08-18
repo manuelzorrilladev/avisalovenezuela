@@ -10,7 +10,6 @@ import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
-
 defineProps<{
     status?: string;
     canResetPassword: boolean;
@@ -82,11 +81,18 @@ defineProps<{
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <Label for="remember" class="flex items-center space-x-3">
-                        <Checkbox id="remember" name="remember" :tabindex="3" />
+                    <Label for="remember" class="flex items-center space-x-1">
+                        <Checkbox id="remember" name="remember" :tabindex="3" class="border-primary" />
                         <span>Recuérdame</span>
                     </Label>
                 </div>
+                   <div
+                class="text-sm text-primary"
+                v-if="canRegister"
+            >
+            
+                <TextLink href="/forgot-password" :tabindex="5" class="">¿Olvidaste tu contraseña?</TextLink>
+            </div>
 
                 <Button
                     type="submit"
@@ -104,7 +110,7 @@ defineProps<{
                 class="text-center text-sm text-text-main"
                 v-if="canRegister"
             >
-                No tienes una cuenta?
+                ¿No tienes una cuenta?
                 <TextLink :href="register()" :tabindex="5">Regístrate</TextLink>
             </div>
         </Form>

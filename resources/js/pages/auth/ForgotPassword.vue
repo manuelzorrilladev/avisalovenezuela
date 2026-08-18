@@ -40,7 +40,7 @@ defineProps<{
                         autocomplete="off"
                         autofocus
                         placeholder="email@example.com"
-                        class="placeholder:text-text-main"
+                        class="placeholder:text-text-main/30"
                     />
                     <InputError :message="errors.email" />
                 </div>
