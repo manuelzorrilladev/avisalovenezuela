@@ -5,6 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
+    <meta name="description" content="¿Tienes algo que vender? ¡Avísalo! ¿Buscas algo nuevo? ¡Encuéntralo!" />
+    <link rel="canonical" href="https://avisalovenezuela.com/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://avisalovenezuela.com/" />
+    <meta property="og:title" content="Avísalo Venezuela" />
+    <meta property="og:description" content="¿Tienes algo que vender? ¡Avísalo! ¿Buscas algo nuevo? ¡Encuéntralo!" />
+    <meta property="og:image" content="https://avisalovenezuela.com/assets/img/avisalo.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://avisalovenezuela.com/" />
+    <meta name="twitter:title" content="Avísalo Venezuela" />
+    <meta name="twitter:description" content="¿Tienes algo que vender? ¡Avísalo! ¿Buscas algo nuevo? ¡Encuéntralo!" />
+    <meta name="twitter:image" content="https://avisalovenezuela.com/assets/img/avisalo.png" />
+
     {{-- Inline script to detect system dark mode preference and apply it immediately --}}
     <script>
         (function () {
