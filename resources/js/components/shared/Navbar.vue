@@ -35,11 +35,14 @@ function logout(){
 <template>
     <nav class="relative">
         <section
-            class="flex h-[10vh] items-center justify-between bg-primary md:px-10 dark:bg-black"
+            class="flex h-[12vh] items-center justify-between bg-primary md:px-10 dark:bg-black"
         >
+            <div class="flex flex-col">
             <Link href="/">
                 <AppLogo class="w-48 pl-4 md:pl-0" />
             </Link>
+            <h3 class="text-[10px] text-right">J-508176022</h3>
+            </div>
 
             <div class="text-carbon-black-text flex items-center font-semibold">
                 <div v-if="isDesktop" class="flex items-center space-x-4">
