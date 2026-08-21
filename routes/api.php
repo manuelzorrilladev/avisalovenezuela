@@ -13,7 +13,9 @@ Route::get('/publications/get-all', [PublicationController::class, 'getAll']);
 // Route::get('/publications/get/{category}/{sub_category}', [PublicationController::class, 'getByCategory']);
 
 
-
+Route::get('/api-health-test', function () {
+    return response()->json(['status' => 200,'message' => 'API is working fine.']);
+});
 
 
 
