@@ -22,7 +22,7 @@ class UserController extends Controller
             ->latest()
             ->get();
 
-        if ($user->role == 'empleado') {
+        if ($user->role !== 'usuario') {
             return to_route('worker.dashboard');
         }
 
@@ -38,7 +38,7 @@ class UserController extends Controller
         $userId=$user->id;
 
         $myPublications = Publication::query()
-            ->with(['category', 'images'])
+            ->with(['category', 'images','user'])
             ->orderBy('status')
             ->when($filter === 'asignados', function ($query) use ($userId) {
                 $query->where('worker_id', $userId);

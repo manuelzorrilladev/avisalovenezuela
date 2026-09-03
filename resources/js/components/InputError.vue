@@ -2,6 +2,7 @@
 defineProps<{
     message?: string;
 }>();
+
 </script>
 
 <template>

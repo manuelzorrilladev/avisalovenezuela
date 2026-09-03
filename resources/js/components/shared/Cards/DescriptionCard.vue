@@ -10,18 +10,18 @@ import {
     AlertCircleIcon,
     CheckCircle2Icon,
     FileDownIcon,
-    
 } from 'lucide-vue-next';
 
 import { ref, watch } from 'vue';
-import type  { User } from '@/types';
+import type { User } from '@/types';
 import type { PublicationCardType, Workers } from '@/types/publication';
 // --- PROPS Y EMITS ---
 const props = defineProps<{
     publication?: PublicationCardType;
     activeItem: number;
     inCharge?: Workers;
-    user?:User;
+    user?: User;
+    haveAccess: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -51,7 +51,7 @@ const nextImage = () => {
 };
 const url = `dashboard/publicacion/${props.publication?.id}`;
 
-const fullPublicationUrl = `https://avisalovenezuela.com/${url}`; 
+const fullPublicationUrl = `https://avisalovenezuela.com/${url}`;
 
 const rawText = `¡Hola! Tengo una publicación activa en Avisalo y quisiera verificar el estatus del aviso, por favor. El link a mi publicación es: ${fullPublicationUrl}`;
 
@@ -98,7 +98,6 @@ const statusMap: Record<string, { color: string; text: string; icon: any }> = {
         icon: CheckCircle2Icon,
     },
 };
-
 </script>
 
 <template>
@@ -106,6 +105,7 @@ const statusMap: Record<string, { color: string; text: string; icon: any }> = {
         v-if="props.publication"
         class="relative flex max-h-[90vh] w-11/12 max-w-4xl flex-col overflow-hidden rounded-2xl border border-primary/20 bg-secondary-background text-foreground shadow-2xl md:max-h-[85vh]"
     >
+
         <button
             @click="emit('close')"
             class="group absolute top-4 right-4 z-50 rounded-full border border-primary/20 bg-background/60 p-2 transition-all duration-200 hover:bg-primary hover:text-black"
@@ -260,17 +260,27 @@ const statusMap: Record<string, { color: string; text: string; icon: any }> = {
                             </div>
                         </div>
                     </div>
-                    <div v-if="inCharge" class="">
-                        <hr class="mb-2 border-foreground/40">
+
+                    <div v-if="props.haveAccess" class="">
+                        <hr class=" border-foreground/40" />
                         <h5
-                            class="mb-0 text leading-none font-semibold tracking-wider uppercase"
+                            class="text my-3 leading-none font-semibold tracking-wider uppercase"
                         >
                             Diseñador a cargo:
                             {{ inCharge?.name || 'SIN ASIGNAR' }}
                         </h5>
+                        <hr class="mb-2 border-foreground/40" />
+                        <h3>
+                               <strong>Detalles del anunciante</strong> <br />
+                    {{ props.publication.user.name }} <br />
+                    {{ props.publication.user?.email }} <br />
+                    {{ props.publication.user.id_card }} <br />
+                    {{ props.publication.user?.phone || 'SIN TELÉFONO ASIGNADO' }}
+                
+                        </h3>
                     </div>
                 </div>
-
+               
                 <div class="flex-1 space-y-2">
                     <h3
                         class="text-xs font-bold tracking-wider text-foreground/40 uppercase"
@@ -278,13 +288,17 @@ const statusMap: Record<string, { color: string; text: string; icon: any }> = {
                         Detalles del anuncio
                     </h3>
                     <div
-                        class="max-h-45 overflow-y-auto rounded-xl border border-primary/10 bg-background/40  p-4 text-sm leading-relaxed whitespace-pre-line text-foreground/90"
+                        class="max-h-45 overflow-y-auto rounded-xl border border-primary/10 bg-background/40 p-4 text-sm leading-relaxed whitespace-pre-line text-foreground/90"
                     >
-                        {{ props.publication.description }} 
+                        {{ props.publication.description }}
                     </div>
                 </div>
-                <div v-if="inCharge && props.user?.role != 1" class="flex justify-end">
-                    <a :href="`/dashboard/publicacion/${props.publication.id}/files`"
+                <div
+                    v-if="props.haveAccess && props.user?.role != 1"
+                    class="flex justify-end"
+                >
+                    <a
+                        :href="`/dashboard/publicacion/${props.publication.id}/files`"
                         class="group dark:hover: flex cursor-pointer items-center gap-2 rounded-xl border border-primary bg-primary px-3 py-3 text-xs font-bold duration-200 hover:bg-white hover:text-primary dark:hover:bg-amber-400"
                     >
                         <FileDownIcon class="size-6 duration-200" />
@@ -292,10 +306,20 @@ const statusMap: Record<string, { color: string; text: string; icon: any }> = {
                     </a>
                 </div>
                 <div v-else class="flex justify-end">
-                    <a :href="message" target="_blank" 
-                        class="group dark:hover: flex cursor-pointer items-center gap-2 rounded-xl border border-primary bg-primary px-3 py-3 text-xs font-bold duration-200 hover:bg-white hover:text-primary hover:fill-primary  dark:hover:bg-amber-400"
+                    <a
+                        :href="message"
+                        target="_blank"
+                        class="group dark:hover: flex cursor-pointer items-center gap-2 rounded-xl border border-primary bg-primary px-3 py-3 text-xs font-bold duration-200 hover:bg-white hover:fill-primary hover:text-primary dark:hover:bg-amber-400"
                     >
-                        <svg class="size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1c-41.9-42-97.7-65.1-157-65.1-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480 117.7 449.1c32.4 17.7 68.9 27 106.1 27l.1 0c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1s56.2 81.2 56.1 130.5c0 101.8-84.9 184.6-186.6 184.6zM325.1 300.5c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8s-14.3 18-17.6 21.8c-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7s-12.5-30.1-17.1-41.2c-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2s-9.7 1.4-14.8 6.9c-5.1 5.6-19.4 19-19.4 46.3s19.9 53.7 22.6 57.4c2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4s4.6-24.1 3.2-26.4c-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+                        <svg
+                            class="size-6"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 448 512"
+                        >
+                            <path
+                                d="M380.9 97.1c-41.9-42-97.7-65.1-157-65.1-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480 117.7 449.1c32.4 17.7 68.9 27 106.1 27l.1 0c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1s56.2 81.2 56.1 130.5c0 101.8-84.9 184.6-186.6 184.6zM325.1 300.5c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8s-14.3 18-17.6 21.8c-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7s-12.5-30.1-17.1-41.2c-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2s-9.7 1.4-14.8 6.9c-5.1 5.6-19.4 19-19.4 46.3s19.9 53.7 22.6 57.4c2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4s4.6-24.1 3.2-26.4c-1.3-2.5-5-3.9-10.5-6.6z"
+                            />
+                        </svg>
                         <p class="text-xs">Chequear estatús</p>
                     </a>
                 </div>

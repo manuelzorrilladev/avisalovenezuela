@@ -131,6 +131,8 @@ onMounted(() => {
                     :publication="activePublication"
                     :activeItem="activeItem"
                     @close="toggleModal(-1)"
+                    :haveAccess="false"
+
                 />
             </div>
             </Transition>

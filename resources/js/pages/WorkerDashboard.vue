@@ -228,6 +228,7 @@ function toggleModal(pos: number, type?: string) {
                             @close="toggleModal(-1)"
                             :in-charge="findWorker(activePublication?.worker_id || 0)"
                             :user="props.user"
+                            :haveAccess="true"
                         />
                     </div>
                 </div>

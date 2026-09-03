@@ -10,11 +10,14 @@ import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
-const docNumber = ref('')
-const docType = ref('V')
+
+const docNumber = ref('');
+const docType = ref('V');
+const serverErrorMessage = ref<string | null>(null);
+
 function handleSubmit(data: Record<string, any>) {
-    
-  const payloadFinal = { ...data };
+    serverErrorMessage.value = null; // Limpiar errores previos del servidor
+    const payloadFinal = { ...data };
 
     payloadFinal.id_card = `${docType.value}-${docNumber.value}`;
     
@@ -23,14 +26,11 @@ function handleSubmit(data: Record<string, any>) {
     }
     delete payloadFinal.docType;
     delete payloadFinal.docNumber;
-    console.log('--- PAYLOAD FINAL LISTO PARA EL SERVIDOR ---');
-    console.log(payloadFinal);
 
     return payloadFinal;
 }
 
 function handleAuthSuccess() {
-    // 1. Analizamos los parámetros de la URL actual
     const urlParams = new URLSearchParams(window.location.search);
     const redirectTarget = urlParams.get('redirect');
 
@@ -39,6 +39,19 @@ function handleAuthSuccess() {
     }
 }
 
+function handleAuthError(errors: Record<string, string>) {
+    // Si viene un error general no asociado a un campo específico (ej: exception/500)
+    if (errors.error) {
+        serverErrorMessage.value = errors.error;
+    }
+
+    // Scroll al primer input con error de validación para mejor UX
+    const firstErrorKey = Object.keys(errors)[0];
+    if (firstErrorKey) {
+        const element = document.getElementById(firstErrorKey) || document.getElementById('doc-number');
+        element?.focus();
+    }
+}
 </script>
 
 <template>
@@ -47,7 +60,15 @@ function handleAuthSuccess() {
         description="Crea una cuenta para empezar a publicar tus avisos"
     >
         <Head title="Register" />
-              <!--  -->
+
+        <!-- Alerta de Error General del Servidor -->
+        <div 
+            v-if="serverErrorMessage" 
+            class="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600"
+            role="alert"
+        >
+            {{ serverErrorMessage }}
+        </div>
 
         <Form
             v-bind="store.form()"
@@ -55,9 +76,11 @@ function handleAuthSuccess() {
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6"
             :transform="handleSubmit"
-              @success="handleAuthSuccess" 
+            @success="handleAuthSuccess"
+            @error="handleAuthError"
         >
             <div class="grid gap-6">
+                <!-- Nombre Completo -->
                 <div class="grid gap-2">
                     <Label for="name">Nombre completo</Label>
                     <Input
@@ -74,8 +97,9 @@ function handleAuthSuccess() {
                     <InputError :message="errors.name" />
                 </div>
 
+                <!-- Correo Electrónico -->
                 <div class="grid gap-2">
-                    <Label for="email">Correo electronico</Label>
+                    <Label for="email">Correo electrónico</Label>
                     <Input
                         id="email"
                         type="email"
@@ -89,40 +113,58 @@ function handleAuthSuccess() {
                     <InputError :message="errors.email" />
                 </div>
 
-                     <div class="flex flex-col gap-2">
-                        <label for="doc-number" class="text-sm font-semibold italic">
-                            Documento de Identidad <span class="text-red-500" aria-hidden="true">*</span><span class="sr-only">(Obligatorio)</span>
-                        </label>
-                        <div class="relative flex items-center gap-0 rounded-lg border  bg-background transition-all focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]  group">
-                            <label for="doc-type" class="sr-only">Tipo de documento de identidad</label>
-                            <select
-                                id="doc-type"
-                                v-model="docType"
-                                class="h-full cursor-pointer rounded-l-lg border-r border-primary/20 bg-transparent py-3 pr-2 pl-4 text-base font-bold  outline-none text-text-main/50 group-focus-within:text-primary"
-                            >
-                                <option value="V" class="bg-background text-foreground">V</option>
-                                <option value="E" class="bg-background text-foreground">E</option>
-                                <option value="P" class="bg-background text-foreground">P</option>
-                                <option value="J" class="bg-background text-foreground">J</option>
-                            </select>
+                <!-- Documento de Identidad -->
+                <div class="flex flex-col gap-2">
+                    <label for="doc-number" class="text-sm font-semibold italic">
+                        Documento de Identidad <span class="text-red-500" aria-hidden="true">*</span><span class="sr-only">(Obligatorio)</span>
+                    </label>
+                    <div 
+                        class="relative flex items-center gap-0 rounded-lg border bg-background transition-all focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px] group"
+                        :class="{ 'border-red-500': errors.id_card }"
+                    >
+                        <label for="doc-type" class="sr-only">Tipo de documento de identidad</label>
+                        <select
+                            id="doc-type"
+                            v-model="docType"
+                            class="h-full cursor-pointer rounded-l-lg border-r border-primary/20 bg-transparent py-3 pr-2 pl-4 text-base font-bold outline-none text-text-main/50 group-focus-within:text-primary"
+                        >
+                            <option value="V" class="bg-background text-foreground">V</option>
+                            <option value="E" class="bg-background text-foreground">E</option>
+                            <option value="P" class="bg-background text-foreground">P</option>
+                            <option value="J" class="bg-background text-foreground">J</option>
+                        </select>
 
-                            <input
-                                id="doc-number"
-                                v-model="docNumber"
-                                type="text"
-                                inputmode="numeric"
-                                pattern="[0-999999999]*"
-                                maxlength="9"
-                                placeholder="12345678"
-                                aria-describedby="doc-hint"
-                                class="w-full rounded-r-lg bg-transparent px-4 py-3 text-base transition-all outline-none"
-                                @input="docNumber = (docNumber as string).replace(/\D/g, '')"
-                                required
-                            />
-                        </div>
-                     
+                        <input
+                            id="doc-number"
+                            v-model="docNumber"
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-999999999]*"
+                            maxlength="9"
+                            placeholder="12345678"
+                            aria-describedby="doc-hint"
+                            class="w-full rounded-r-lg bg-transparent px-4 py-3 text-base transition-all outline-none"
+                            @input="docNumber = (docNumber as string).replace(/\D/g, '')"
+                            required
+                        />
                     </div>
-          
+                    <!-- Manejador de error para Cédula/Identificación duplicada o inválida -->
+                    <InputError :message="errors.id_card" />
+                </div>
+<div class="grid gap-2">
+    <Label for="phone">Teléfono de contacto</Label>
+    <Input
+        id="phone"
+        type="tel"
+        required
+        maxlength="11"
+        placeholder="04141234567"
+        name="phone"
+        class="placeholder:text-text-main/50"
+    />
+    <InputError :message="errors.phone" />
+</div>
+                <!-- Contraseña -->
                 <div class="grid gap-2">
                     <Label for="password">Contraseña</Label>
                     <Input
@@ -138,6 +180,7 @@ function handleAuthSuccess() {
                     <InputError :message="errors.password" />
                 </div>
 
+                <!-- Confirmar Contraseña -->
                 <div class="grid gap-2">
                     <Label for="password_confirmation">Confirmar contraseña</Label>
                     <Input
@@ -153,6 +196,7 @@ function handleAuthSuccess() {
                     <InputError :message="errors.password_confirmation" />
                 </div>
 
+                <!-- Botón Submit -->
                 <Button
                     type="submit"
                     class="mt-2 w-full"
@@ -166,13 +210,14 @@ function handleAuthSuccess() {
             </div>
 
             <div class="text-center text-sm text-text-main/50">
-                ¿Ya estas registrado?
+                ¿Ya estás registrado?
                 <TextLink
                     :href="login()"
                     class="underline underline-offset-4"
                     :tabindex="6"
-                    >Inicia sesión</TextLink
                 >
+                    Inicia sesión
+                </TextLink>
             </div>
         </Form>
     </AuthBase>
